@@ -6,3 +6,5 @@ dist/
 .gemini/
 *.exp
 .vercel
+bin/
+

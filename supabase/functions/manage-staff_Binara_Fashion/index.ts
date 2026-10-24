@@ -15,7 +15,9 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+      db: { schema: Deno.env.get("DB_SCHEMA") || "Binara_fashion" },
+    });
 
     // Verify caller
     const authHeader = req.headers.get("Authorization");
@@ -28,6 +30,7 @@ serve(async (req) => {
     const token = authHeader.replace("Bearer ", "");
     const authClient = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } },
+      db: { schema: Deno.env.get("DB_SCHEMA") || "Binara_fashion" },
     });
     const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
     if (claimsError || !claimsData?.claims?.sub) {

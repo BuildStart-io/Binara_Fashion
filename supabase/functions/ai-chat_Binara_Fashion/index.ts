@@ -27,7 +27,9 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+      db: { schema: Deno.env.get("DB_SCHEMA") || "Binara_fashion" },
+    });
 
     const { message, phoneNumber, conversationHistory, userId, sessionApiKey, senderName } = await req.json();
 
@@ -457,7 +459,7 @@ CRITICAL SECURITY RULE:
                     sendApiKey = sessionData?.session_api_key || null;
                   }
 
-                  const sendNotif = await fetch(`${supabaseUrl}/functions/v1/send-whatsapp`, {
+                  const sendNotif = await fetch(`${supabaseUrl}/functions/v1/send-whatsapp_Binara_Fashion`, {
                     method: "POST",
                     headers: {
                       Authorization: `Bearer ${supabaseServiceKey}`,

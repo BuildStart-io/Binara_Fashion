@@ -118,7 +118,9 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+      db: { schema: Deno.env.get("DB_SCHEMA") || "Binara_fashion" },
+    });
 
     // Identify the calling user from the JWT (token already verified by gateway = false; we self-check)
     const authHeader = req.headers.get("authorization") || "";
@@ -128,6 +130,7 @@ serve(async (req) => {
     }
     const authClient = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } },
+      db: { schema: Deno.env.get("DB_SCHEMA") || "Binara_fashion" },
     });
     const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
     if (claimsError || !claimsData?.claims?.sub) {
@@ -140,7 +143,7 @@ serve(async (req) => {
 
     // WAHA session name locked to the user — slug-safe, deterministic, fits within ~25 chars.
     const sessionName = `u_${userId.replace(/-/g, "").substring(0, 20)}`;
-    const webhookUrl = Deno.env.get("WEBHOOK_URL_OVERRIDE") || `${supabaseUrl}/functions/v1/webhook-wsender`;
+    const webhookUrl = Deno.env.get("WEBHOOK_URL_OVERRIDE") || `${supabaseUrl}/functions/v1/webhook-wsender_Binara_Fashion`;
 
     // Helper: store/update mapping in user_wsender_sessions
     const upsertMapping = async (displayName?: string) => {

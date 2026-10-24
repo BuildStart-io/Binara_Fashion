@@ -264,7 +264,7 @@ export default function Conversations() {
       .channel("conversations-realtime")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "conversations" },
+        { event: "INSERT", schema: import.meta.env.VITE_SUPABASE_SCHEMA || "Binara_fashion", table: "conversations" },
         (payload) => {
           const newMsg = payload.new as Message;
 
@@ -330,7 +330,7 @@ export default function Conversations() {
       if (sessionError) throw sessionError;
 
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-whatsapp`,
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-whatsapp_Binara_Fashion`,
         {
           method: "POST",
           headers: {
