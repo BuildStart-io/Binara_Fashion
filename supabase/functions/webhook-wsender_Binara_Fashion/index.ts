@@ -127,18 +127,29 @@ serve(async (req) => {
       || wp._data?.message?.documentMessage?.caption
       || "";
 
-    // Message type — derive from WAHA `type` or `_data.message.*` keys
+    // Message type — derive from WAHA `type`, `media.mimetype`, or `_data.message.*` keys
     let messageType = wp.type || "text";
     if (messageType === "chat") messageType = "text";
     
+    const mediaMime = String(wp.media?.mimetype || wp._data?.mimetype || "").toLowerCase();
+    const mediaUrl = String(wp.media?.url || "").toLowerCase();
+    const isAudioMedia = messageType === "ptt" || messageType === "audio" || mediaMime.startsWith("audio/") || /\.(oga|ogg|mp3|wav|m4a|aac|opus)($|\?)/i.test(mediaUrl);
+    const isVideoMedia = messageType === "video" || mediaMime.startsWith("video/") || /\.(mp4|mov|avi|webm|3gp)($|\?)/i.test(mediaUrl);
+    const isDocMedia = messageType === "document" || mediaMime.startsWith("application/") || /\.(pdf|docx?|xlsx?)($|\?)/i.test(mediaUrl);
+    const isImageMedia = messageType === "image" || mediaMime.startsWith("image/") || /\.(jpg|jpeg|png|webp|gif)($|\?)/i.test(mediaUrl);
+
     const wMsg = wp._data?.message || {};
-    if (wMsg.imageMessage) messageType = "image";
-    else if (wMsg.videoMessage) messageType = "video";
-    else if (wMsg.audioMessage) messageType = wMsg.audioMessage?.ptt ? "ptt" : "audio";
-    else if (wMsg.documentMessage) messageType = "document";
+    if (wMsg.audioMessage || isAudioMedia) messageType = "ptt";
+    else if (wMsg.videoMessage || isVideoMedia) messageType = "video";
+    else if (wMsg.documentMessage || isDocMedia) messageType = "document";
+    else if (wMsg.imageMessage || isImageMedia) messageType = "image";
     else if (wMsg.stickerMessage) messageType = "sticker";
     else if (wMsg.locationMessage) messageType = "location";
-    else if (wp.hasMedia && !messageText && messageType === "text") messageType = "image";
+    else if (wp.hasMedia) {
+      if (isAudioMedia) messageType = "ptt";
+      else if (isVideoMedia) messageType = "video";
+      else messageType = "image";
+    }
 
     const senderName = wp._data?.pushName || wp._data?.notifyName || wp.notifyName || "Unknown";
     const wahaMessageId = wp.id || wp._data?.key?.id || `${phoneNumber}-${Date.now()}`;

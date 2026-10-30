@@ -268,10 +268,12 @@ async function processBatch(
 
   for (const msg of batch) {
     const msgType = msg.message_type;
-    const isVoice = msgType === "ptt" || msgType === "audio";
-    const isImage = msgType === "image";
-    let text = (msg.message_text || "").trim();
     const body = msg.raw_payload;
+    const mime = String(body?.payload?.media?.mimetype || body?.media?.mimetype || "").toLowerCase();
+    const mediaUrl = String(body?.payload?.media?.url || body?.media?.url || "").toLowerCase();
+    const isVoice = msgType === "ptt" || msgType === "audio" || mime.startsWith("audio/") || /\.(oga|ogg|mp3|wav|m4a|aac|opus)($|\?)/i.test(mediaUrl);
+    const isImage = (msgType === "image" || mime.startsWith("image/")) && !isVoice;
+    let text = (msg.message_text || "").trim();
 
     if (isVoice) {
       console.log(`[${corrId}] Detected voice message in batch, transcribing...`);

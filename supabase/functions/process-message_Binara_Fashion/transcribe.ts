@@ -15,7 +15,8 @@ export async function transcribeAudio(sessionName: string, wahaMessageId: string
   // 1. Download WAHA Audio
   let audioBuffer: Uint8Array;
   try {
-    const wahaUrl = mediaUrl || `${WAHA_BASE}/api/${encodeURIComponent(sessionName)}/messages/${encodeURIComponent(wahaMessageId)}/download`;
+    const rawUrl = mediaUrl || `${WAHA_BASE}/api/${encodeURIComponent(sessionName)}/messages/${encodeURIComponent(wahaMessageId)}/download`;
+    const wahaUrl = rawUrl.replace(/^https?:\/\/(?:localhost|127\.0\.0\.1):3000\b/i, WAHA_BASE || "http://waha:3000");
     console.log(`Downloading audio from: ${wahaUrl}`);
     const res = await fetch(wahaUrl, {
       headers: { "X-Api-Key": WAHA_KEY, "Accept": "*/*" },
