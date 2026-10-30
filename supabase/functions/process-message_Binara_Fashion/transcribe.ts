@@ -9,8 +9,9 @@ function bytesToBase64(bytes: Uint8Array): string {
 export async function transcribeAudio(sessionName: string, wahaMessageId: string, mediaUrl?: string): Promise<string | null> {
   const WAHA_BASE = (Deno.env.get("WAHA_BASE_URL") || "").replace(/\/+$/, "");
   const WAHA_KEY = Deno.env.get("WAHA_API_KEY") || "";
-  const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY") || "";
+  const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "";
   const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") || "";
+  const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY") || "";
 
   // 1. Download WAHA Audio
   let audioBuffer: Uint8Array;
@@ -35,10 +36,107 @@ export async function transcribeAudio(sessionName: string, wahaMessageId: string
     return null;
   }
 
-  // 2. Try OpenAI Whisper API (whisper-1) first if OPENAI_API_KEY is available
+  const base64Audio = bytesToBase64(audioBuffer);
+
+  // 2. Primary: Google Gemini model API (gemini-2.5-flash)
+  if (GEMINI_API_KEY) {
+    try {
+      console.log("Transcribing audio using Google Gemini model (gemini-2.5-flash)...");
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      const geminiRes = await fetch(geminiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: "You are an expert audio transcriber. Transcribe this audio recording verbatim in its native language/script (Sinhala, Tamil, English, or Singlish). Do NOT translate, summarize, or add extra commentary. Return ONLY the exact transcribed text."
+                },
+                {
+                  inline_data: {
+                    mime_type: "audio/ogg",
+                    data: base64Audio
+                  }
+                }
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.1
+          }
+        }),
+        signal: AbortSignal.timeout(25_000)
+      });
+
+      if (geminiRes.ok) {
+        const geminiData = await geminiRes.json();
+        const text = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (text) {
+          console.log("Google Gemini transcription successful:", text);
+          return text;
+        }
+      } else {
+        console.warn(`Google Gemini API failed (${geminiRes.status}): ${await geminiRes.text()}`);
+      }
+    } catch (geminiErr) {
+      console.warn("Google Gemini transcription error:", geminiErr);
+    }
+  }
+
+  // 3. OpenRouter with Gemini (google/gemini-2.5-flash, google/gemini-2.5-flash-lite)
+  if (OPENROUTER_API_KEY) {
+    try {
+      console.log("Transcribing audio using OpenRouter Gemini model (google/gemini-2.5-flash)...");
+      const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          models: ["google/gemini-2.5-flash", "google/gemini-2.5-flash-lite", "google/gemini-flash-1.5"],
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: "You are an expert audio transcriber. Transcribe this audio recording verbatim in its native language/script (Sinhala, Tamil, English, or Singlish). Do NOT translate, summarize, or add extra commentary. Return ONLY the exact transcribed text."
+                },
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: `data:audio/ogg;base64,${base64Audio}`
+                  }
+                }
+              ]
+            }
+          ]
+        }),
+        signal: AbortSignal.timeout(25_000)
+      });
+
+      if (orRes.ok) {
+        const orData = await orRes.json();
+        const transcription = orData?.choices?.[0]?.message?.content?.trim();
+        if (transcription) {
+          console.log("OpenRouter Gemini transcription result:", transcription);
+          return transcription;
+        }
+      } else {
+        console.error(`OpenRouter transcription failed (${orRes.status}): ${await orRes.text()}`);
+      }
+    } catch (err) {
+      console.error("Error transcribing audio via OpenRouter Gemini:", err);
+    }
+  }
+
+  // 4. Fallback: OpenAI Whisper if configured
   if (OPENAI_API_KEY && !OPENAI_API_KEY.includes("sk-proj-xxxxxxxx")) {
     try {
-      console.log("Transcribing audio using OpenAI Whisper API (whisper-1)...");
+      console.log("Falling back to OpenAI Whisper API (whisper-1)...");
       const formData = new FormData();
       const audioBlob = new Blob([audioBuffer], { type: "audio/ogg" });
       formData.append("file", audioBlob, "voice_message.ogg");
@@ -59,63 +157,14 @@ export async function transcribeAudio(sessionName: string, wahaMessageId: string
         const whisperData = await whisperRes.json();
         const text = whisperData?.text?.trim();
         if (text) {
-          console.log("OpenAI Whisper transcription successful:", text);
+          console.log("OpenAI Whisper fallback transcription successful:", text);
           return text;
         }
       } else {
-        console.warn(`OpenAI Whisper failed (${whisperRes.status}): ${await whisperRes.text()}, trying fallback...`);
+        console.warn(`OpenAI Whisper failed (${whisperRes.status}): ${await whisperRes.text()}`);
       }
     } catch (whisperErr) {
       console.warn("OpenAI Whisper transcription error:", whisperErr);
-    }
-  }
-
-  // 3. Fallback: OpenRouter with Gemini audio / Whisper
-  if (OPENROUTER_API_KEY) {
-    try {
-      console.log("Sending to OpenRouter for transcription fallback...");
-      const base64Audio = bytesToBase64(audioBuffer);
-      const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          models: ["google/gemini-2.5-flash", "google/gemini-2.5-flash-lite"],
-          messages: [
-            {
-              role: "user",
-              content: [
-                {
-                  type: "text",
-                  text: "Transcribe this audio verbatim in its native language/script (Sinhala, Tamil, English, or Singlish). Do NOT translate or summarize. Output ONLY the transcription."
-                },
-                {
-                  type: "image_url",
-                  image_url: {
-                    url: `data:audio/ogg;base64,${base64Audio}`
-                  }
-                }
-              ]
-            }
-          ]
-        }),
-        signal: AbortSignal.timeout(20_000)
-      });
-
-      if (orRes.ok) {
-        const orData = await orRes.json();
-        const transcription = orData?.choices?.[0]?.message?.content?.trim();
-        if (transcription) {
-          console.log("OpenRouter transcription result:", transcription);
-          return transcription;
-        }
-      } else {
-        console.error(`OpenRouter transcription failed (${orRes.status}): ${await orRes.text()}`);
-      }
-    } catch (err) {
-      console.error("Error transcribing audio via OpenRouter:", err);
     }
   }
 
