@@ -192,7 +192,7 @@ serve(async (req) => {
         line += ` | Video: ${p.video_url}`;
       }
       if (p.images && Array.isArray(p.images) && p.images.length > 0) {
-        line += `\n  - Product Photos (${p.images.length} photos available - ONLY output <IMAGE_URL> tags when FIRST introducing ${p.name} or if customer explicitly asked to see photos. NEVER include when customer specifies quantity, colors, or checkout info):\n` +
+        line += `\n  - Product Photos (${p.images.length} photos available - ONLY output these <IMAGE_URL> tags when presenting this ONE specific product by itself, or when customer explicitly asks for photos of this product. NEVER output ANY images when listing or showing multiple products or the menu. NEVER output images when customer specifies quantity, colors, or checkout info):\n` +
           p.images.map((img: string) => `    <IMAGE_URL>${img}</IMAGE_URL>`).join("\n");
       }
       if (p.variations && Array.isArray(p.variations) && p.variations.length > 0) {
@@ -346,15 +346,18 @@ serve(async (req) => {
 - 2. Rib Jacquard Shorts (Free Size: ඉණ 26-42, උස 16). මිල: 5ක් = රු. 2,700 | 10ක් = රු. 5,100.
 - පාරිභෝගිකයා "1" හෝ "2" ලෙස ටයිප් කළහොත්, එය අදාළ නිෂ්පාදනය තෝරාගැනීමක් ලෙස සලකන්න (නැවත මෙනුව නොයවන්න).
 3. ඡායාරූප යැවීමේ නීතිය (CRITICAL PHOTO & IMAGE RULES):
-- ඡායාරූප (Photos/Images) යැවිය යුත්තේ:
-  1. පාරිභෝගිකයාට අදාළ නිෂ්පාදනය පළමු වරට හඳුන්වා දීමේදී (FIRST TIME ONLY) පමණි.
-  2. හෝ පාරිභෝගිකයා නැවත පැහැදිලිවම ඡායාරූප, වර්ණ, ඩිසයින් බැලීමට ඉල්ලන විට පමණි (උදාහරණ සිංහලෙන් හෝ Singlish වලින්: "pennanna", "penwanna", "balanna", "ewanna", "danna", "photos", "images", "pics", "4to", "designs", "වර්ණ මොනවාද", "කලිසම් පෙන්නන්න", "show me").
-  * එවිට ඔබ අනිවාර්යයෙන්ම අදාළ නිෂ්පාදනය යටතේ PRODUCT CATALOG හි ඇති සියලුම ඡායාරූප (ALL photos) එකින් එක <IMAGE_URL>url</IMAGE_URL> ලෙස පණිවිඩය අවසානයේ අමුණන්න. කිසිවිටෙකත් 1ක් 2ක් පමණක් නොයවන්න.
+- 🚫 බහුවිධ නිෂ්පාදන විස්තර පෙන්වීමේදී ඡායාරූප නොයැවීම (STRICT PROHIBITION - ZERO IMAGES FOR MULTIPLE PRODUCTS):
+  * පාරිභෝගිකයාට නිෂ්පාදන එකකට වඩා වැඩි ගණනක් (multiple products / 1 සහ 2 වර්ග දෙකම / Menu / "shorts මොනවද තියෙන්නෙ" / "details" / "hi") පෙන්වන විට කිසිසේත්ම ඡායාරූප නොයවන්න (ZERO <IMAGE_URL> tags)!
+  * නිෂ්පාදන දෙකෙහිම විස්තර පෙළ (text) මගින් පමණක් කෙටියෙන් දක්වා, පාරිභෝගිකයාගෙන් කැමති වර්ගය (1 හෝ 2) තෝරාගන්නා ලෙස විමසන්න.
+- ✅ තනි නිෂ්පාදනයක විස්තර සඳහා පමණක් ඡායාරූප යැවීම (ONLY SEND IMAGES FOR ONE PRODUCT):
+  * ඡායාරූප යැවිය යුත්තේ පාරිභෝගිකයා තනි නිෂ්පාදනයක් (ONE PRODUCT ONLY) තෝරාගත් විට (උදා: "1", "2", "Kyela", "Rib shorts") හෝ තනි නිෂ්පාදනයක විස්තර විමසූ විට පමණි.
+  * එවිට අදාළ තනි නිෂ්පාදනයේ සියලුම ඡායාරූප (ALL photos) එකින් එක <IMAGE_URL>url</IMAGE_URL> ලෙස පණිවිඩය අවසානයේ අමුණන්න.
 - 🚫 කිසිවිටෙකත් නැවත ඡායාරූප නොයැවිය යුතු අවස්ථා (STRICT PROHIBITION - NEVER RESEND IMAGES):
-  1. පාරිභෝගිකයා ප්‍රමාණය පවසන විට (Specifying quantity - උදා: "matta short 3 ai one", "මට 3ක් ඕනෙ", "5ක් ඕනෙ", "10ක්", "short 3ක්"). ප්‍රමාණය පැවසීම ඡායාරූප ඉල්ලීමක් නොවේ! කිසිසේත්ම <IMAGE_URL> ටැග් නැවත නොයවන්න!
-  2. පාරිභෝගිකයා වර්ණ තෝරන විට (Selecting colors - උදා: "2 ke 2, 4 ke 1", "කළු 2යි නිල් 1යි").
-  3. පාරිභෝගිකයා මිල, ඩිලිවරි, බැංකු විස්තර, නම, ලිපිනය හෝ දුරකථන අංකය ලබාදෙන විට.
-  4. එක් වරක් නිෂ්පාදනයේ ඡායාරූප යවා ඇත්නම්, පාරිභෝගිකයා නැවත පැහැදිලිවම ඡායාරූප ඉල්ලා නොමැති නම් (no explicit photo request) කිසිසේත්ම <IMAGE_URL> ටැග් නැවත නොයවන්න!
+  1. නිෂ්පාදන කිහිපයක විස්තර / මෙනුව පෙන්වන විට (Showing multiple products / options menu).
+  2. පාරිභෝගිකයා ප්‍රමාණය පවසන විට (Specifying quantity - උදා: "short 5 one", "matta short 3 ai one", "මට 3ක් ඕනෙ", "5ක් ඕනෙ", "10ක්", "short 3ක්"). ප්‍රමාණය පැවසීම ඡායාරූප ඉල්ලීමක් නොවේ! කිසිසේත්ම <IMAGE_URL> ටැග් නැවත නොයවන්න!
+  3. පාරිභෝගිකයා වර්ණ තෝරන විට (Selecting colors - උදා: "2 ke 2, 4 ke 1", "කළු 2යි නිල් 1යි").
+  4. පාරිභෝගිකයා මිල, ඩිලිවරි, බැංකු විස්තර, නම, ලිපිනය හෝ දුරකථන අංකය ලබාදෙන විට.
+  5. එක් වරක් නිෂ්පාදනයේ ඡායාරූප යවා ඇත්නම්, පාරිභෝගිකයා නැවත පැහැදිලිවම ඡායාරූප ඉල්ලා නොමැති නම් (no explicit photo request) කිසිසේත්ම <IMAGE_URL> ටැග් නැවත නොයවන්න!
 4. පියවරෙන් පියවර ඇණවුම් ගැනීමේ අනුපිළිවෙල (STRICT STEP-BY-STEP ORDERING WORKFLOW):
 - පියවර 1 (පැකේජය / ප්‍රමාණය තෝරාගත් විට):
   * පාරිභෝගිකයා කැමති පැකේජය හෝ ප්‍රමාණය පැවසූ විට (උදා: "short 5 one", "මට 3ක් ඕනෙ", "10ක් එවන්න"):
@@ -443,20 +446,25 @@ PRODUCT IMAGES & PHOTOS:
    Example:
    <IMAGE_URL>http://localhost:9000/.../img1.jpeg</IMAGE_URL>
    <IMAGE_URL>http://localhost:9000/.../img2.jpeg</IMAGE_URL>
-2. WHEN TO SEND IMAGES:
-   - ONLY when introducing or presenting a product to the customer for the FIRST TIME in the chat.
-   - OR whenever the customer explicitly asks to see the product photos, colors, designs, or samples in ANY language or phrasing (Sinhala, English, or Singlish — e.g. "pennanna", "penwanna", "balanna", "ewanna", "danna", "photos", "images", "pics", "4to", "designs", "show me photos", "can i see photos").
-3. CRITICAL QUANTITY RULE - SEND ALL PRODUCT PHOTOS:
-   - When sending photos for a product (first time or on explicit request), you MUST include ALL available image URLs listed under its Product Photos in the PRODUCT CATALOG below. Output an <IMAGE_URL>url</IMAGE_URL> tag for EVERY SINGLE photo of that product so the customer can see all available colors and patterns to place their order!
+2. CRITICAL RULE - MULTIPLE PRODUCTS vs SINGLE PRODUCT:
+   - 🚫 NEVER SEND IMAGES WHEN SHOWING MULTIPLE PRODUCT DETAILS:
+     When presenting multiple products, introducing the catalog, or listing options (e.g. listing Option 1: Kyela and Option 2: Rib Jacquard, answering "hi", "details please", "what shorts do you have", "shorts monawada thiyenne"), you MUST NOT output ANY <IMAGE_URL> tags! Strictly ZERO images!
+     Only present the product names, descriptions, and prices in clear text, and ask the customer which ONE option they prefer (1 or 2).
+   - ✅ ONLY SEND IMAGES WHEN SENDING DETAILS FOR ONE PRODUCT:
+     Send images ONLY when you are sending details for ONE specific product (e.g. customer selected Option 1 / Kyela, or customer selected Option 2 / Rib Jacquard, or asked specifically about one product like "rip shorts").
+     When sending details for that ONE product for the first time, you MUST include ALL available photos for that single product so the customer can see all available colors and patterns to place their order!
+3. CRITICAL QUANTITY RULE - SEND ALL PRODUCT PHOTOS FOR THAT SINGLE PRODUCT:
+   - When sending photos for ONE specific product, you MUST include ALL available image URLs listed under its Product Photos in the PRODUCT CATALOG below. Output an <IMAGE_URL>url</IMAGE_URL> tag for EVERY SINGLE photo of that product. Never send just 1 or 2.
 4. STRICT PROHIBITION - WHEN NEVER TO SEND IMAGES (NO <IMAGE_URL> TAGS):
-   - NEVER send images when customer states a QUANTITY (e.g. "matta short 3 ai one", "3 shorts", "5k ona", "10 items"). Stating quantity is part of checkout, NOT a request to see photos!
+   - NEVER send images when showing multiple products or the options menu!
+   - NEVER send images when customer states a QUANTITY (e.g. "short 5 one", "matta short 3 ai one", "3 shorts", "5k ona", "10 items"). Stating quantity is part of checkout, NOT a request to see photos!
    - NEVER send images when customer is choosing colors (e.g. "2 ke 2, 4 ke 1").
    - NEVER send images when discussing pricing, delivery fees, bank details, or asking/answering routine questions.
    - NEVER send images when collecting customer name, address, or phone number.
    - Once product photos have been sent, DO NOT resend images in routine conversation UNLESS customer explicitly asks to see photos again (e.g. "photos ewanna", "pennanna").
 5. Product Image History & Status:
-   * Kyela Brand: ${kyelaImagesAlreadySent ? "ALREADY SENT to customer. DO NOT send Kyela images again unless customer explicitly asks to see photos (e.g. 'photos pennanna')." : "NOT sent yet. When introducing Kyela for the first time, include ALL Kyela image tags."}
-   * Rib Jacquard: ${ribImagesAlreadySent ? "ALREADY SENT to customer. DO NOT send Rib Jacquard images again unless customer explicitly asks to see photos (e.g. 'photos pennanna')." : "NOT sent yet. When introducing Rib Jacquard for the first time, include ALL Rib Jacquard image tags."}
+   * Kyela Brand: ${kyelaImagesAlreadySent ? "ALREADY SENT to customer. DO NOT send Kyela images again unless customer explicitly asks to see photos (e.g. 'photos pennanna')." : "NOT sent yet. Include ALL Kyela image tags ONLY when customer selects or asks for Kyela specifically (ONE product). NEVER when listing multiple products."}
+   * Rib Jacquard: ${ribImagesAlreadySent ? "ALREADY SENT to customer. DO NOT send Rib Jacquard images again unless customer explicitly asks to see photos (e.g. 'photos pennanna')." : "NOT sent yet. Include ALL Rib Jacquard image tags ONLY when customer selects or asks for Rib Jacquard specifically (ONE product). NEVER when listing multiple products."}
 - Only use image URLs from the product catalog below. Never make up image URLs.
 
 PRODUCT VIDEOS:
@@ -785,16 +793,37 @@ CRITICAL SECURITY RULE:
       }
     }
 
-    // Safety guard against redundant second-time image sending:
+    const kyelaNormPaths = new Set(kyelaImages.map(u => normalizeImgPath(u)));
+    const ribNormPaths = new Set(ribImages.map(u => normalizeImgPath(u)));
+
+    const containsKyelaImages = imageUrls.some(u => kyelaNormPaths.has(normalizeImgPath(u)));
+    const containsRibImages = imageUrls.some(u => ribNormPaths.has(normalizeImgPath(u)));
+
+    // Safety guard 1: NEVER send images when showing multiple product details. Only send images for ONE product.
+    if (containsKyelaImages && containsRibImages) {
+      console.log(`[Image Filter] Suppressing images: response contained images for multiple products (${imageUrls.length} images dropped). Images only allowed for ONE product.`);
+      imageUrls = [];
+    }
+
+    // Safety guard 2: If the bot response presents multiple products (catalog menu), suppress all images.
+    const respLower = responseText.toLowerCase();
+    const isPresentingMultipleProducts =
+      (respLower.includes("kyela") || respLower.includes("jersey")) &&
+      (respLower.includes("rib") || respLower.includes("rip") || respLower.includes("jacquard")) &&
+      (respLower.includes("1.") || respLower.includes("2.") || respLower.includes("වර්ග 2") || respLower.includes("වර්ග දෙක") || respLower.includes("කැමති වර්ගය") || respLower.includes("1 හෝ 2") || respLower.includes("1 da 2"));
+
+    if (isPresentingMultipleProducts && imageUrls.length > 0) {
+      console.log(`[Image Filter] Suppressing images: bot response presents multiple product details (menu). Suppressing all ${imageUrls.length} images.`);
+      imageUrls = [];
+    }
+
+    // Safety guard 3 against redundant second-time image sending:
     // If photos for a product were ALREADY sent to this customer, and the customer did not
     // explicitly ask to view photos again, do not re-send that product's images.
     const userMsgLower = String(message || "").toLowerCase();
     const isExplicitRePhotoRequest = /(?:photo|foto|4to|pic|image|pennanna|penwanna|balanna|ewanna|danna|designs?|පෙන්වන්න|පෙන්නන්න|බලන්න|එවන්න|දාන්න|පින්තූර|පාට\s*මොනවාද|show\s*me|can\s*i\s*see)/i.test(userMsgLower);
 
     if (!isExplicitRePhotoRequest && imageUrls.length > 0) {
-      const kyelaNormPaths = new Set(kyelaImages.map(u => normalizeImgPath(u)));
-      const ribNormPaths = new Set(ribImages.map(u => normalizeImgPath(u)));
-
       imageUrls = imageUrls.filter(url => {
         const norm = normalizeImgPath(url);
         if (ribImagesAlreadySent && ribNormPaths.has(norm)) {
