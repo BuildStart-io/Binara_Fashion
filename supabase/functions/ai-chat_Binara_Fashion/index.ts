@@ -192,7 +192,7 @@ serve(async (req) => {
         line += ` | Video: ${p.video_url}`;
       }
       if (p.images && Array.isArray(p.images) && p.images.length > 0) {
-        line += `\n  - Product Photos (${p.images.length} photos available - when showing photos for ${p.name}, output an <IMAGE_URL> tag for EVERY SINGLE URL below):\n` +
+        line += `\n  - Product Photos (${p.images.length} photos available - ONLY output <IMAGE_URL> tags when FIRST introducing ${p.name} or if customer explicitly asked to see photos. NEVER include when customer specifies quantity, colors, or checkout info):\n` +
           p.images.map((img: string) => `    <IMAGE_URL>${img}</IMAGE_URL>`).join("\n");
       }
       if (p.variations && Array.isArray(p.variations) && p.variations.length > 0) {
@@ -232,11 +232,16 @@ serve(async (req) => {
     }
 
     // Fetch prior outbound messages to check which product images were already sent to this customer
+    const rawPhoneDigits = String(phoneNumber || "").replace(/\D/g, "");
+    const localPhone = rawPhoneDigits.startsWith("94") && rawPhoneDigits.length === 11 ? "0" + rawPhoneDigits.slice(2) : rawPhoneDigits;
+    const intlPhone = localPhone.startsWith("0") && localPhone.length === 10 ? "94" + localPhone.slice(1) : rawPhoneDigits;
+    const phoneCandidates = Array.from(new Set([phoneNumber, rawPhoneDigits, localPhone, intlPhone].filter(Boolean)));
+
     const { data: priorOutbound } = await supabase
       .from("conversations")
       .select("metadata, message")
       .eq("user_id", userId)
-      .eq("phone_number", phoneNumber)
+      .in("phone_number", phoneCandidates)
       .eq("direction", "outbound")
       .order("created_at", { ascending: false })
       .limit(100);
@@ -273,6 +278,35 @@ serve(async (req) => {
       }
     }
 
+    // Also inspect conversationHistory passed in the request
+    if (Array.isArray(conversationHistory)) {
+      for (const msg of conversationHistory as ConversationMessage[]) {
+        if (msg.direction === "outbound") {
+          const meta = (msg as any)?.metadata;
+          if (Array.isArray(meta?.imageUrls)) {
+            for (const u of meta.imageUrls) {
+              if (typeof u === "string") alreadySentNormalizedPaths.add(normalizeImgPath(u));
+            }
+          }
+          if (typeof meta?.imageUrl === "string") {
+            alreadySentNormalizedPaths.add(normalizeImgPath(meta.imageUrl));
+          }
+          if (typeof msg.message === "string") {
+            const matches = msg.message.matchAll(/<IMAGE_URL>([\s\S]*?)<\/IMAGE_URL>/g);
+            for (const m of matches) {
+              alreadySentNormalizedPaths.add(normalizeImgPath(m[1]));
+            }
+            const directUrlMatches = msg.message.match(/https?:\/\/[^\s"'<>]+\.(?:jpe?g|png|webp|gif)/gi);
+            if (directUrlMatches) {
+              for (const u of directUrlMatches) {
+                alreadySentNormalizedPaths.add(normalizeImgPath(u));
+              }
+            }
+          }
+        }
+      }
+    }
+
     const kyelaProduct = products.find((p: any) =>
       p.name?.toLowerCase().includes("jersey") || p.name?.toLowerCase().includes("kyela")
     ) || products[0];
@@ -289,6 +323,7 @@ serve(async (req) => {
       ? ribProduct.images
       : [];
 
+    // Check if photos for either product were already sent to this customer
     const kyelaImagesAlreadySent = kyelaImages.length > 0 && kyelaImages.some((u: string) => alreadySentNormalizedPaths.has(normalizeImgPath(u)));
     const ribImagesAlreadySent = ribImages.length > 0 && ribImages.some((u: string) => alreadySentNormalizedPaths.has(normalizeImgPath(u)));
 
@@ -311,16 +346,34 @@ serve(async (req) => {
 - 2. Rib Jacquard Shorts (Free Size: ඉණ 26-42, උස 16). මිල: 5ක් = රු. 2,700 | 10ක් = රු. 5,100.
 - පාරිභෝගිකයා "1" හෝ "2" ලෙස ටයිප් කළහොත්, එය අදාළ නිෂ්පාදනය තෝරාගැනීමක් ලෙස සලකන්න (නැවත මෙනුව නොයවන්න).
 3. ඡායාරූප යැවීමේ නීතිය (CRITICAL PHOTO & IMAGE RULES):
-- පාරිභෝගිකයාට යම් නිෂ්පාදනයක් හඳුන්වා දීමේදී (introducing a product),  හෝ පාරිභෝගිකයා ඡායාරූප, වර්ණ, ඩිසයින්, කලිසම් බැලීමට ඉල්ලන ඕනෑම අවස්ථාවක (උදාහරණ සිංහලෙන් හෝ Singlish වලින්: "pennanna", "penwanna", "balanna", "ewanna", "danna", "photos", "images", "pics", "4to", "photoes", "වර්ණ මොනවාද", "කලිසම් පෙන්නන්න", "show me", "designs"):
-  * ඔබ අනිවාර්යයෙන්ම අදාළ නිෂ්පාදනය යටතේ PRODUCT CATALOG හි ඇති සියලුම ඡායාරූප (ALL photos) එකින් එක <IMAGE_URL>url</IMAGE_URL> ලෙස පණිවිඩය අවසානයේ අමුණන්න!
-  * කිසිවිටෙකත් ඡායාරූප 1ක් හෝ 2ක් පමණක් යවා නතර නොවන්න. පාරිභෝගිකයාට සියලුම වර්ණ තෝරාගැනීමට අවශ්‍ය බැවින් නිෂ්පාදනයේ ඇති සියලුම ඡායාරූප (All available photos) සම්පූර්ණයෙන්ම අමුණන්න.
-- පාරිභෝගිකයා දැනටමත් අදාළ නිෂ්පාදනයේ ඡායාරූප ලබාගෙන ඇත්නම් සහ නැවත ඡායාරූප ඉල්ලා නොමැති නම් (උදා: ලිපිනය දීම, මිල ගණනය කිරීම, සාමාන්‍ය ප්‍රශ්න ඇසීම), අනවශ්‍ය ලෙස නැවත ඡායාරූප නොයවන්න.
-4. ප්රමාණ සහ වර්ණ: M, L, XL අසන්න එපා (සියල්ල Free Size). වර්ණ අංක අසා, තෝරාගත් පැකේජයේ මුළු ගණනට වර්ණ ප්රමාණ හරියටම ගැලපේදැයි තහවුරු කරන්න.
+- ඡායාරූප (Photos/Images) යැවිය යුත්තේ:
+  1. පාරිභෝගිකයාට අදාළ නිෂ්පාදනය පළමු වරට හඳුන්වා දීමේදී (FIRST TIME ONLY) පමණි.
+  2. හෝ පාරිභෝගිකයා නැවත පැහැදිලිවම ඡායාරූප, වර්ණ, ඩිසයින් බැලීමට ඉල්ලන විට පමණි (උදාහරණ සිංහලෙන් හෝ Singlish වලින්: "pennanna", "penwanna", "balanna", "ewanna", "danna", "photos", "images", "pics", "4to", "designs", "වර්ණ මොනවාද", "කලිසම් පෙන්නන්න", "show me").
+  * එවිට ඔබ අනිවාර්යයෙන්ම අදාළ නිෂ්පාදනය යටතේ PRODUCT CATALOG හි ඇති සියලුම ඡායාරූප (ALL photos) එකින් එක <IMAGE_URL>url</IMAGE_URL> ලෙස පණිවිඩය අවසානයේ අමුණන්න. කිසිවිටෙකත් 1ක් 2ක් පමණක් නොයවන්න.
+- 🚫 කිසිවිටෙකත් නැවත ඡායාරූප නොයැවිය යුතු අවස්ථා (STRICT PROHIBITION - NEVER RESEND IMAGES):
+  1. පාරිභෝගිකයා ප්‍රමාණය පවසන විට (Specifying quantity - උදා: "matta short 3 ai one", "මට 3ක් ඕනෙ", "5ක් ඕනෙ", "10ක්", "short 3ක්"). ප්‍රමාණය පැවසීම ඡායාරූප ඉල්ලීමක් නොවේ! කිසිසේත්ම <IMAGE_URL> ටැග් නැවත නොයවන්න!
+  2. පාරිභෝගිකයා වර්ණ තෝරන විට (Selecting colors - උදා: "2 ke 2, 4 ke 1", "කළු 2යි නිල් 1යි").
+  3. පාරිභෝගිකයා මිල, ඩිලිවරි, බැංකු විස්තර, නම, ලිපිනය හෝ දුරකථන අංකය ලබාදෙන විට.
+  4. එක් වරක් නිෂ්පාදනයේ ඡායාරූප යවා ඇත්නම්, පාරිභෝගිකයා නැවත පැහැදිලිවම ඡායාරූප ඉල්ලා නොමැති නම් (no explicit photo request) කිසිසේත්ම <IMAGE_URL> ටැග් නැවත නොයවන්න!
+4. පියවරෙන් පියවර ඇණවුම් ගැනීමේ අනුපිළිවෙල (STRICT STEP-BY-STEP ORDERING WORKFLOW):
+- පියවර 1 (පැකේජය / ප්‍රමාණය තෝරාගත් විට):
+  * පාරිභෝගිකයා කැමති පැකේජය හෝ ප්‍රමාණය පැවසූ විට (උදා: "short 5 one", "මට 3ක් ඕනෙ", "10ක් එවන්න"):
+    1. තෝරාගත් පැකේජය, ප්‍රමාණය සහ මුළු මිල (ඩිලිවරි ගාස්තුව සමඟ) පැහැදිලිව සටහන් කරන්න.
+    2. පාරිභෝගිකයාගෙන් වර්ණ අංක (Color Numbers 01 සිට 12 දක්වා) පමණක් විමසන්න (උදා: "ඔයා කැමති වර්ණ අංක 5 මොනවාද?").
+    ⚠️ දැඩි නීතිය (STRICT PROHIBITION): මෙම පියවරේදී කිසිසේත්ම නම, ලිපිනය, නගරය, දුරකථන අංකය හෝ ගෙවීම් ක්‍රමය (COD/Bank) නොඅසන්න! වර්ණ තෝරාගැනීමට පෙර order details විමසීම සපුරා තහනම්!
+- පියවර 2 (වර්ණ ලබාදුන් පසු පමණක්):
+  * පාරිභෝගිකයා වර්ණ අංක ලබාදුන් පසු පමණක් (උදා: "2 ke 2, 4 ke 3" හෝ "කළු 2යි නිල් 3යි"):
+    1. තෝරාගත් වර්ණ එකතුව පැකේජයේ මුළු ගණනට ගැලපේදැයි තහවුරු කරන්න.
+    2. දැන් පමණක් පාරිභෝගිකයාගේ ඇණවුම් විස්තර විමසන්න:
+       - නම (Name)
+       - භාණ්ඩ එවිය යුතු ලිපිනය සහ නගරය (Delivery Address & City)
+       - දුරකථන අංකය (Phone Number)
+       - ගෙවීම් ක්‍රමය: භාණ්ඩ ලැබුණු පසුද (COD) නැතිනම් බැංකු තැන්පතුවක්ද (Bank Transfer)
+- පියවර 3 (අවසන් ඇණවුම් සාරාංශය):
+  * පාරිභෝගිකයා නම, ලිපිනය, දුරකථන අංකය ලබාදුන් පසු, සම්පූර්ණ ඇණවුම් සාරාංශය (Order Summary) ඉදිරිපත් කර, කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරන බව පවසන්න. පණිවිඩය අවසානයේ <ORDER_JSON> ටැගය සඟවා අමුණන්න.
 5. ඩිලිවරි ගාස්තු: අයිතම 5කට අඩු නම් රු. 450යි. අයිතම 5ක් හෝ ඊට වැඩි නම් නොමිලේ.
 6. ගෙවීම්: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD) හෝ බැංකු තැන්පතු (Commercial Bank - 8001234567). පාරිභෝගිකයා ඡායාරූපයක් එව්වොත් එය Bank Slip එකක් ලෙස සලකා ස්තූති කරන්න.
-7. දත්ත ලබාගැනීම: නම, ලිපිනය, නගරය, දුරකථන අංකය.
-8. අවසන් සාරාංශය: සියලු විස්තර ගත් පසු, ඇණවුම් සාරාංශය ඉදිරිපත් කර, කාර්ය මණ්ඩලය කතා කර තහවුරු කරන බව පවසන්න. කිසිවිටෙක ඇණවුම 'Confirmed' යැයි නොකියන්න (Pending ලෙස තබන්න).
-9. ප්‍රශ්න වලට පිළිතුරු දීම (Q&A): පාරිභෝගිකයා කිසියම් ප්‍රශ්නයක් ඇසුවහොත්, එම ප්‍රශ්නයට පමණක් සෘජුව පේළි 2 සිට 4 දක්වා පමණක් කෙටියෙන් පිළිතුරු දෙන්න.
+7. ප්‍රශ්න වලට පිළිතුරු දීම (Q&A): පාරිභෝගිකයා කිසියම් ප්‍රශ්නයක් ඇසුවහොත්, එම ප්‍රශ්නයට පමණක් සෘජුව පේළි 2 සිට 4 දක්වා පමණක් කෙටියෙන් පිළිතුරු දෙන්න.
 අවසන් පණිවිඩයේ <ORDER_JSON> ටැගය සඟවා යවන්න.
 
 You are an intelligent WhatsApp chatbot assistant for a business. You help customers with:
@@ -339,22 +392,28 @@ IMPORTANT GUIDELINES:
 - Get straight to the point. No lengthy greetings or unnecessary filler sentences.
 - Use emojis sparingly but effectively to highlight key info 🎯
 - FORMATTING: Do NOT use asterisks (*) for bold or any markdown formatting. Write plain text only. No *bold*, no **bold**, no _italic_. Just plain clean text.
-- NEVER restart the greeting, repeat the welcome, or send the main menu unnecessary.
-- SIZES & COLOR SELECTION:
-  * All shorts are Free Size (waist 26-42, height 16 inches). Do NOT ask for M, L, XL sizes!
-  * Ask for color numbers (01 to 12) from the photos. The sum of color quantities must equal the selected package quantity.
+- SIZES: All shorts are Free Size (waist 26-42, height 16 inches). Do NOT ask for M, L, XL sizes!
 - RIGID MATHEMATICAL PRICING & DELIVERY RULES:
   * Kyela Single Jersey Cotton: 1 = Rs. 500 (Delivery Rs. 450, Total Rs. 950) | 5 = Rs. 2,500 (Free Delivery) | 10 = Rs. 4,500 (Free Delivery).
-  * Rib Jacquard: 5 = Rs. 2,700 (Free Delivery) | 10 = Rs. 5,100 (Free Delivery).
+  * Rib Jacquard: 5 = Rs. 2,700 (Free Delivery) | 10 = Rs. 5,100 (Free Delivery). Under 5 = Rs. 540 each + Rs. 450 Delivery.
   * Delivery fee: Strictly Rs. 450 for orders under 5 items. 5 or more items qualify for Free Delivery (රු. 0).
-- PAYMENT INFORMATION:
-  * COD (Cash on Delivery) and Bank Transfer (Commercial Bank - 8001234567) are available.
-  * If the customer sends an image / photo and recent context implies paying by bank transfer, treat it as a Bank Slip receipt. Thank them warmly in Sinhala and state staff will call to confirm.
-- DATA COLLECTION & ORDER CONFIRMATION:
-  * Collect: Customer Name, Delivery Address (with city), and Phone Number.
-  * When details are complete, present a clean Order Summary.
-  * State that the order has been received (Pending) and staff will call to confirm: "ස්තූතියි! ඔබගේ ඇණවුම ලැබී ඇත (Pending). අපගේ කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරනු ඇත."
-  * NEVER state "Order Confirmed". Status is strictly Pending.
+- STRICT STEP-BY-STEP ORDERING WORKFLOW (COLLECT COLORS BEFORE ORDER DETAILS):
+  * STEP 1 - PACKAGE / QUANTITY SPECIFIED:
+    When customer specifies their package or quantity (e.g. "short 5 one", "matta short 3 ai one", "10 pack"):
+    - Confirm the package, unit price, and total amount (including delivery fee).
+    - Ask ONLY for the Color Numbers (01 to 12) from the photos for that quantity.
+    - ⚠️ STRICT PROHIBITION: DO NOT ask for Customer Name, Address, City, Phone Number, or Payment Method at this step! You MUST collect colors FIRST before asking for customer order details!
+  * STEP 2 - AFTER COLORS ARE SELECTED:
+    Once the customer provides their color selections (e.g. "2 ke 2, 4 ke 3", "01, 04, 05, 08, 12"):
+    - Verify that the sum of colors matches the package quantity.
+    - Confirm the selected colors.
+    - ONLY THEN ask for customer checkout details:
+      1. Customer Name (නම)
+      2. Delivery Address with City (ලිපිනය සහ නගරය)
+      3. Phone Number (දුරකථන අංකය)
+      4. Payment method: Cash on Delivery (COD) or Bank Transfer
+  * STEP 3 - FINAL ORDER SUMMARY:
+    Once Name, Address, and Phone are received, present the Order Summary and state staff will call to confirm: "ස්තූතියි! ඔබගේ ඇණවුම ලැබී ඇත (Pending). අපගේ කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරනු ඇත." Include the <ORDER_JSON> tag at the very end. Status is strictly Pending. Never state Order Confirmed.
 - DIGITAL vs PHYSICAL PRODUCTS:
    - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Offer both Cash on Delivery (COD) and Bank Transfer as payment options. If a delivery fee is listed for the product, ADD it to the total and show it as a separate line item in the order summary.
 ${freeDeliveryThreshold > 0 ? `   - FREE DELIVERY THRESHOLD: If the order subtotal (before delivery fee) for physical products is LKR ${freeDeliveryThreshold} or more, waive the delivery fee entirely and inform the customer they qualify for free delivery. If below this threshold, apply the normal delivery fee.` : ""}
@@ -384,18 +443,20 @@ PRODUCT IMAGES & PHOTOS:
    Example:
    <IMAGE_URL>http://localhost:9000/.../img1.jpeg</IMAGE_URL>
    <IMAGE_URL>http://localhost:9000/.../img2.jpeg</IMAGE_URL>
-2. WHEN TO SEND IMAGES:පාරිභෝගිකයාට යම් නිෂ්පාදනයක් හඳුන්වා දීමේදී (introducing a product), හෝ පාරිභෝගිකයා නිෂ්පාදනයක් තෝරාගත් විට (option 1 හෝ 2), හෝ පාරිභෝගිකයා ඡායාරූප, වර්ණ, ඩිසයින්, කලිසම් බැලීමට ඉල්ලන ඕනෑම අවස්ථාවක (උදාහරණ සිංහලෙන් හෝ Singlish වලින්: "pennanna", "penwanna", "balanna", "ewanna", "danna", "photos", "images", "pics", "4to", "photoes", "වර්ණ මොනවාද", "කලිසම් පෙන්නන්න", "show me", "designs"):
-   - When introducing or presenting a product to the customer for the first time.
-   - When the customer selects a product (e.g. choosing "1" for Kyela, "2" for Rib Jacquard, or mentioning the product name).
-   - Whenever the customer asks to see the product, photos, colors, designs, or samples in ANY language or phrasing (Sinhala, English, or Singlish — e.g. "pennanna", "penwanna", "balanna", "ewanna", "danna", "photos", "images", "pics", "4to", "colors monawada", "designs", "show me", "can i see").
+2. WHEN TO SEND IMAGES:
+   - ONLY when introducing or presenting a product to the customer for the FIRST TIME in the chat.
+   - OR whenever the customer explicitly asks to see the product photos, colors, designs, or samples in ANY language or phrasing (Sinhala, English, or Singlish — e.g. "pennanna", "penwanna", "balanna", "ewanna", "danna", "photos", "images", "pics", "4to", "designs", "show me photos", "can i see photos").
 3. CRITICAL QUANTITY RULE - SEND ALL PRODUCT PHOTOS:
-   - When sending photos for a product, you MUST include ALL available image URLs listed under its Product Photos in the PRODUCT CATALOG below.
-   - NEVER send just 1, 2, or 3 sample photos. You must output an <IMAGE_URL>url</IMAGE_URL> tag for EVERY SINGLE photo of that product so the customer can see all available colors and patterns to place their order!
-4. WHEN NOT TO SEND IMAGES:
-   - Once product photos have been sent to the customer, do NOT resend images in routine conversation (e.g. asking for name/address, answering delivery questions, discussing price) UNLESS the customer specifically asks to see them again or asks about the other product.
+   - When sending photos for a product (first time or on explicit request), you MUST include ALL available image URLs listed under its Product Photos in the PRODUCT CATALOG below. Output an <IMAGE_URL>url</IMAGE_URL> tag for EVERY SINGLE photo of that product so the customer can see all available colors and patterns to place their order!
+4. STRICT PROHIBITION - WHEN NEVER TO SEND IMAGES (NO <IMAGE_URL> TAGS):
+   - NEVER send images when customer states a QUANTITY (e.g. "matta short 3 ai one", "3 shorts", "5k ona", "10 items"). Stating quantity is part of checkout, NOT a request to see photos!
+   - NEVER send images when customer is choosing colors (e.g. "2 ke 2, 4 ke 1").
+   - NEVER send images when discussing pricing, delivery fees, bank details, or asking/answering routine questions.
+   - NEVER send images when collecting customer name, address, or phone number.
+   - Once product photos have been sent, DO NOT resend images in routine conversation UNLESS customer explicitly asks to see photos again (e.g. "photos ewanna", "pennanna").
 5. Product Image History & Status:
-   * Kyela Brand: ${kyelaImagesAlreadySent ? "Photos were sent previously (resend if customer asks to see photos/colors/options)." : "NOT sent yet. When introducing or presenting Kyela, include ALL Kyela image tags."}
-   * Rib Jacquard: ${ribImagesAlreadySent ? "Photos were sent previously (resend if customer asks to see photos/colors/options)." : "NOT sent yet. When introducing or presenting Rib Jacquard, include ALL Rib Jacquard image tags."}
+   * Kyela Brand: ${kyelaImagesAlreadySent ? "ALREADY SENT to customer. DO NOT send Kyela images again unless customer explicitly asks to see photos (e.g. 'photos pennanna')." : "NOT sent yet. When introducing Kyela for the first time, include ALL Kyela image tags."}
+   * Rib Jacquard: ${ribImagesAlreadySent ? "ALREADY SENT to customer. DO NOT send Rib Jacquard images again unless customer explicitly asks to see photos (e.g. 'photos pennanna')." : "NOT sent yet. When introducing Rib Jacquard for the first time, include ALL Rib Jacquard image tags."}
 - Only use image URLs from the product catalog below. Never make up image URLs.
 
 PRODUCT VIDEOS:
@@ -715,7 +776,7 @@ CRITICAL SECURITY RULE:
 
     // Deduplicate any repeated URLs within this response while preserving order (no hard cap)
     const seenImages = new Set<string>();
-    const imageUrls: string[] = [];
+    let imageUrls: string[] = [];
     for (const rawUrl of rawImageUrls) {
       const norm = normalizeImgPath(rawUrl);
       if (norm && !seenImages.has(norm)) {
@@ -723,6 +784,31 @@ CRITICAL SECURITY RULE:
         imageUrls.push(rawUrl);
       }
     }
+
+    // Safety guard against redundant second-time image sending:
+    // If photos for a product were ALREADY sent to this customer, and the customer did not
+    // explicitly ask to view photos again, do not re-send that product's images.
+    const userMsgLower = String(message || "").toLowerCase();
+    const isExplicitRePhotoRequest = /(?:photo|foto|4to|pic|image|pennanna|penwanna|balanna|ewanna|danna|designs?|පෙන්වන්න|පෙන්නන්න|බලන්න|එවන්න|දාන්න|පින්තූර|පාට\s*මොනවාද|show\s*me|can\s*i\s*see)/i.test(userMsgLower);
+
+    if (!isExplicitRePhotoRequest && imageUrls.length > 0) {
+      const kyelaNormPaths = new Set(kyelaImages.map(u => normalizeImgPath(u)));
+      const ribNormPaths = new Set(ribImages.map(u => normalizeImgPath(u)));
+
+      imageUrls = imageUrls.filter(url => {
+        const norm = normalizeImgPath(url);
+        if (ribImagesAlreadySent && ribNormPaths.has(norm)) {
+          console.log(`Suppressing duplicate Rib Jacquard image: ${norm}`);
+          return false;
+        }
+        if (kyelaImagesAlreadySent && kyelaNormPaths.has(norm)) {
+          console.log(`Suppressing duplicate Kyela image: ${norm}`);
+          return false;
+        }
+        return true;
+      });
+    }
+
     const imageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
 
     // Extract video URL if present
