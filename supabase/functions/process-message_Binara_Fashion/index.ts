@@ -278,7 +278,8 @@ async function processBatch(
     if (isVoice) {
       console.log(`[${corrId}] Detected voice message in batch, transcribing...`);
       const mediaUrl = body?.payload?.media?.url || body?.media?.url;
-      const transcription = await transcribeAudio(sessionApiKey, msg.wsender_message_id, mediaUrl);
+      const mediaMime = body?.payload?.media?.mimetype || body?.media?.mimetype || "audio/ogg";
+      const transcription = await transcribeAudio(sessionApiKey, msg.wsender_message_id, mediaUrl, mediaMime);
 
       if (transcription) {
         text = transcription;
