@@ -116,10 +116,15 @@ serve(async (req) => {
     }
 
 
-    // Text body — WAHA usually puts it on payload.body
+    // Text body — WAHA puts text on payload.body or caption for media messages
     const messageText = wp.body
+      || wp.caption
+      || wp._data?.caption
       || wp._data?.message?.conversation
       || wp._data?.message?.extendedTextMessage?.text
+      || wp._data?.message?.imageMessage?.caption
+      || wp._data?.message?.videoMessage?.caption
+      || wp._data?.message?.documentMessage?.caption
       || "";
 
     // Message type — derive from WAHA `type` or `_data.message.*` keys

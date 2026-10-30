@@ -455,9 +455,10 @@ services:
 
       SUPABASE_URL: http://api-gw:8000
       SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
-      # Legacy API keys (HS256-signed JWTs)
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       # New opaque API keys
       SUPABASE_PUBLISHABLE_KEYS: "{\"default\":\"${SUPABASE_PUBLISHABLE_KEY:-}\"}"
       SUPABASE_SECRET_KEYS: "{\"default\":\"${SUPABASE_SECRET_KEY:-}\"}"

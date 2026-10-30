@@ -40,40 +40,27 @@ serve(async (req) => {
     console.log(`[process-message] Recovered ${staleRecovered.length} stale messages`);
   }
 
-  // Step 2: Process messages in a loop
+  // Step 2: Process messages in debounced batches per phone number
   let processedCount = 0;
   const maxIterations = 10; // Safety cap per invocation
 
   for (let i = 0; i < maxIterations; i++) {
-    // Claim one pending message, enforcing per-user ordering:
-    // Only pick from users who don't have another message currently processing.
-    // We use a two-step approach since Supabase JS doesn't support FOR UPDATE SKIP LOCKED.
-    
-    // Find users currently processing
-    const { data: busyUsers } = await supabase
+    // Find phone numbers currently processing
+    const { data: busyPhones } = await supabase
       .from("message_queue")
-      .select("user_id")
+      .select("phone_number")
       .eq("status", "processing");
 
-    const busyUserIds = (busyUsers || []).map((u: any) => u.user_id);
+    const busyPhoneNumbers = new Set((busyPhones || []).map((u: any) => u.phone_number));
 
-    // Find next pending message from a non-busy user
-    let query = supabase
+    // Find next pending message from a non-busy phone number
+    const { data: candidates, error: fetchError } = await supabase
       .from("message_queue")
       .select("*")
       .in("status", ["pending", "failed"])
       .lt("attempts", 3)
       .order("created_at", { ascending: true })
-      .limit(1);
-
-    if (busyUserIds.length > 0) {
-      // Exclude users with messages currently processing
-      for (const uid of busyUserIds) {
-        query = query.neq("user_id", uid);
-      }
-    }
-
-    const { data: candidates, error: fetchError } = await query;
+      .limit(30);
 
     if (fetchError) {
       console.error("[process-message] Queue fetch error:", fetchError);
@@ -84,46 +71,107 @@ serve(async (req) => {
       break; // No more work
     }
 
-    const msg = candidates[0];
-    const corrId = msg.correlation_id || triggerCorrelationId || msg.id.substring(0, 8);
+    const candidate = candidates.find((c: any) => !busyPhoneNumbers.has(c.phone_number));
+    if (!candidate) {
+      break; // All pending messages belong to currently processing phones
+    }
+
+    const targetPhone = candidate.phone_number;
+
+    // Debounce / Inactivity window (3-5 seconds):
+    // Wait until at least 3.5 seconds of inactivity has passed since the latest message from this customer
+    const { data: latestPending } = await supabase
+      .from("message_queue")
+      .select("created_at")
+      .eq("phone_number", targetPhone)
+      .in("status", ["pending", "failed"])
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (latestPending) {
+      const elapsed = Date.now() - new Date(latestPending.created_at).getTime();
+      const DEBOUNCE_MS = 3500;
+      if (elapsed < DEBOUNCE_MS) {
+        const waitMs = Math.max(500, DEBOUNCE_MS - elapsed);
+        console.log(`[Debounce] Waiting ${waitMs}ms for ${targetPhone} messages to settle...`);
+        await new Promise(r => setTimeout(r, waitMs));
+
+        // Re-check after waiting in case another forwarded message arrived
+        const { data: latestAgain } = await supabase
+          .from("message_queue")
+          .select("created_at")
+          .eq("phone_number", targetPhone)
+          .in("status", ["pending", "failed"])
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (latestAgain) {
+          const newElapsed = Date.now() - new Date(latestAgain.created_at).getTime();
+          if (newElapsed < DEBOUNCE_MS) {
+            await new Promise(r => setTimeout(r, Math.max(500, DEBOUNCE_MS - newElapsed)));
+          }
+        }
+      }
+    }
+
+    // Fetch ALL pending messages for this customer to aggregate them
+    const { data: batchMessages, error: batchError } = await supabase
+      .from("message_queue")
+      .select("*")
+      .eq("phone_number", targetPhone)
+      .in("status", ["pending", "failed"])
+      .order("created_at", { ascending: true });
+
+    if (batchError || !batchMessages || batchMessages.length === 0) {
+      continue;
+    }
+
+    const batchIds = batchMessages.map((m: any) => m.id);
+    const corrId = batchMessages[0].correlation_id || triggerCorrelationId || batchMessages[0].id.substring(0, 8);
     const timings: Record<string, number> = {};
     const mark = (label: string) => { timings[label] = Date.now(); };
 
-    // Claim this message atomically
+    // Claim the entire batch atomically
     mark("claim_start");
-    const { data: claimed, error: claimError } = await supabase
+    const { data: claimedBatch, error: claimError } = await supabase
       .from("message_queue")
-      .update({ status: "processing", attempts: msg.attempts + 1, updated_at: new Date().toISOString() })
-      .eq("id", msg.id)
+      .update({
+        status: "processing",
+        attempts: batchMessages[0].attempts + 1,
+        updated_at: new Date().toISOString()
+      })
+      .in("id", batchIds)
       .in("status", ["pending", "failed"])
-      .select()
-      .single();
+      .select();
     mark("claim_end");
 
-    if (claimError || !claimed) {
-      console.log(`[${corrId}] Message ${msg.id} already claimed, skipping`);
+    if (claimError || !claimedBatch || claimedBatch.length === 0) {
+      console.log(`[${corrId}] Batch for ${targetPhone} already claimed by another worker, skipping`);
       continue;
     }
 
     try {
-      await processMessage(supabase, supabaseUrl, supabaseServiceKey, msg, corrId, timings, mark);
+      await processBatch(supabase, supabaseUrl, supabaseServiceKey, claimedBatch, corrId, timings, mark);
 
-      // Mark as done
+      // Mark entire batch as done
       mark("done_start");
       await supabase
         .from("message_queue")
-        .update({ status: "done", processed_at: new Date().toISOString(), updated_at: new Date().toISOString() })
-        .eq("id", msg.id);
+        .update({
+          status: "done",
+          processed_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .in("id", batchIds);
       mark("done_end");
 
-      processedCount++;
-
-      // Log timing breakdown
-      const queueWaitMs = timings.claim_start - new Date(msg.created_at).getTime();
-      console.log(`[${corrId}] ✅ Message ${msg.id} processed | queue_wait=${queueWaitMs}ms claim=${timings.claim_end - timings.claim_start}ms ai=${(timings.ai_end || 0) - (timings.ai_start || 0)}ms send=${(timings.send_end || 0) - (timings.send_start || 0)}ms total=${Date.now() - new Date(msg.created_at).getTime()}ms`);
-    } catch (error) {
-      const newStatus = msg.attempts + 1 >= msg.max_attempts ? "dead" : "failed";
-      console.error(`[${corrId}] ❌ Message ${msg.id} failed (attempt ${msg.attempts + 1}/${msg.max_attempts} → ${newStatus}):`, error.message);
+      processedCount += claimedBatch.length;
+      console.log(`[${corrId}] ✅ Batch of ${claimedBatch.length} messages processed for ${targetPhone}`);
+    } catch (error: any) {
+      const newStatus = batchMessages[0].attempts + 1 >= batchMessages[0].max_attempts ? "dead" : "failed";
+      console.error(`[${corrId}] ❌ Batch processing failed for ${targetPhone} (attempt ${batchMessages[0].attempts + 1}/${batchMessages[0].max_attempts} → ${newStatus}):`, error.message);
       await supabase
         .from("message_queue")
         .update({
@@ -131,7 +179,7 @@ serve(async (req) => {
           error_message: error.message || String(error),
           updated_at: new Date().toISOString(),
         })
-        .eq("id", msg.id);
+        .in("id", batchIds);
     }
   }
 
@@ -142,95 +190,166 @@ serve(async (req) => {
   });
 });
 
-async function processMessage(
+async function isLikelyBankSlip(
+  supabase: any,
+  userId: string,
+  phoneNumber: string,
+  conversationHistory: any[]
+): Promise<boolean> {
+  try {
+    const rawDigits = phoneNumber.replace(/\D/g, "");
+    const localPhone = rawDigits.startsWith("94") && rawDigits.length === 11
+      ? "0" + rawDigits.slice(2)
+      : rawDigits;
+    const intlPhone = localPhone.startsWith("0") && localPhone.length === 10
+      ? "94" + localPhone.slice(1)
+      : rawDigits;
+
+    // 1. Check if customer has a recent order within 48 hours
+    const { data: recentOrder } = await supabase
+      .from("orders")
+      .select("status, payment_method, created_at")
+      .eq("user_id", userId)
+      .or(`whatsapp_phone.eq.${phoneNumber},customer_phone.eq.${phoneNumber},customer_phone.eq.${localPhone},customer_phone.eq.${intlPhone}`)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (recentOrder) {
+      const orderAgeHours = (Date.now() - new Date(recentOrder.created_at).getTime()) / (1000 * 60 * 60);
+      const isPendingStatus = ["pending", "waiting_for_slip_verification", "pending_verification"].includes(recentOrder.status);
+      const isBankPayment = recentOrder.payment_method === "bank_transfer" || recentOrder.payment_method === "yet to decide";
+      if (orderAgeHours < 48 && (isPendingStatus || isBankPayment)) {
+        return true;
+      }
+    }
+
+    // 2. Check conversation history (last 10 messages) for bank transfer keywords
+    const recentMsgs = (conversationHistory || [])
+      .slice(-10)
+      .map((m: any) => String(m.message || "").toLowerCase())
+      .join(" ");
+
+    const bankSlipKeywords = [
+      "commercial bank", "8001234567", "bank transfer", "slip", "receipt", "deposit",
+      "account", "බැංකු", "තැන්පතු", "ස්ලිප්", "ට්‍රාන්ස්ෆර්", "සල්ලි දැම්මා", "ගෙව්වා", "ඇකවුන්ට්"
+    ];
+
+    if (bankSlipKeywords.some(kw => recentMsgs.includes(kw))) {
+      return true;
+    }
+  } catch (err) {
+    console.warn("isLikelyBankSlip check error:", err);
+  }
+  return false;
+}
+
+async function processBatch(
   supabase: any,
   supabaseUrl: string,
   supabaseServiceKey: string,
-  msg: any,
+  batch: any[],
   corrId: string,
   timings: Record<string, number>,
   mark: (label: string) => void
 ) {
-  let { user_id: userId, phone_number: phoneNumber, sender_name: senderName, message_text: messageText, message_type: messageType, session_api_key: sessionApiKey, raw_payload: body, wsender_message_id: wahaMessageId } = msg;
+  const firstMsg = batch[0];
+  const userId = firstMsg.user_id;
+  const phoneNumber = firstMsg.phone_number;
+  const senderName = firstMsg.sender_name || "Unknown";
+  const sessionApiKey = firstMsg.session_api_key;
 
-  let isVoice = false;
-  if (messageType === "ptt" || messageType === "audio") {
-    isVoice = true;
-  }
-
-  // Check if this is a media message — if so, store it but do NOT reply
-  const mediaTypes = ["image", "video", "document", "sticker", "vcard", "location"];
-  let isMediaMessage = mediaTypes.includes(messageType) || 
-    (!messageText && messageType !== "text" && !isVoice) ||
-    (body?.data?.messages?.messageBody === undefined && body?.data?.messages?.message?.conversation === undefined && !isVoice && !messageText);
-
-  // 1. Store the incoming message in conversations
+  // 1. Store each incoming message in conversations & transcribe voice if any
   mark("store_inbound_start");
-  const { data: inboundMsg, error: insertError } = await supabase.from("conversations").insert({
-    phone_number: phoneNumber,
-    message: isVoice ? "🎤 [Voice Note: Transcribing...]" : messageText,
-    direction: "inbound",
-    message_type: messageType,
-    metadata: { senderName, event: body?.event, raw: body, correlationId: corrId, is_voice: isVoice },
-    user_id: userId,
-  }).select('id').single();
-  mark("store_inbound_end");
+  let transcribedVoiceTexts: string[] = [];
+  let userTextMessages: string[] = [];
+  let imageCount = 0;
+  let voiceNoteFailed = false;
 
-  if (insertError) {
-    console.error(`[${corrId}] Error storing message:`, insertError);
-  }
+  for (const msg of batch) {
+    const msgType = msg.message_type;
+    const isVoice = msgType === "ptt" || msgType === "audio";
+    const isImage = msgType === "image";
+    let text = (msg.message_text || "").trim();
+    const body = msg.raw_payload;
 
-  if (isVoice) {
-    console.log(`[${corrId}] Detected voice message, attempting transcription...`);
-    const mediaUrl = body?.payload?.media?.url || body?.media?.url;
-    const transcription = await transcribeAudio(sessionApiKey, wahaMessageId, mediaUrl);
-    if (transcription) {
-      messageText = transcription;
-      if (inboundMsg?.id) {
-        await supabase.from("conversations").update({
+    if (isVoice) {
+      console.log(`[${corrId}] Detected voice message in batch, transcribing...`);
+      const mediaUrl = body?.payload?.media?.url || body?.media?.url;
+      const transcription = await transcribeAudio(sessionApiKey, msg.wsender_message_id, mediaUrl);
+
+      if (transcription) {
+        text = transcription;
+        transcribedVoiceTexts.push(transcription);
+        await supabase.from("conversations").insert({
+          phone_number: phoneNumber,
           message: transcription,
-          metadata: { senderName, event: body?.event, raw: body, correlationId: corrId, is_voice: true, transcription_provider: "gemini" }
-        }).eq('id', inboundMsg.id);
+          direction: "inbound",
+          message_type: "text",
+          metadata: { senderName, event: body?.event, raw: body, correlationId: corrId, is_voice: true },
+          user_id: userId,
+        });
+      } else {
+        voiceNoteFailed = true;
+        await supabase.from("conversations").insert({
+          phone_number: phoneNumber,
+          message: "🎤 [Voice Note: Transcribe failed]",
+          direction: "inbound",
+          message_type: "text",
+          metadata: { senderName, event: body?.event, raw: body, correlationId: corrId, is_voice: true },
+          user_id: userId,
+        });
       }
-    } else {
-      console.log(`[${corrId}] Transcription failed, skipping voice message and sending apology`);
-      if (inboundMsg?.id) {
-        await supabase.from("conversations").update({
-          message: "🎤 [Voice Note: Transcription failed]"
-        }).eq('id', inboundMsg.id);
-      }
-      
-      const apologyText = "I couldn't hear that clearly. Could you please resend it or type it out for me?";
+    } else if (isImage) {
+      imageCount++;
+      if (text) userTextMessages.push(text);
       await supabase.from("conversations").insert({
         phone_number: phoneNumber,
-        message: apologyText,
-        direction: "outbound",
-        message_type: "text",
+        message: text ? `📷 [Image: ${text}]` : "📷 [Image]",
+        direction: "inbound",
+        message_type: "image",
+        metadata: { senderName, event: body?.event, raw: body, correlationId: corrId },
         user_id: userId,
       });
-      await sendWhatsApp(supabaseUrl, supabaseServiceKey, phoneNumber, apologyText, null, sessionApiKey);
-      return; 
+    } else {
+      if (text) userTextMessages.push(text);
+      await supabase.from("conversations").insert({
+        phone_number: phoneNumber,
+        message: text,
+        direction: "inbound",
+        message_type: msgType,
+        metadata: { senderName, event: body?.event, raw: body, correlationId: corrId },
+        user_id: userId,
+      });
     }
   }
+  mark("store_inbound_end");
 
-  // 1b. Contact billing: register this contact for the current cycle.
-  // Every first inbound message from a contact counts, regardless of whether the AI replies.
+  // If voice note failed and no other text or images were provided, send polite apology in Sinhala
+  if (voiceNoteFailed && transcribedVoiceTexts.length === 0 && userTextMessages.length === 0 && imageCount === 0) {
+    const apologyText = "මට ඔබේ හඬ පණිවිඩය පැහැදිලිව ඇසුණේ නැත. කරුණාකර එය නැවත එවන්න හෝ message එකක් ලෙස ටයිප් කර එවන්න පුළුවන්ද? 😊";
+    await supabase.from("conversations").insert({
+      phone_number: phoneNumber,
+      message: apologyText,
+      direction: "outbound",
+      message_type: "text",
+      user_id: userId,
+    });
+    await sendWhatsApp(supabaseUrl, supabaseServiceKey, phoneNumber, apologyText, null, sessionApiKey);
+    return;
+  }
+
+  // 1b. Contact billing
   const contactCheck = await registerContact(supabase, userId, phoneNumber, corrId);
   if (contactCheck.blocked) {
     console.log(`[${corrId}] New-contact limit reached for user ${userId}, not serving ${phoneNumber}`);
     return;
   }
-  // 1c. Growth plan: notify the owner when this contact becomes a qualified lead.
+
+  // 1c. Qualified lead check
   await maybeNotifyQualifiedLead(
     supabase, supabaseUrl, supabaseServiceKey, userId, phoneNumber, senderName, sessionApiKey, corrId
   );
-
-
-  // Skip replying to media messages (images, PDFs, videos, etc.)
-  if (isMediaMessage) {
-    console.log(`[${corrId}] Media message (type: ${messageType}) from ${phoneNumber}, stored but not replying`);
-    return;
-  }
 
   // 2. Check if auto-responses are enabled
   mark("settings_start");
@@ -243,7 +362,6 @@ async function processMessage(
   mark("settings_end");
 
   const autoResponsesEnabled = settingsData?.value?.enabled ?? true;
-
   if (!autoResponsesEnabled) {
     console.log(`[${corrId}] Auto responses disabled, skipping AI processing`);
     return;
@@ -263,21 +381,7 @@ async function processMessage(
     return;
   }
 
-  // 4. Check if first message (for welcome message flow)
-  const { count: convoCount } = await supabase
-    .from("conversations")
-    .select("id", { count: "exact", head: true })
-    .eq("phone_number", phoneNumber)
-    .eq("user_id", userId);
-
-  const isFirstMessage = (convoCount || 0) <= 1;
-
-  if (isFirstMessage) {
-    const sent = await handleWelcomeMessage(supabase, supabaseUrl, supabaseServiceKey, userId, phoneNumber, messageText, sessionApiKey, corrId, timings, mark);
-    if (sent) return;
-  }
-
-  // 5. Get conversation history
+  // 4. Fetch conversation history
   mark("history_start");
   const { data: conversationHistory } = await supabase
     .from("conversations")
@@ -285,13 +389,50 @@ async function processMessage(
     .eq("phone_number", phoneNumber)
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
-    .limit(10);
+    .limit(12);
   mark("history_end");
 
-  // 6. Call AI chat with timeout
+  // 5. Construct aggregated prompt for the LLM
+  const combinedTexts = [...transcribedVoiceTexts, ...userTextMessages].join("\n").trim();
+  let aggregatedMessage = combinedTexts;
+
+  if (imageCount > 0) {
+    const isSlip = await isLikelyBankSlip(supabase, userId, phoneNumber, conversationHistory || []);
+    if (isSlip) {
+      aggregatedMessage = `[System: User uploaded an image. Treat this as a payment slip receipt. Thank them and state staff will call to confirm.]${combinedTexts ? ` Customer message: ${combinedTexts}` : ""}`;
+    } else {
+      if (combinedTexts) {
+        aggregatedMessage = `[System: Customer sent ${imageCount} product photo(s). Customer text: "${combinedTexts}"]`;
+      } else {
+        aggregatedMessage = `[System: Customer sent ${imageCount} product photo(s). Greet them warmly in Sinhala and ask which shorts package or colors they would like to order.]`;
+      }
+    }
+  }
+
+  if (!aggregatedMessage) {
+    aggregatedMessage = "Hello";
+  }
+
+  // 6. Check if first message (for welcome message flow)
+  const { count: convoCount } = await supabase
+    .from("conversations")
+    .select("id", { count: "exact", head: true })
+    .eq("phone_number", phoneNumber)
+    .eq("user_id", userId);
+
+  const isFirstMessage = (convoCount || 0) <= batch.length;
+  const isNumericSelection = ["1", "2", "1.", "2.", "option 1", "option 2", "එක", "දෙක"].includes(aggregatedMessage.trim().toLowerCase());
+  if (isFirstMessage && imageCount === 0 && !isNumericSelection) {
+    const sent = await handleWelcomeMessage(
+      supabase, supabaseUrl, supabaseServiceKey, userId, phoneNumber, aggregatedMessage, sessionApiKey, corrId, timings, mark
+    );
+    if (sent) return;
+  }
+
+  // 7. Call AI chat with timeout
   mark("ai_start");
   const controller = new AbortController();
-  const aiTimeout = setTimeout(() => controller.abort(), 55_000); // 55s timeout (edge function limit ~60s)
+  const aiTimeout = setTimeout(() => controller.abort(), 55_000);
 
   let aiResponse: Response;
   try {
@@ -302,16 +443,16 @@ async function processMessage(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        message: messageText,
+        message: aggregatedMessage,
         phoneNumber,
         senderName,
-        conversationHistory: conversationHistory?.reverse() || [],
+        conversationHistory: (conversationHistory || []).slice().reverse(),
         userId,
         sessionApiKey,
       }),
       signal: controller.signal,
     });
-  } catch (err) {
+  } catch (err: any) {
     clearTimeout(aiTimeout);
     mark("ai_end");
     if (err.name === "AbortError") {
@@ -325,7 +466,6 @@ async function processMessage(
   const aiData = await aiResponse.json();
 
   if (!aiResponse.ok) {
-    // Handle limit/paused fallback messages
     if ((aiResponse.status === 429 || aiResponse.status === 403) && aiData.response) {
       console.log(`[${corrId}] AI limit/paused (${aiResponse.status}), sending fallback`);
       await supabase.from("conversations").insert({
@@ -351,46 +491,41 @@ async function processMessage(
   const replyVideoUrl = aiData.videoUrl || null;
   const followupMessage = aiData.followupMessage || null;
   const faqMedia: string[] = Array.isArray(aiData.faqMedia) ? aiData.faqMedia : [];
+
   console.log(`[${corrId}] AI reply: ${replyMessage?.substring(0, 100)}${replyImageUrls.length > 0 ? ` (with ${replyImageUrls.length} images)` : ""}${replyVideoUrl ? " (with video)" : ""}${followupMessage ? " (with followup)" : ""}`);
 
-  // 7. Store outgoing message
+  // 8. Store outgoing message
   mark("store_outbound_start");
   await supabase.from("conversations").insert({
     phone_number: phoneNumber,
     message: replyMessage,
     direction: "outbound",
     message_type: replyImageUrls.length > 0 ? "image" : "text",
-    metadata: { correlationId: corrId, ...(faqMedia.length > 0 ? { faqMedia } : {}) },
+    metadata: { correlationId: corrId, ...(faqMedia.length > 0 ? { faqMedia } : {}), imageUrls: replyImageUrls },
     user_id: userId,
   });
   mark("store_outbound_end");
 
-  // 8. Send reply via WhatsApp: video first, then images, then text
+  // 9. Send reply via WhatsApp: video first, then images, then FAQ media, then text
   mark("send_start");
 
-  // Send video first if present
   if (replyVideoUrl) {
     await sendWhatsAppMedia(supabaseUrl, supabaseServiceKey, phoneNumber, replyVideoUrl, sessionApiKey);
   }
 
-  // Send image(s) next if present
   for (const url of replyImageUrls) {
     await sendWhatsAppMedia(supabaseUrl, supabaseServiceKey, phoneNumber, url, sessionApiKey);
   }
 
-  // Send FAQ attachments (images / videos / PDFs) with no caption, before the text reply
   for (const url of faqMedia) {
     await sendWhatsAppMedia(supabaseUrl, supabaseServiceKey, phoneNumber, url, sessionApiKey);
   }
 
-  // Send text message last
   await sendWhatsApp(supabaseUrl, supabaseServiceKey, phoneNumber, replyMessage, null, sessionApiKey);
 
-  // Send order follow-up message if present
   if (followupMessage) {
     console.log(`[${corrId}] Sending order follow-up message`);
     await sendWhatsApp(supabaseUrl, supabaseServiceKey, phoneNumber, followupMessage, null, sessionApiKey);
-    // Store follow-up in conversation history
     await supabase.from("conversations").insert({
       phone_number: phoneNumber,
       message: followupMessage,
@@ -425,11 +560,12 @@ async function handleWelcomeMessage(
 
   // Check bypass triggers
   const bypassTriggers: string[] = welcomeSettings?.value?.bypass_triggers || [];
-  const msgLower = messageText.toLowerCase();
-  const shouldBypass = bypassTriggers.length > 0 && bypassTriggers.some((t: string) => msgLower.includes(t));
+  const msgLower = messageText.toLowerCase().trim();
+  const isNumeric = ["1", "2", "1.", "2.", "option 1", "option 2", "එක", "දෙක"].includes(msgLower);
+  const shouldBypass = isNumeric || (bypassTriggers.length > 0 && bypassTriggers.some((t: string) => msgLower.includes(t)));
 
   if (shouldBypass) {
-    console.log(`[${corrId}] Bypass trigger matched, skipping welcome`);
+    console.log(`[${corrId}] Bypass trigger matched (numeric or keyword), skipping welcome`);
     return false;
   }
 
