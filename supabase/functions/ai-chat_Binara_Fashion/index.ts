@@ -18,14 +18,18 @@ function calculateOrderTotals(orderData: any): {
   totalAmount: number;
   totalQuantity: number;
 } {
-  const items = Array.isArray(orderData?.order_items) ? orderData.order_items : [];
+  const items = Array.isArray(orderData?.order_items) && orderData.order_items.length > 0
+    ? orderData.order_items
+    : (Array.isArray(orderData?.items) && orderData.items.length > 0
+      ? orderData.items
+      : (Array.isArray(orderData?.products) ? orderData.products : []));
   let totalQty = 0;
   let calculatedSubtotal = 0;
 
   for (const item of items) {
     const qty = Math.max(1, parseInt(String(item.quantity || 1), 10) || 1);
     totalQty += qty;
-    const nameLower = String(item.name || "").toLowerCase();
+    const nameLower = String(item.name || item.id || item.title || "").toLowerCase();
 
     if (nameLower.includes("rib") || nameLower.includes("rip") || nameLower.includes("jacquard")) {
       // Rib Jacquard pricing: 5 = 2700, 10 = 5100
@@ -364,26 +368,36 @@ serve(async (req) => {
     1. තෝරාගත් පැකේජය, ප්‍රමාණය සහ මුළු මිල (ඩිලිවරි ගාස්තුව සමඟ) පැහැදිලිව සටහන් කරන්න.
     2. පාරිභෝගිකයාගෙන් වර්ණ අංක (Color Numbers 01 සිට 12 දක්වා) පමණක් විමසන්න (උදා: "ඔයා කැමති වර්ණ අංක 5 මොනවාද?").
     ⚠️ දැඩි නීතිය (STRICT PROHIBITION): මෙම පියවරේදී කිසිසේත්ම නම, ලිපිනය, නගරය, දුරකථන අංකය හෝ ගෙවීම් ක්‍රමය (COD/Bank) නොඅසන්න! වර්ණ තෝරාගැනීමට පෙර order details විමසීම සපුරා තහනම්!
-- පියවර 2 (වර්ණ ලබාදුන් පසු පමණක්):
-  * පාරිභෝගිකයා වර්ණ අංක ලබාදුන් පසු පමණක් (උදා: "2 ke 2, 4 ke 3" හෝ "කළු 2යි නිල් 3යි"):
+- පියවර 2 (වර්ණ ලබාදුන් පසු - කෙටි ඇණවුම් සාරාංශය සහ පුද්ගලික විස්තර විමසීම):
+  * පාරිභෝගිකයා වර්ණ අංක ලබාදුන් පසු (උදා: "2 ke 2, 4 ke 3" හෝ "11-2, 2-2, 5-4, 4-4"):
     1. තෝරාගත් වර්ණ එකතුව පැකේජයේ මුළු ගණනට ගැලපේදැයි තහවුරු කරන්න.
-    2. දැන් පමණක් පාරිභෝගිකයාගේ ඇණවුම් විස්තර විමසන්න:
-       - නම (Name)
-       - භාණ්ඩ එවිය යුතු ලිපිනය සහ නගරය (Delivery Address & City)
-       - දුරකථන අංකය (Phone Number)
-       - ගෙවීම් ක්‍රමය: භාණ්ඩ ලැබුණු පසුද (COD) නැතිනම් බැංකු තැන්පතුවක්ද (Bank Transfer)
-- පියවර 3 (සම්පූර්ණ ඇණවුම් සාරාංශය - අනිවාර්යයි):
-  * පාරිභෝගිකයා නම, ලිපිනය, දුරකථන අංකය සහ ගෙවීම් ක්‍රමය (COD හෝ Bank Transfer) ලබාදුන් පසු, ඔබගේ පණිවිඩයේ අනිවාර්යයෙන්ම පහත සම්පූර්ණ ඇණවුම් සාරාංශය (Bill / Order Summary) පෙන්විය යුතුය:
-    📋 ඔබගේ ඇණවුමේ සාරාංශය:
+    2. පුද්ගලික විස්තර විමසීමට පෙර, අනිවාර්යයෙන්ම පහත ආකෘතියට අනුව කෙටි ඇණවුම් සාරාංශයක් (Mini Order Summary) ඉදිරිපත් කරන්න:
+       📋 ඇණවුමේ කෙටි සාරාංශය (Mini Summary):
+       • භාණ්ඩය (Product): [නිෂ්පාදනයේ නම - උදා: Rib Jacquard Shorts හෝ Kyela Cotton Shorts]
+       • ප්‍රමාණය (Quantity): [තෝරාගත් ප්‍රමාණය - උදා: Shorts 11ක්]
+       • තෝරාගත් වර්ණ (Colors): [තෝරාගත් වර්ණ ලැයිස්තුව]
+       • අයිතම එකතුව (Subtotal): රු. [මුදල]
+       • ඩිලිවරි ගාස්තුව (Delivery): [නොමිලේ (Free Delivery) හෝ රු. 450]
+       • මුළු මුදල (Total Amount): රු. [මුළු මුදල]
+    3. මෙම කෙටි සාරාංශයට පහළින්, ඇණවුම සම්පූර්ණ කිරීම සඳහා පාරිභෝගිකයාගේ පුද්ගලික විස්තර විමසන්න:
+       "දැන් මේ ඇණවුම ඉදිරියට කරගෙන යන්න ඔබගේ මේ විස්තර ටික අපිට එවන්න:
+       1. නම (Name)
+       2. භාණ්ඩ එවිය යුතු ලිපිනය සහ නගරය (Delivery Address & City)
+       3. දුරකථන අංකය (Phone Number)
+       4. ගෙවීම් ක්‍රමය: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD) ද නැතිනම් බැංකු තැන්පතුවක් (Bank Transfer) ද? 🎯"
+    ⚠️ මෙම පියවරේදී කිසිසේත්ම <ORDER_JSON> ටැගය ඇතුළත් නොකරන්න!
+- පියවර 3 (පුද්ගලික විස්තර ලබාදුන් පසු - සම්පූර්ණ ඇණවුම් සාරාංශය):
+  * පාරිභෝගිකයා නම, ලිපිනය, දුරකථන අංකය සහ ගෙවීම් ක්‍රමය (COD හෝ Bank Transfer) ලබාදුන් පසු, ඔබගේ පණිවිඩයේ අනිවාර්යයෙන්ම පහත සම්පූර්ණ ඇණවුම් සාරාංශය (Full Order Summary / Full Bill) පෙන්විය යුතුය:
+    📋 ඔබගේ සම්පූර්ණ ඇණවුම් සාරාංශය (Full Order Summary):
     • නම (Name): [පාරිභෝගිකයාගේ නම]
     • ලිපිනය (Delivery Address): [ලිපිනය සහ නගරය]
     • දුරකථන අංකය (Phone Number): [දුරකථන අංකය]
-    • ඇණවුම (Items): [භාණ්ඩ වර්ගය, ප්‍රමාණය සහ තෝරාගත් වර්ණ]
+    • ඇණවුම (Items & Colors): [භාණ්ඩ වර්ගය, ප්‍රමාණය සහ තෝරාගත් වර්ණ]
     • අයිතම එකතුව (Subtotal): රු. [මුදල]
     • ඩිලිවරි ගාස්තුව (Delivery): [නොමිලේ (Free Delivery) හෝ රු. 450]
     • මුළු මුදල (Total Amount): රු. [මුළු මුදල]
     • ගෙවීම් ක්‍රමය (Payment Method): [COD හෝ Bank Transfer]
-    ⚠️ දැඩි නීතිය: ගෙවීම් ක්‍රමය Bank Transfer වුවද, සාරාංශය කිසිවිටෙකත් මඟනොහරින්න! සාරාංශය මුලින්ම පෙන්වා, ඊට පහළින් බැංකු ගිණුම් විස්තර සඳහන් කර slip එකේ photo එකක් එවන්නැයි පවසන්න.
+    ⚠️ දැඩි නීතිය: ගෙවීම් ක්‍රමය Bank Transfer වුවද, සම්පූර්ණ සාරාංශය කිසිවිටෙකත් මඟනොහරින්න! සම්පූර්ණ සාරාංශය මුලින්ම පෙන්වා, ඊට පහළින් බැංකු ගිණුම් විස්තර සඳහන් කර slip එකේ photo එකක් එවන්නැයි පවසන්න.
     අවසානයට "ස්තූතියි! ඔබගේ ඇණවුම ලැබී ඇත (Pending). අපගේ කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරනු ඇත." ලෙස පවසා <ORDER_JSON> ටැගය සඟවා අමුණන්න.
 5. ඩිලිවරි ගාස්තු: අයිතම 5කට අඩු නම් රු. 450යි. අයිතම 5ක් හෝ ඊට වැඩි නම් නොමිලේ.
 6. ගෙවීම්: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD) හෝ බැංකු තැන්පතු (Commercial Bank - 8001234567). පාරිභෝගිකයා ඡායාරූපයක් එව්වොත් එය Bank Slip එකක් ලෙස සලකා ස්තූති කරන්න.
@@ -417,19 +431,29 @@ IMPORTANT GUIDELINES:
     - Confirm the package, unit price, and total amount (including delivery fee).
     - Ask ONLY for the Color Numbers (01 to 12) from the photos for that quantity.
     - ⚠️ STRICT PROHIBITION: DO NOT ask for Customer Name, Address, City, Phone Number, or Payment Method at this step! You MUST collect colors FIRST before asking for customer order details!
-  * STEP 2 - AFTER COLORS ARE SELECTED:
-    Once the customer provides their color selections (e.g. "2 ke 2, 4 ke 3", "01, 04, 05, 08, 12"):
-    - Verify that the sum of colors matches the package quantity.
-    - Confirm the selected colors.
-    - ONLY THEN ask for customer checkout details:
-      1. Customer Name (නම)
-      2. Delivery Address with City (ලිපිනය සහ නගරය)
-      3. Phone Number (දුරකථන අංකය)
-      4. Payment method: Cash on Delivery (COD) or Bank Transfer
-  * STEP 3 - FINAL ORDER SUMMARY (MANDATORY INCLUSION):
-    Once Name, Address, Phone, and Payment Method are received, you MUST ALWAYS display the complete, itemized Order Summary (Bill) to the customer in your message, REGARDLESS of payment method (COD or Bank Transfer).
-    The Order Summary MUST explicitly list:
-    📋 ඔබගේ ඇණවුමේ සාරාංශය:
+  * STEP 2 - AFTER COLORS ARE SELECTED (SEND MINI SUMMARY, THEN ASK FOR PERSONAL DETAILS):
+    Once the customer provides their color selections (e.g. "2 ke 2, 4 ke 3", "01, 04, 05, 08, 12", "11-2, 2-2, 5-4, 4-4"):
+    1. Verify that the sum of colors matches the package quantity.
+    2. BEFORE asking for personal details, you MUST send a Mini Order Summary:
+       📋 ඇණවුමේ කෙටි සාරාංශය (Mini Summary):
+       • භාණ්ඩය (Product): Product name (e.g. Rib Jacquard Shorts or Kyela Cotton Shorts)
+       • ප්‍රමාණය (Quantity): Quantity (e.g. Shorts 11ක්)
+       • තෝරාගත් වර්ණ (Colors): Selected color numbers & counts
+       • අයිතම එකතුව (Subtotal): Rs. amount
+       • ඩිලිවරි ගාස්තුව (Delivery): Free Delivery (for 5+) or Rs. 450
+       • මුළු මුදල (Total Amount): Rs. total
+    3. Right below the Mini Summary, ask for their checkout details:
+       "දැන් මේ ඇණවුම ඉදිරියට කරගෙන යන්න ඔබගේ මේ විස්තර ටික අපිට එවන්න:
+       1. නම (Name)
+       2. භාණ්ඩ එවිය යුතු ලිපිනය සහ නගරය (Delivery Address & City)
+       3. දුරකථන අංකය (Phone Number)
+       4. ගෙවීම් ක්‍රමය: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD) ද නැතිනම් බැංකු තැන්පතුවක් (Bank Transfer) ද? 🎯"
+    ⚠️ DO NOT include <ORDER_JSON> at this step! <ORDER_JSON> is ONLY included in Step 3 after personal details are collected.
+
+  * STEP 3 - FINAL FULL ORDER SUMMARY (MANDATORY INCLUSION AFTER COLLECTING DETAILS):
+    Once Name, Address, Phone, and Payment Method are received, you MUST ALWAYS display the complete, itemized Full Order Summary (Full Bill) to the customer in your message, REGARDLESS of payment method (COD or Bank Transfer).
+    The Full Order Summary MUST explicitly list:
+    📋 ඔබගේ සම්පූර්ණ ඇණවුම් සාරාංශය (Full Order Summary):
     • නම (Name): Customer name
     • ලිපිනය (Delivery Address): Delivery address and city
     • දුරකථන අංකය (Phone Number): Phone number
@@ -438,7 +462,7 @@ IMPORTANT GUIDELINES:
     • ඩිලිවරි ගාස්තුව (Delivery): Free Delivery (for 5+) or Rs. 450
     • මුළු මුදල (Total Amount): Rs. total
     • ගෙවීම් ක්‍රමය (Payment Method): COD or Bank Transfer
-    ⚠️ STRICT RULE: If payment method is Bank Transfer, you MUST output the Order Summary FIRST, followed below by the bank accounts and slip photo request. NEVER skip the Order Summary when providing bank details!
+    ⚠️ STRICT RULE: If payment method is Bank Transfer, you MUST output the Full Order Summary FIRST, followed below by the bank accounts and slip photo request. NEVER skip the Full Order Summary when providing bank details!
     State staff will call to confirm: "ස්තූතියි! ඔබගේ ඇණවුම ලැබී ඇත (Pending). අපගේ කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරනු ඇත." Include the <ORDER_JSON> tag at the very end. Status is strictly Pending. Never state Order Confirmed.
 - DIGITAL vs PHYSICAL PRODUCTS:
    - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Offer both Cash on Delivery (COD) and Bank Transfer as payment options. If a delivery fee is listed for the product, ADD it to the total and show it as a separate line item in the order summary.
@@ -658,7 +682,8 @@ CRITICAL SECURITY RULE:
           savedOrderData = orderData;
 
           // Preserve phone number formatting (e.g. 07XXXXXXXX)
-          let phoneToSave = String(orderData.customer_phone || phoneNumber || "").trim().replace(/[^0-9+]/g, "");
+          const rawPhone = String(orderData.customer_phone || orderData.customer?.phone || orderData.customer_details?.phone || phoneNumber || "").trim();
+          let phoneToSave = rawPhone.replace(/[^0-9+]/g, "");
           if (phoneToSave.startsWith("+94") && phoneToSave.length === 12) {
             phoneToSave = "0" + phoneToSave.slice(3);
           } else if (phoneToSave.startsWith("94") && phoneToSave.length === 11) {
@@ -681,18 +706,44 @@ CRITICAL SECURITY RULE:
             console.log("Duplicate order detected, skipping creation. Existing:", recentOrders[0].id);
             createdOrderId = recentOrders[0].id;
           } else {
+            const rawItems = Array.isArray(orderData.order_items) && orderData.order_items.length > 0
+              ? orderData.order_items
+              : (Array.isArray(orderData.items) && orderData.items.length > 0
+                ? orderData.items.map((p: any) => ({ name: p.name || p.id || "Shorts", quantity: p.quantity || 1, price: p.price || 0 }))
+                : (Array.isArray(orderData.products) ? orderData.products.map((p: any) => ({ name: p.id || p.name || "Shorts", quantity: p.quantity || 1, price: p.price || 0 })) : []));
+            const custName = orderData.customer_name || orderData.customer?.name || orderData.customer_details?.name || "Customer";
+            const custAddress = orderData.customer_address || orderData.customer?.address || orderData.customer_details?.address || null;
+            let paymentMethod = String(orderData.payment_method || orderData.customer?.payment_method || orderData.customer_details?.payment_method || "cod").toLowerCase().trim();
+            if (paymentMethod.includes("bank") || paymentMethod.includes("transfer")) {
+              paymentMethod = "bank_transfer";
+            } else if (paymentMethod.includes("cod") || paymentMethod.includes("cash") || paymentMethod.includes("delivery")) {
+              paymentMethod = "cod";
+            } else {
+              paymentMethod = "yet to decide";
+            }
+
+            let specialInstructions = orderData.special_instructions || null;
+            if (!specialInstructions && orderData.items?.[0]?.sub_variants) {
+              const sv = orderData.items[0].sub_variants;
+              specialInstructions = typeof sv === "object" ? (sv.colors ? `Colors: ${sv.colors}` : JSON.stringify(sv)) : String(sv);
+            } else if (!specialInstructions && Array.isArray(orderData.products?.[0]?.sub_variants)) {
+              specialInstructions = orderData.products[0].sub_variants.join(", ");
+            } else if (!specialInstructions && orderData.customer_email) {
+              specialInstructions = `Email: ${orderData.customer_email}`;
+            }
+
             const { data: orderResult, error: orderError } = await supabase
               .from("orders")
               .insert({
-                customer_name: orderData.customer_name,
+                customer_name: custName,
                 customer_phone: phoneToSave,
                 whatsapp_phone: phoneNumber,
                 district: orderData.district || null,
-                customer_address: orderData.customer_address || null,
-                order_items: orderData.order_items || [],
-                payment_method: orderData.payment_method || "yet to decide",
+                customer_address: custAddress,
+                order_items: rawItems,
+                payment_method: paymentMethod,
                 total_amount: math.totalAmount,
-                special_instructions: orderData.special_instructions || (orderData.customer_email ? `Email: ${orderData.customer_email}` : null),
+                special_instructions: specialInstructions,
                 status: "pending",
                 user_id: userId,
               })
@@ -909,24 +960,33 @@ CRITICAL SECURITY RULE:
 
       // Check if visible cleanResponse lacks basic order summary fields (e.g. LLM jumped straight to bank accounts)
       const hasSummaryHeader = /(?:සාරාංශය|Order\s*Summary|Bill)/i.test(cleanResponse);
-      const hasCustomerDetails = /(?:නම|Name)\s*:/i.test(cleanResponse) && /(?:ලිපිනය|Address)\s*:/i.test(cleanResponse);
+      const hasCustomerName = /(?:නම|\bName\b)[^:\n]*:/i.test(cleanResponse);
+      const hasCustomerAddress = /(?:ලිපිනය|\bAddress\b)[^:\n]*:/i.test(cleanResponse);
+      const hasCustomerDetails = hasCustomerName && hasCustomerAddress;
 
       if (!hasSummaryHeader || !hasCustomerDetails) {
         console.log("LLM omitted visible Order Summary before confirmation/bank details. Injecting complete Order Summary...");
-        const itemsList = (savedOrderData.order_items || [])
+        const rawItems = Array.isArray(savedOrderData.order_items) && savedOrderData.order_items.length > 0
+          ? savedOrderData.order_items
+          : (Array.isArray(savedOrderData.products) ? savedOrderData.products.map((p: any) => ({ name: p.id || p.name, quantity: p.quantity })) : []);
+        const itemsList = rawItems
           .map((it: any) => `${it.name || "Shorts"} (${it.quantity || 1} pcs)`)
           .join(", ") || "Shorts";
-        const colorsText = savedOrderData.special_instructions ? `\n• වර්ණ (Colors): ${savedOrderData.special_instructions.replace(/^Colors:\s*/i, "")}` : "";
-        const paymentMethodText = String(savedOrderData.payment_method || "").toLowerCase().includes("bank") ? "Bank Transfer" : "Cash on Delivery (COD)";
+        const specialInstr = savedOrderData.special_instructions || (Array.isArray(savedOrderData.products?.[0]?.sub_variants) ? savedOrderData.products[0].sub_variants.join(", ") : null);
+        const colorsText = specialInstr ? `\n• වර්ණ (Colors): ${specialInstr.replace(/^Colors:\s*/i, "")}` : "";
+        const paymentMethodRaw = savedOrderData.payment_method || savedOrderData.customer_details?.payment_method || "";
+        const paymentMethodText = String(paymentMethodRaw).toLowerCase().includes("bank") ? "Bank Transfer" : "Cash on Delivery (COD)";
+        const custName = savedOrderData.customer_name || savedOrderData.customer_details?.name || "සඳහන් කර නැත";
+        const custAddress = savedOrderData.customer_address || savedOrderData.customer_details?.address || "සඳහන් කර නැත";
 
-        const summaryBlock = `📋 ඔබගේ ඇණවුමේ සාරාංශය (Order Summary):\n• නම: ${savedOrderData.customer_name || "සඳහන් කර නැත"}\n• ලිපිනය: ${savedOrderData.customer_address || "සඳහන් කර නැත"}\n• දුරකථන අංකය: ${savedPhoneToSave || phoneNumber}\n• ඇණවුම: ${itemsList}${colorsText}\n• අයිතම එකතුව: රු. ${subtotal.toLocaleString()}\n• ඩිලිවරි ගාස්තුව: ${delivText}\n• මුළු මුදල: රු. ${totalAmount.toLocaleString()}\n• ගෙවීම් ක්‍රමය: ${paymentMethodText}\n\n`;
+        const summaryBlock = `📋 ඔබගේ සම්පූර්ණ ඇණවුම් සාරාංශය (Full Order Summary):\n• නම: ${custName}\n• ලිපිනය: ${custAddress}\n• දුරකථන අංකය: ${savedPhoneToSave || phoneNumber}\n• ඇණවුම: ${itemsList}${colorsText}\n• අයිතම එකතුව: රු. ${subtotal.toLocaleString()}\n• ඩිලිවරි ගාස්තුව: ${delivText}\n• මුළු මුදල: රු. ${totalAmount.toLocaleString()}\n• ගෙවීම් ක්‍රමය: ${paymentMethodText}\n\n`;
 
         cleanResponse = summaryBlock + cleanResponse;
       }
 
       // Overwrite subtotal, delivery fee, and total amount in text summary if present
       cleanResponse = cleanResponse.replace(/(?:(?:අයිතම\s*එකතුව|භාණ්ඩ\s*එකතුව|Subtotal|Items\s*Subtotal)\s*[:\-]?\s*)(?:රු\.?|Rs\.?|LKR)?\s*[\d,]+/gi, `අයිතම එකතුව: රු. ${subtotal.toLocaleString()}`);
-      cleanResponse = cleanResponse.replace(/(?:(?:ඩිලිවරි\s*(?:ගාස්තු|ගාස්තුව)?|Delivery\s*(?:Fee)?)\s*[:\-]?\s*)(?:රු\.?|Rs\.?|LKR|\bFree\b|නොමිලේ)?[^\n]*/gi, `ඩිලිවරි ගාස්තුව: ${delivText}`);
+      cleanResponse = cleanResponse.replace(/(?:(?:ඩිලිවරි\s*(?:ගාස්තු|ගාස්තුව)|Delivery\s+(?:Fee|Charge))\s*[:\-]?\s*)(?:රු\.?|Rs\.?|LKR|\bFree\b|නොමිලේ)?[^\n]*/gi, `ඩිලිවරි ගාස්තුව: ${delivText}`);
       cleanResponse = cleanResponse.replace(/(?:(?:මුළු\s*(?:මුදල|එකතුව)?|Total\s*(?:Amount)?)\s*[:\-]?\s*)(?:රු\.?|Rs\.?|LKR)?\s*[\d,]+/gi, `මුළු මුදල: රු. ${totalAmount.toLocaleString()}`);
 
       // Ensure status is never "Confirmed", always state staff will call to confirm
