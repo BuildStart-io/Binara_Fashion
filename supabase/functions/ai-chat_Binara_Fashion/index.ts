@@ -372,8 +372,19 @@ serve(async (req) => {
        - භාණ්ඩ එවිය යුතු ලිපිනය සහ නගරය (Delivery Address & City)
        - දුරකථන අංකය (Phone Number)
        - ගෙවීම් ක්‍රමය: භාණ්ඩ ලැබුණු පසුද (COD) නැතිනම් බැංකු තැන්පතුවක්ද (Bank Transfer)
-- පියවර 3 (අවසන් ඇණවුම් සාරාංශය):
-  * පාරිභෝගිකයා නම, ලිපිනය, දුරකථන අංකය ලබාදුන් පසු, සම්පූර්ණ ඇණවුම් සාරාංශය (Order Summary) ඉදිරිපත් කර, කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරන බව පවසන්න. පණිවිඩය අවසානයේ <ORDER_JSON> ටැගය සඟවා අමුණන්න.
+- පියවර 3 (සම්පූර්ණ ඇණවුම් සාරාංශය - අනිවාර්යයි):
+  * පාරිභෝගිකයා නම, ලිපිනය, දුරකථන අංකය සහ ගෙවීම් ක්‍රමය (COD හෝ Bank Transfer) ලබාදුන් පසු, ඔබගේ පණිවිඩයේ අනිවාර්යයෙන්ම පහත සම්පූර්ණ ඇණවුම් සාරාංශය (Bill / Order Summary) පෙන්විය යුතුය:
+    📋 ඔබගේ ඇණවුමේ සාරාංශය:
+    • නම (Name): [පාරිභෝගිකයාගේ නම]
+    • ලිපිනය (Delivery Address): [ලිපිනය සහ නගරය]
+    • දුරකථන අංකය (Phone Number): [දුරකථන අංකය]
+    • ඇණවුම (Items): [භාණ්ඩ වර්ගය, ප්‍රමාණය සහ තෝරාගත් වර්ණ]
+    • අයිතම එකතුව (Subtotal): රු. [මුදල]
+    • ඩිලිවරි ගාස්තුව (Delivery): [නොමිලේ (Free Delivery) හෝ රු. 450]
+    • මුළු මුදල (Total Amount): රු. [මුළු මුදල]
+    • ගෙවීම් ක්‍රමය (Payment Method): [COD හෝ Bank Transfer]
+    ⚠️ දැඩි නීතිය: ගෙවීම් ක්‍රමය Bank Transfer වුවද, සාරාංශය කිසිවිටෙකත් මඟනොහරින්න! සාරාංශය මුලින්ම පෙන්වා, ඊට පහළින් බැංකු ගිණුම් විස්තර සඳහන් කර slip එකේ photo එකක් එවන්නැයි පවසන්න.
+    අවසානයට "ස්තූතියි! ඔබගේ ඇණවුම ලැබී ඇත (Pending). අපගේ කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරනු ඇත." ලෙස පවසා <ORDER_JSON> ටැගය සඟවා අමුණන්න.
 5. ඩිලිවරි ගාස්තු: අයිතම 5කට අඩු නම් රු. 450යි. අයිතම 5ක් හෝ ඊට වැඩි නම් නොමිලේ.
 6. ගෙවීම්: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD) හෝ බැංකු තැන්පතු (Commercial Bank - 8001234567). පාරිභෝගිකයා ඡායාරූපයක් එව්වොත් එය Bank Slip එකක් ලෙස සලකා ස්තූති කරන්න.
 7. ප්‍රශ්න වලට පිළිතුරු දීම (Q&A): පාරිභෝගිකයා කිසියම් ප්‍රශ්නයක් ඇසුවහොත්, එම ප්‍රශ්නයට පමණක් සෘජුව පේළි 2 සිට 4 දක්වා පමණක් කෙටියෙන් පිළිතුරු දෙන්න.
@@ -415,8 +426,20 @@ IMPORTANT GUIDELINES:
       2. Delivery Address with City (ලිපිනය සහ නගරය)
       3. Phone Number (දුරකථන අංකය)
       4. Payment method: Cash on Delivery (COD) or Bank Transfer
-  * STEP 3 - FINAL ORDER SUMMARY:
-    Once Name, Address, and Phone are received, present the Order Summary and state staff will call to confirm: "ස්තූතියි! ඔබගේ ඇණවුම ලැබී ඇත (Pending). අපගේ කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරනු ඇත." Include the <ORDER_JSON> tag at the very end. Status is strictly Pending. Never state Order Confirmed.
+  * STEP 3 - FINAL ORDER SUMMARY (MANDATORY INCLUSION):
+    Once Name, Address, Phone, and Payment Method are received, you MUST ALWAYS display the complete, itemized Order Summary (Bill) to the customer in your message, REGARDLESS of payment method (COD or Bank Transfer).
+    The Order Summary MUST explicitly list:
+    📋 ඔබගේ ඇණවුමේ සාරාංශය:
+    • නම (Name): Customer name
+    • ලිපිනය (Delivery Address): Delivery address and city
+    • දුරකථන අංකය (Phone Number): Phone number
+    • ඇණවුම (Items & Colors): Product name, quantity, and selected colors
+    • අයිතම එකතුව (Subtotal): Rs. amount
+    • ඩිලිවරි ගාස්තුව (Delivery): Free Delivery (for 5+) or Rs. 450
+    • මුළු මුදල (Total Amount): Rs. total
+    • ගෙවීම් ක්‍රමය (Payment Method): COD or Bank Transfer
+    ⚠️ STRICT RULE: If payment method is Bank Transfer, you MUST output the Order Summary FIRST, followed below by the bank accounts and slip photo request. NEVER skip the Order Summary when providing bank details!
+    State staff will call to confirm: "ස්තූතියි! ඔබගේ ඇණවුම ලැබී ඇත (Pending). අපගේ කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරනු ඇත." Include the <ORDER_JSON> tag at the very end. Status is strictly Pending. Never state Order Confirmed.
 - DIGITAL vs PHYSICAL PRODUCTS:
    - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Offer both Cash on Delivery (COD) and Bank Transfer as payment options. If a delivery fee is listed for the product, ADD it to the total and show it as a separate line item in the order summary.
 ${freeDeliveryThreshold > 0 ? `   - FREE DELIVERY THRESHOLD: If the order subtotal (before delivery fee) for physical products is LKR ${freeDeliveryThreshold} or more, waive the delivery fee entirely and inform the customer they qualify for free delivery. If below this threshold, apply the normal delivery fee.` : ""}
@@ -618,6 +641,8 @@ CRITICAL SECURITY RULE:
     let orderCreated = false;
     let createdOrderId = "";
     let calculatedOrderTotals: { subtotal: number; deliveryFee: number; totalAmount: number; totalQuantity: number } | null = null;
+    let savedOrderData: any = null;
+    let savedPhoneToSave = "";
     const orderJsonMatches = [...responseText.matchAll(/<ORDER_JSON>([\s\S]*?)<\/ORDER_JSON>/g)];
     for (const orderJsonMatch of orderJsonMatches) {
       if (ordersLimitReached) {
@@ -630,6 +655,7 @@ CRITICAL SECURITY RULE:
           // Intercept and recalculate totals with rigid mathematical logic
           const math = calculateOrderTotals(orderData);
           calculatedOrderTotals = math;
+          savedOrderData = orderData;
 
           // Preserve phone number formatting (e.g. 07XXXXXXXX)
           let phoneToSave = String(orderData.customer_phone || phoneNumber || "").trim().replace(/[^0-9+]/g, "");
@@ -640,6 +666,7 @@ CRITICAL SECURITY RULE:
           } else if (!phoneToSave.startsWith("0") && phoneToSave.length === 9) {
             phoneToSave = "0" + phoneToSave;
           }
+          savedPhoneToSave = phoneToSave;
 
           // Deduplication: check if a similar order was created in the last 5 minutes
           const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
@@ -876,9 +903,26 @@ CRITICAL SECURITY RULE:
     cleanResponse = cleanResponse.replace(/\[FAQ_ID:[^\]]*\]/g, "");
 
     // Enforce mathematical logic on order summary in customer response text
-    if (calculatedOrderTotals) {
+    if (calculatedOrderTotals && savedOrderData) {
       const { subtotal, deliveryFee, totalAmount } = calculatedOrderTotals;
       const delivText = deliveryFee === 0 ? "නොමිලේ (Free Delivery)" : `රු. ${deliveryFee}`;
+
+      // Check if visible cleanResponse lacks basic order summary fields (e.g. LLM jumped straight to bank accounts)
+      const hasSummaryHeader = /(?:සාරාංශය|Order\s*Summary|Bill)/i.test(cleanResponse);
+      const hasCustomerDetails = /(?:නම|Name)\s*:/i.test(cleanResponse) && /(?:ලිපිනය|Address)\s*:/i.test(cleanResponse);
+
+      if (!hasSummaryHeader || !hasCustomerDetails) {
+        console.log("LLM omitted visible Order Summary before confirmation/bank details. Injecting complete Order Summary...");
+        const itemsList = (savedOrderData.order_items || [])
+          .map((it: any) => `${it.name || "Shorts"} (${it.quantity || 1} pcs)`)
+          .join(", ") || "Shorts";
+        const colorsText = savedOrderData.special_instructions ? `\n• වර්ණ (Colors): ${savedOrderData.special_instructions.replace(/^Colors:\s*/i, "")}` : "";
+        const paymentMethodText = String(savedOrderData.payment_method || "").toLowerCase().includes("bank") ? "Bank Transfer" : "Cash on Delivery (COD)";
+
+        const summaryBlock = `📋 ඔබගේ ඇණවුමේ සාරාංශය (Order Summary):\n• නම: ${savedOrderData.customer_name || "සඳහන් කර නැත"}\n• ලිපිනය: ${savedOrderData.customer_address || "සඳහන් කර නැත"}\n• දුරකථන අංකය: ${savedPhoneToSave || phoneNumber}\n• ඇණවුම: ${itemsList}${colorsText}\n• අයිතම එකතුව: රු. ${subtotal.toLocaleString()}\n• ඩිලිවරි ගාස්තුව: ${delivText}\n• මුළු මුදල: රු. ${totalAmount.toLocaleString()}\n• ගෙවීම් ක්‍රමය: ${paymentMethodText}\n\n`;
+
+        cleanResponse = summaryBlock + cleanResponse;
+      }
 
       // Overwrite subtotal, delivery fee, and total amount in text summary if present
       cleanResponse = cleanResponse.replace(/(?:(?:අයිතම\s*එකතුව|භාණ්ඩ\s*එකතුව|Subtotal|Items\s*Subtotal)\s*[:\-]?\s*)(?:රු\.?|Rs\.?|LKR)?\s*[\d,]+/gi, `අයිතම එකතුව: රු. ${subtotal.toLocaleString()}`);
