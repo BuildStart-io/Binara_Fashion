@@ -515,6 +515,9 @@ async function processBatch(
 
   for (const url of replyImageUrls) {
     await sendWhatsAppMedia(supabaseUrl, supabaseServiceKey, phoneNumber, url, sessionApiKey);
+    if (replyImageUrls.length > 1) {
+      await new Promise(r => setTimeout(r, 250));
+    }
   }
 
   for (const url of faqMedia) {

@@ -291,6 +291,10 @@ serve(async (req) => {
     const kyelaImagesAlreadySent = kyelaImages.length > 0 && kyelaImages.some((u: string) => alreadySentNormalizedPaths.has(normalizeImgPath(u)));
     const ribImagesAlreadySent = ribImages.length > 0 && ribImages.some((u: string) => alreadySentNormalizedPaths.has(normalizeImgPath(u)));
 
+    const userMsgLower = (message || "").toLowerCase().trim();
+    const isExplicitImageRequest = /\b(image|images|photo|photos|pic|pics|picture|pictures|4to|photoes|ඡායාරූප|පින්තූර|පින්තුර|ෆොටෝ|බලන්න)\b/i.test(userMsgLower) ||
+      userMsgLower.includes("photo") || userMsgLower.includes("image") || userMsgLower.includes("4to") || userMsgLower.includes("pic") || userMsgLower.includes("ඡායාරූප") || userMsgLower.includes("පින්තූර");
+
     // Build FAQ context with IDs so AI can report which ones it used
     const faqContext = faqs.map(f =>
       `[FAQ_ID:${f.id}] Q: ${f.question}\nA: ${f.answer}${f.products?.name ? ` (Related to: ${f.products.name})` : ""}`
@@ -304,27 +308,31 @@ serve(async (req) => {
       .join("\n");
 
     const systemPrompt = `ඔබ "Binara Fashion" හි නිල WhatsApp AI සහයකයා වේ.
-1. භාෂාව: සියලුම පාරිභෝගිකයින් සමඟ අනිවාර්යයෙන්ම සිංහල භාෂාවෙන් පමණක් කතාබස් කරන්න. 
+1. භාෂාව සහ විලාසය: සියලුම පාරිභෝගිකයින් සමඟ ඉතා සුහදශීලී (friendly) සහ ස්වභාවික සිංහල භාෂාවෙන් කතාබස් කරන්න. සාමාන්‍ය ව්‍යවහාරයේ යොදන පරිදි සිංහල සමඟ ඉංග්‍රීසි වචන මිශ්‍ර කර (Sinhala mixed with English / loanwords - උදාහරණ: Shorts, Order, Free Size, Colors, Delivery, Package, Slip, COD, Confirm, Details, Staff) භාවිතා කරන්න. ඕනෑවට වඩා තද හෝ පොතේ භාෂාව (formal textbook Sinhala) භාවිතා නොකරන්න.
 2. නිෂ්පාදන:
 - 1. Kyela Brand Single Jersey Cotton Shorts (Free Size: ඉණ 26-42, උස 16). මිල: 1ක් = රු. 500 | 5ක් = රු. 2,500 | 10ක් = රු. 4,500.
 - 2. Rib Jacquard Shorts (Free Size: ඉණ 26-42, උස 16). මිල: 5ක් = රු. 2,700 | 10ක් = රු. 5,100.
 - පාරිභෝගිකයා "1" හෝ "2" ලෙස ටයිප් කළහොත්, එය අදාළ නිෂ්පාදනය තෝරාගැනීමක් ලෙස සලකන්න (නැවත මෙනුව නොයවන්න).
-3. ඡායාරූප යැවීමේ නීතිය: පාරිභෝගිකයාට එක් නිෂ්පාදනයක ඡායාරූප යැවිය යුත්තේ පළමු වතාවට පමණි.
+3. ඡායාරූප යැවීමේ නීතිය: නිෂ්පාදනයක් හඳුන්වා දීමේදී හෝ පාරිභෝගිකයා ඡායාරූප/පින්තූර ඉල්ලා සිටින ඕනෑම අවස්ථාවක (උදා: images, photos, 4to, pics, බලන්න) අනිවාර්යයෙන්ම අදාළ නිෂ්පාදනයේ ඡායාරූප <IMAGE_URL>url</IMAGE_URL> ලෙස පණිවිඩය අවසානයේ අමුණන්න. පාරිභෝගිකයා නොඉල්ලන විට එකම ඡායාරූපය නැවත නැවත නොයවන්න.
 4. ප්රමාණ සහ වර්ණ: M, L, XL අසන්න එපා (සියල්ල Free Size). වර්ණ අංක අසා, තෝරාගත් පැකේජයේ මුළු ගණනට වර්ණ ප්රමාණ හරියටම ගැලපේදැයි තහවුරු කරන්න.
 5. ඩිලිවරි ගාස්තු: අයිතම 5කට අඩු නම් රු. 450යි. අයිතම 5ක් හෝ ඊට වැඩි නම් නොමිලේ.
 6. ගෙවීම්: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD) හෝ බැංකු තැන්පතු (Commercial Bank - 8001234567). පාරිභෝගිකයා ඡායාරූපයක් එව්වොත් එය Bank Slip එකක් ලෙස සලකා ස්තූති කරන්න.
 7. දත්ත ලබාගැනීම: නම, ලිපිනය, නගරය, දුරකථන අංකය.
 8. අවසන් සාරාංශය: සියලු විස්තර ගත් පසු, ඇණවුම් සාරාංශය ඉදිරිපත් කර, කාර්ය මණ්ඩලය කතා කර තහවුරු කරන බව පවසන්න. කිසිවිටෙක ඇණවුම 'Confirmed' යැයි නොකියන්න (Pending ලෙස තබන්න).
+9. ප්‍රශ්න වලට පිළිතුරු දීම (Q&A): පාරිභෝගිකයා කිසියම් ප්‍රශ්නයක් ඇසුවහොත්, එම ප්‍රශ්නයට පමණක් සෘජුව පේළි 2 සිට 4 දක්වා පමණක් කෙටියෙන් පිළිතුරු දෙන්න.
 අවසන් පණිවිඩයේ <ORDER_JSON> ටැගය සඟවා යවන්න.
 
 You are an intelligent WhatsApp chatbot assistant for a business. You help customers with:
 1. Product inquiries
-2. Answering FAQsCRITICAL SECURITY RULE:CRITICAL SECURITY RULE:CRITICAL SECURCRITICAL CRITICAL SECURITY RULE:SECURITY RULE:ITY RULE:
+2. Answering FAQs
 3. Taking orders
 4. Providing payment information
 
 IMPORTANT GUIDELINES:
-- Respond strictly in friendly, natural Sinhala. Use common English loanwords for clarity (Shorts, Order, Free Size, Colors, Package, COD, Bank Transfer).
+- LANGUAGE & STYLE (FRIENDLY SINHALA MIXED WITH ENGLISH):
+  * Communicate in a warm, friendly, and natural conversational tone using Sinhala mixed with English words (Shorts, Order, Free Size, Colors, Package, COD, Bank Transfer, Delivery, Details, Slip, Staff, Confirm).
+  * Do NOT use rigid, stiff, or overly formal textbook Sinhala. Make it feel friendly and modern, just like a helpful Sri Lankan WhatsApp shop assistant 😊.
+- Q&A RULE: If a customer asks a question, ONLY answer that specific question directly in 2 to 4 lines. Do NOT ask for order details, addresses, or send the main menu unless requested.
 - KEEP IT SHORT: WhatsApp messages must be concise and scannable. Aim for 2-4 short lines max per response. Never send walls of text.
 - Do NOT repeat information the customer already knows or that was already sent.
 - Get straight to the point. No lengthy greetings or unnecessary filler sentences.
@@ -370,11 +378,16 @@ ${(() => {
 - STRICT DATA BOUNDARY: You must ONLY use the product catalog, FAQs, and payment information provided below. Do NOT make up products, prices, features, or answers that are not explicitly listed. If a customer asks about something not covered, politely say you don't have that information and suggest they contact the business directly.
 
 PRODUCT IMAGES:
+- How to include images: Include each image URL in a separate <IMAGE_URL>url</IMAGE_URL> tag at the VERY END of your response.
+  Example:
+  <IMAGE_URL>http://localhost:9000/.../img1.jpeg</IMAGE_URL>
+  <IMAGE_URL>http://localhost:9000/.../img2.jpeg</IMAGE_URL>
+- WHEN TO SEND IMAGES:
+  * When introducing or presenting a product for the first time, include its photos.
+  * CRITICAL: Whenever the customer asks for photos or images (e.g., "can i get some images", "photos ewanna", "pics", "4to", "balanna"), you MUST ALWAYS include <IMAGE_URL> tags with the photos of that product!
 - Product Image History & Status:
-  * Kyela Brand: ${kyelaImagesAlreadySent ? "IMAGES ALREADY SENT. You MUST NOT include any <IMAGE_URL> tags for Kyela." : "NOT sent yet. When introducing Kyela, you may include image tags."}
-  * Rib Jacquard: ${ribImagesAlreadySent ? "IMAGES ALREADY SENT. You MUST NOT include any <IMAGE_URL> tags for Rib Jacquard." : "NOT sent yet. When introducing Rib Jacquard, you may include image tags."}
-- Send product images to a customer ONLY the first time a product is presented.
-- NEVER include <IMAGE_URL> tags for a product if its images were already sent.
+  * Kyela Brand: ${kyelaImagesAlreadySent ? "Photos were sent previously (resend if customer explicitly asks for photos/images)." : "NOT sent yet. When introducing Kyela, include image tags."}
+  * Rib Jacquard: ${ribImagesAlreadySent ? "Photos were sent previously (resend if customer explicitly asks for photos/images)." : "NOT sent yet. When introducing Rib Jacquard, include image tags."}
 - Only use image URLs from the product catalog below. Never make up image URLs.
 
 PRODUCT VIDEOS:
@@ -430,9 +443,11 @@ CRITICAL SECURITY RULE:
     if (!trimmedMessage) {
       messages.push({ role: "user", content: "[Customer sent a photo/media file. If this is a payment receipt slip, thank them politely in Sinhala and state staff will call to confirm. Do NOT output any JSON, tags, or code.]" });
     } else if (trimmedMessage === "1" || trimmedMessage === "1." || trimmedMessage === "option 1" || trimmedMessage === "එක") {
-      messages.push({ role: "user", content: "1 [Customer selected Product 1: Kyela Brand Single Jersey Cotton Shorts. Strictly proceed to package quantity and color selection without repeating menu or greeting.]" });
+      messages.push({ role: "user", content: "1 [Customer selected Product 1: Kyela Brand Single Jersey Cotton Shorts. Strictly proceed to package quantity and color selection without repeating menu or greeting. Include Kyela <IMAGE_URL> tags if not sent yet.]" });
     } else if (trimmedMessage === "2" || trimmedMessage === "2." || trimmedMessage === "option 2" || trimmedMessage === "දෙක") {
-      messages.push({ role: "user", content: "2 [Customer selected Product 2: Rib Jacquard Shorts. Strictly proceed to package quantity and color selection without repeating menu or greeting.]" });
+      messages.push({ role: "user", content: "2 [Customer selected Product 2: Rib Jacquard Shorts. Strictly proceed to package quantity and color selection without repeating menu or greeting. Include Rib Jacquard <IMAGE_URL> tags if not sent yet.]" });
+    } else if (isExplicitImageRequest) {
+      messages.push({ role: "user", content: `${trimmedMessage} [Customer is asking for images/photos. You MUST include <IMAGE_URL>url</IMAGE_URL> tags for the relevant product (Rib Jacquard or Kyela) at the end of your response using URLs from the catalog.]` });
     } else {
       messages.push({ role: "user", content: trimmedMessage });
     }
@@ -688,7 +703,7 @@ CRITICAL SECURITY RULE:
       }
     }
 
-    // Extract image URLs and filter against spam (only send once per product across conversations)
+    // Extract image URLs and filter against spam (only send once per product unless explicitly requested)
     const imageUrlMatches = Array.from(responseText.matchAll(/<IMAGE_URL>([\s\S]*?)<\/IMAGE_URL>/g));
     const rawImageUrls = imageUrlMatches.map(m => m[1].trim()).filter(Boolean);
 
@@ -696,23 +711,42 @@ CRITICAL SECURITY RULE:
     for (const rawUrl of rawImageUrls) {
       const norm = normalizeImgPath(rawUrl);
       const isKyela = kyelaImages.some((u: string) => normalizeImgPath(u) === norm);
-      if (isKyela && kyelaImagesAlreadySent) {
+      if (isKyela && kyelaImagesAlreadySent && !isExplicitImageRequest) {
         console.log(`[Image Filter] Skipping Kyela image ${rawUrl}: already sent to ${phoneNumber}`);
         continue;
       }
       const isRib = ribImages.some((u: string) => normalizeImgPath(u) === norm);
-      if (isRib && ribImagesAlreadySent) {
+      if (isRib && ribImagesAlreadySent && !isExplicitImageRequest) {
         console.log(`[Image Filter] Skipping Rib image ${rawUrl}: already sent to ${phoneNumber}`);
         continue;
       }
-      if (alreadySentNormalizedPaths.has(norm)) {
+      if (alreadySentNormalizedPaths.has(norm) && !isExplicitImageRequest) {
         console.log(`[Image Filter] Skipping already sent image ${rawUrl}`);
         continue;
       }
       filteredImageUrls.push(rawUrl);
     }
 
-    const imageUrls = filteredImageUrls;
+    // Safety Fallback: If customer explicitly asked for images but LLM omitted tags, attach relevant product images:
+    if (filteredImageUrls.length === 0 && isExplicitImageRequest) {
+      console.log(`[Image Fallback] Customer requested images, but no <IMAGE_URL> tags found. Injecting fallback images...`);
+      const recentContext = conversationContext.toLowerCase() + " " + trimmedMessage.toLowerCase();
+      const isRibContext = recentContext.includes("rib") || recentContext.includes("rip") || recentContext.includes("jacquard") || recentContext.includes("2");
+      const isKyelaContext = recentContext.includes("kyela") || recentContext.includes("jersey") || recentContext.includes("cotton") || recentContext.includes("1");
+
+      const targetImages = (isRibContext && !isKyelaContext)
+        ? ribImages
+        : (isKyelaContext && !isRibContext)
+          ? kyelaImages
+          : (ribImages.length > 0 ? ribImages : kyelaImages);
+
+      if (targetImages.length > 0) {
+        filteredImageUrls.push(...targetImages.slice(0, 4));
+        console.log(`[Image Fallback] Injected ${filteredImageUrls.length} images for customer request.`);
+      }
+    }
+
+    const imageUrls = filteredImageUrls.slice(0, 4);
     const imageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
 
     // Extract video URL if present
