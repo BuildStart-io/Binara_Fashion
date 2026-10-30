@@ -71,6 +71,7 @@ serve(async (req) => {
 
     // `sessionApiKey` is now the WAHA session name (kept variable name for back-compat with callers).
     const sessionName = sessionApiKey || Deno.env.get("WAHA_DEFAULT_SESSION") || "default";
+    const chatId = toChatId(to);
     const rawUrl = mediaUrl || imageUrl;
     const detectedType = explicitType || (rawUrl ? detectMediaType(rawUrl) : null);
 
