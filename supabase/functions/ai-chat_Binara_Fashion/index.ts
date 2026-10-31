@@ -32,27 +32,21 @@ function calculateOrderTotals(orderData: any): {
     const nameLower = String(item.name || item.id || item.title || "").toLowerCase();
 
     if (nameLower.includes("rib") || nameLower.includes("rip") || nameLower.includes("jacquard")) {
-      // Rib Jacquard pricing: 5 = 2700, 10 = 5100
-      if (qty === 5) {
-        calculatedSubtotal += 2700;
-      } else if (qty === 10) {
-        calculatedSubtotal += 5100;
-      } else if (qty > 10) {
-        calculatedSubtotal += 5100 + (qty - 10) * 510;
-      } else if (qty > 5) {
+      // Rib Jacquard pricing: 1 = 540, 5 = 2700, 10 = 5100
+      // For qty > 10: price of 10 + (extra quantity * price of 1)
+      if (qty >= 10) {
+        calculatedSubtotal += Math.floor(qty / 10) * 5100 + (qty % 10) * 540;
+      } else if (qty >= 5) {
         calculatedSubtotal += 2700 + (qty - 5) * 540;
       } else {
         calculatedSubtotal += qty * 540;
       }
     } else {
       // Kyela Single Jersey Cotton pricing: 1 = 500, 5 = 2500, 10 = 4500
-      if (qty === 5) {
-        calculatedSubtotal += 2500;
-      } else if (qty === 10) {
-        calculatedSubtotal += 4500;
-      } else if (qty > 10) {
-        calculatedSubtotal += 4500 + (qty - 10) * 450;
-      } else if (qty > 5) {
+      // For qty > 10: price of 10 + (extra quantity * price of 1)
+      if (qty >= 10) {
+        calculatedSubtotal += Math.floor(qty / 10) * 4500 + (qty % 10) * 500;
+      } else if (qty >= 5) {
         calculatedSubtotal += 2500 + (qty - 5) * 500;
       } else {
         calculatedSubtotal += qty * 500;
@@ -345,9 +339,21 @@ serve(async (req) => {
 
     const systemPrompt = `ඔබ "Binara Fashion" හි නිල WhatsApp AI සහයකයා වේ.
 1. භාෂාව සහ විලාසය: සියලුම පාරිභෝගිකයින් සමඟ ඉතා සුහදශීලී (friendly) සහ ස්වභාවික සිංහල භාෂාවෙන් කතාබස් කරන්න. සාමාන්‍ය ව්‍යවහාරයේ යොදන පරිදි සිංහල සමඟ ඉංග්‍රීසි වචන මිශ්‍ර කර (Sinhala mixed with English / loanwords - උදාහරණ: Shorts, Order, Free Size, Colors, Delivery, Package, Slip, COD, Confirm, Details, Staff) භාවිතා කරන්න. ඕනෑවට වඩා තද හෝ පොතේ භාෂාව (formal textbook Sinhala) භාවිතා නොකරන්න.
-2. නිෂ්පාදන:
+2. නිෂ්පාදන සහ මිල ගණන්:
 - 1. Kyela Brand Single Jersey Cotton Shorts (Free Size: ඉණ 26-42, උස 16). මිල: 1ක් = රු. 500 | 5ක් = රු. 2,500 | 10ක් = රු. 4,500.
-- 2. Rib Jacquard Shorts (Free Size: ඉණ 26-42, උස 16). මිල: 5ක් = රු. 2,700 | 10ක් = රු. 5,100.
+- 2. Rib Jacquard Shorts (Free Size: ඉණ 26-42, උස 16). මිල: 1ක් = රු. 540 | 5ක් = රු. 2,700 | 10ක් = රු. 5,100.
+- ⚠️ අයිතම 10කට වැඩි ප්‍රමාණ සඳහා මිල ගණනය කිරීමේ නීතිය (CALCULATION FOR MORE THAN 10 SHORTS):
+  * සූත්‍රය: (10 පැකේජයේ මිල) + (අමතර shorts ගණන × 1ක මිල).
+  * Kyela Shorts සඳහා (1ක් = රු. 500, 10ක් = රු. 4,500):
+    - Shorts 11ක්: රු. 4,500 + (1 × රු. 500) = රු. 5,000 (Free Delivery)
+    - Shorts 12ක්: රු. 4,500 + (2 × රු. 500) = රු. 5,500 (Free Delivery)
+    - Shorts 15ක්: රු. 4,500 + (5 × රු. 500) = රු. 7,000 (Free Delivery)
+    - Shorts 20ක්: 2 × රු. 4,500 = රු. 9,000 (Free Delivery)
+  * Rib Jacquard Shorts සඳහා (1ක් = රු. 540, 10ක් = රු. 5,100):
+    - Shorts 11ක්: රු. 5,100 + (1 × රු. 540) = රු. 5,640 (Free Delivery)
+    - Shorts 12ක්: රු. 5,100 + (2 × රු. 540) = රු. 6,180 (Free Delivery)
+    - Shorts 15ක්: රු. 5,100 + (5 × රු. 540) = රු. 7,800 (Free Delivery)
+    - Shorts 20ක්: 2 × රු. 5,100 = රු. 10,200 (Free Delivery)
 - පාරිභෝගිකයා "1" හෝ "2" ලෙස ටයිප් කළහොත්, එය අදාළ නිෂ්පාදනය තෝරාගැනීමක් ලෙස සලකන්න (නැවත මෙනුව නොයවන්න).
 3. ඡායාරූප යැවීමේ නීතිය (CRITICAL PHOTO & IMAGE RULES):
 - 🚫 බහුවිධ නිෂ්පාදන විස්තර පෙන්වීමේදී ඡායාරූප නොයැවීම (STRICT PROHIBITION - ZERO IMAGES FOR MULTIPLE PRODUCTS):
@@ -424,6 +430,20 @@ IMPORTANT GUIDELINES:
 - RIGID MATHEMATICAL PRICING & DELIVERY RULES:
   * Kyela Single Jersey Cotton: 1 = Rs. 500 (Delivery Rs. 450, Total Rs. 950) | 5 = Rs. 2,500 (Free Delivery) | 10 = Rs. 4,500 (Free Delivery).
   * Rib Jacquard: 5 = Rs. 2,700 (Free Delivery) | 10 = Rs. 5,100 (Free Delivery). Under 5 = Rs. 540 each + Rs. 450 Delivery.
+  * PRICING CALCULATION FOR QUANTITIES GREATER THAN 10:
+    Formula: Total Subtotal = (Price of 10) + ((Quantity - 10) * Price of 1)
+    - Kyela Cotton Shorts (1 = Rs. 500, 10 = Rs. 4,500):
+      * 11 shorts: Rs. 4,500 + (1 * Rs. 500) = Rs. 5,000 (Free Delivery)
+      * 12 shorts: Rs. 4,500 + (2 * Rs. 500) = Rs. 5,500 (Free Delivery)
+      * 13 shorts: Rs. 4,500 + (3 * Rs. 500) = Rs. 6,000 (Free Delivery)
+      * 15 shorts: Rs. 4,500 + (5 * Rs. 500) = Rs. 7,000 (Free Delivery)
+      * 20 shorts: 2 * Rs. 4,500 = Rs. 9,000 (Free Delivery)
+    - Rib Jacquard Shorts (1 = Rs. 540, 10 = Rs. 5,100):
+      * 11 shorts: Rs. 5,100 + (1 * Rs. 540) = Rs. 5,640 (Free Delivery)
+      * 12 shorts: Rs. 5,100 + (2 * Rs. 540) = Rs. 6,180 (Free Delivery)
+      * 13 shorts: Rs. 5,100 + (3 * Rs. 540) = Rs. 6,720 (Free Delivery)
+      * 15 shorts: Rs. 5,100 + (5 * Rs. 540) = Rs. 7,800 (Free Delivery)
+      * 20 shorts: 2 * Rs. 5,100 = Rs. 10,200 (Free Delivery)
   * Delivery fee: Strictly Rs. 450 for orders under 5 items. 5 or more items qualify for Free Delivery (රු. 0).
 - STRICT STEP-BY-STEP ORDERING WORKFLOW (COLLECT COLORS BEFORE ORDER DETAILS):
   * STEP 1 - PACKAGE / QUANTITY SPECIFIED:
