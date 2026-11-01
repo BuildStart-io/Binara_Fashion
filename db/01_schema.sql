@@ -236,7 +236,7 @@ CREATE FUNCTION public.handle_new_user_settings() RETURNS trigger
 BEGIN
   INSERT INTO public.settings (user_id, key, value) VALUES
     (NEW.id, 'welcome_message', '{"text": "Welcome! How can I help you today?"}'::jsonb),
-    (NEW.id, 'payment_info', '{"bank_name": "", "account_number": "", "account_name": ""}'::jsonb),
+    (NEW.id, 'payment_info', '{"bank_name": "", "account_number": "", "account_name": "", "branch": ""}'::jsonb),
     (NEW.id, 'auto_responses', '{"enabled": true}'::jsonb);
   RETURN NEW;
 END;

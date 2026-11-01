@@ -230,9 +230,38 @@ async function isLikelyBankSlip(
       .map((m: any) => String(m.message || "").toLowerCase())
       .join(" ");
 
+    // Fetch configured bank details from database dynamically
+    const dynamicKeywords: string[] = [];
+    try {
+      const { data: paymentSetting } = await supabase
+        .from("settings")
+        .select("value")
+        .eq("user_id", userId)
+        .eq("key", "payment_info")
+        .maybeSingle();
+
+      const pInfo = paymentSetting?.value;
+      if (pInfo) {
+        if (Array.isArray(pInfo.accounts)) {
+          for (const acc of pInfo.accounts) {
+            if (acc.account_label) dynamicKeywords.push(String(acc.account_label).toLowerCase().trim());
+            if (acc.bank_name) dynamicKeywords.push(String(acc.bank_name).toLowerCase().trim());
+            if (acc.account_number) dynamicKeywords.push(String(acc.account_number).toLowerCase().trim());
+            if (acc.branch) dynamicKeywords.push(String(acc.branch).toLowerCase().trim());
+          }
+        }
+        if (pInfo.bank_name) dynamicKeywords.push(String(pInfo.bank_name).toLowerCase().trim());
+        if (pInfo.account_number) dynamicKeywords.push(String(pInfo.account_number).toLowerCase().trim());
+        if (pInfo.branch) dynamicKeywords.push(String(pInfo.branch).toLowerCase().trim());
+      }
+    } catch (e) {
+      console.warn("isLikelyBankSlip settings lookup error:", e);
+    }
+
     const bankSlipKeywords = [
-      "commercial bank", "8001234567", "bank transfer", "slip", "receipt", "deposit",
-      "account", "බැංකු", "තැන්පතු", "ස්ලිප්", "ට්‍රාන්ස්ෆර්", "සල්ලි දැම්මා", "ගෙව්වා", "ඇකවුන්ට්"
+      ...dynamicKeywords.filter(k => k.length >= 3),
+      "bank transfer", "slip", "receipt", "deposit",
+      "account", "branch", "බැංකු", "තැන්පතු", "ස්ලිප්", "ට්‍රාන්ස්ෆර්", "සල්ලි දැම්මා", "ගෙව්වා", "ඇකවුන්ට්", "ශාඛාව"
     ];
 
     if (bankSlipKeywords.some(kw => recentMsgs.includes(kw))) {

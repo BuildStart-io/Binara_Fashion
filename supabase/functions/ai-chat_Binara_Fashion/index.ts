@@ -180,6 +180,34 @@ serve(async (req) => {
     const deliverySettings = settings.find(s => s.key === "delivery_settings")?.value || {};
     const freeDeliveryThreshold = deliverySettings.free_delivery_threshold || 0;
 
+    const formatBankDetails = (info: any) => {
+      const rawAccounts = info.accounts;
+      const accounts = Array.isArray(rawAccounts)
+        ? rawAccounts.filter((a: any) => a.account_label || a.bank_name || a.account_number || a.account_name || a.branch)
+        : [];
+      if (accounts.length > 0) {
+        return accounts.map((a: any) => {
+          const parts: string[] = [];
+          const label = a.account_label || a.bank_name;
+          if (label) parts.push(`Bank: ${label}`);
+          if (a.account_number) parts.push(`Account: ${a.account_number}`);
+          if (a.account_name) parts.push(`Name: ${a.account_name}`);
+          if (a.branch) parts.push(`Branch: ${a.branch}`);
+          return parts.length > 0 ? `• ${parts.join(", ")}` : "";
+        }).filter(Boolean).join("\n");
+      }
+      if (info.bank_name || info.account_number || info.account_name || info.branch) {
+        const parts: string[] = [];
+        if (info.bank_name) parts.push(`Bank: ${info.bank_name}`);
+        if (info.account_number) parts.push(`Account: ${info.account_number}`);
+        if (info.account_name) parts.push(`Name: ${info.account_name}`);
+        if (info.branch) parts.push(`Branch: ${info.branch}`);
+        return parts.length > 0 ? `• ${parts.join(", ")}` : "";
+      }
+      return "";
+    };
+    const paymentDetailsFormatted = formatBankDetails(paymentInfo);
+
     const productCatalog = products.map(p => {
       let line = `- ${p.name}: Base price LKR ${p.price} (${p.product_type})`;
       if (p.product_type === "physical" && p.delivery_price && p.delivery_price > 0) {
@@ -345,6 +373,7 @@ serve(async (req) => {
 2. ප්‍රශ්න වලට පමණක් සෘජු පිළිතුරු (STRICT QUESTION-ONLY RULE):
    - පාරිභෝගිකයා යම් ප්‍රශ්නයක් ඇසුවහොත් (උදා: Delivery, Shop location, Fabric, Size, Price), එම ප්‍රශ්නයට පමණක් පේළි 1-2කින් සෘජුව පිළිතුරු දෙන්න.
    - 🚫 දැඩි තහනම: පාරිභෝගිකයා නිෂ්පාදන විස්තර හෝ මිල ඉල්ලා නැතිනම්, ප්‍රශ්නයකට පිළිතුරු දෙන විට කිසිසේත්ම නිෂ්පාදන මෙනුව (Option 1 හෝ 2) හෝ මිල ලැයිස්තු අමුණා නොයවන්න!
+   - පාරිභෝගිකයා Bank Details / ගිණුම් විස්තර ඉල්ලුවහොත්, පහත ගෙවීම් ගිණුම් විස්තර (Bank, Account Number, Name, Branch) ලබාදී slip එකේ photo එකක් එවන්නැයි කියන්න.
    - නිවැරදි උදාහරණය: පාරිභෝගිකයා "Delivery theyanawada" ඇසුවහොත් පිළිතුර:
      "ඔව්, අපේ Delivery සේවාව දිවයින පුරාම තියෙනවා. අයිතම 5ක් හෝ ඊට වැඩි නම් Free Delivery 🚚 (5ට අඩු නම් Delivery ගාස්තුව රු. 450යි)."
      (මෙපමණයි! මෙනුව හෝ අනවශ්‍ය විස්තර නොයවන්න!)
@@ -395,7 +424,7 @@ serve(async (req) => {
     • ඇණවුම: [භාණ්ඩය, ප්‍රමාණය, වර්ණ]
     • අයිතම එකතුව: රු. [මුදල] | ඩිලිවරි: [නොමිලේ / රු. 450]
     • මුළු මුදල: රු. [මුළු මුදල] ([COD හෝ Bank Transfer])
-  * Bank Transfer නම්, සාරාංශයට පහළින් බැංකු ගිණුම් විස්තර දක්වා slip එකේ photo එකක් එවන්නැයි කියන්න.
+  * Bank Transfer නම්, සාරාංශයට පහළින් පහත දැක්වෙන බැංකු ගිණුම් විස්තර (Bank Name, Account Number, Account Name, Branch ඇතුළුව) නිවැරදිව දක්වා slip එකේ photo එකක් එවන්නැයි කියන්න.
   * අවසානයට: "ස්තූතියි! ඔබගේ ඇණවුම ලැබී ඇත (Pending). අපගේ කාර්ය මණ්ඩලය (Staff) දුරකථනයෙන් අමතා මෙය තහවුරු කරනු ඇත."
   * පණිවිඩය අවසානයට සඟවා <ORDER_JSON> ටැගය අමුණන්න. තත්ත්වය Pending විය යුතුය (Confirmed නොකියන්න).
 
@@ -407,18 +436,7 @@ serve(async (req) => {
 - Rib Jacquard: ${ribImagesAlreadySent ? "දැනටමත් ඡායාරූප යවා ඇත. නැවත නොයවන්න." : "තනි නිෂ්පාදනයක් ලෙස ඉල්ලූ විට පමණක් අදාළ Rib Jacquard ඡායාරූප <IMAGE_URL> ටැග් අමුණන්න."}
 
 ගෙවීම් ගිණුම් විස්තර (PAYMENT DETAILS):
-${(() => {
-        const accounts = paymentInfo.accounts;
-        if (accounts && Array.isArray(accounts) && accounts.length > 0) {
-          return accounts.map((a: any, i: number) => {
-            const label = a.account_label || a.bank_name || "Bank";
-            const number = a.account_number || "";
-            const name = a.account_name || "";
-            return `• ${label}: ${number} (${name})`;
-          }).join("\n");
-        }
-        return `• Bank: ${paymentInfo.bank_name || "Commercial Bank"}, Account: ${paymentInfo.account_number || ""}, Name: ${paymentInfo.account_name || ""}`;
-      })()}
+${paymentDetailsFormatted}
 
 PRODUCT CATALOG:
 ${productCatalog || "No products available"}
@@ -865,7 +883,14 @@ CRITICAL ORDER & SECURITY RULES:
         const custName = savedOrderData.customer_name || savedOrderData.customer_details?.name || "සඳහන් කර නැත";
         const custAddress = savedOrderData.customer_address || savedOrderData.customer_details?.address || "සඳහන් කර නැත";
 
-        const summaryBlock = `📋 ඔබගේ සම්පූර්ණ ඇණවුම් සාරාංශය (Full Order Summary):\n• නම: ${custName}\n• ලිපිනය: ${custAddress}\n• දුරකථන අංකය: ${savedPhoneToSave || phoneNumber}\n• ඇණවුම: ${itemsList}${colorsText}\n• අයිතම එකතුව: රු. ${subtotal.toLocaleString()}\n• ඩිලිවරි ගාස්තුව: ${delivText}\n• මුළු මුදල: රු. ${totalAmount.toLocaleString()}\n• ගෙවීම් ක්‍රමය: ${paymentMethodText}\n\n`;
+        let summaryBlock = `📋 ඔබගේ සම්පූර්ණ ඇණවුම් සාරාංශය (Full Order Summary):\n• නම: ${custName}\n• ලිපිනය: ${custAddress}\n• දුරකථන අංකය: ${savedPhoneToSave || phoneNumber}\n• ඇණවුම: ${itemsList}${colorsText}\n• අයිතම එකතුව: රු. ${subtotal.toLocaleString()}\n• ඩිලිවරි ගාස්තුව: ${delivText}\n• මුළු මුදල: රු. ${totalAmount.toLocaleString()}\n• ගෙවීම් ක්‍රමය: ${paymentMethodText}\n\n`;
+
+        if (paymentMethodText === "Bank Transfer" && paymentDetailsFormatted) {
+          const hasBankInResp = /(?:Account|ගිණුම්|බැංකු|Branch|ශාඛා)/i.test(cleanResponse);
+          if (!hasBankInResp) {
+            summaryBlock += `💳 බැංකු ගිණුම් විස්තර (Bank Details):\n${paymentDetailsFormatted}\n\nකරුණාකර ඉහත ගිණුමට මුදල් තැන්පත් කර රිසිට්පතේ (Slip) ඡායාරූපයක් මෙහි එවන්න. 📸\n\n`;
+          }
+        }
 
         cleanResponse = summaryBlock + cleanResponse;
       }

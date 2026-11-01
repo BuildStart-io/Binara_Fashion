@@ -22,6 +22,7 @@ interface PaymentAccount {
   account_label: string;
   account_number: string;
   account_name: string;
+  branch: string;
 }
 
 interface SettingsData {
@@ -65,7 +66,7 @@ export default function Settings() {
 
   // Payment Info - Multiple Bank Accounts
   const [bankAccounts, setBankAccounts] = useState<PaymentAccount[]>([
-    { account_type: "bank", account_label: "", account_number: "", account_name: "" }
+    { account_type: "bank", account_label: "", account_number: "", account_name: "", branch: "" }
   ]);
 
   // Auto Responses
@@ -151,7 +152,7 @@ export default function Settings() {
           }
           case "payment_info": {
             const val = setting.value as any;
-            const defaultAccount: PaymentAccount = { account_type: "bank", account_label: "", account_number: "", account_name: "" };
+            const defaultAccount: PaymentAccount = { account_type: "bank", account_label: "", account_number: "", account_name: "", branch: "" };
             if (val?.accounts && Array.isArray(val.accounts)) {
               // Migrate old accounts that have bank_name to new format
               const migrated = val.accounts.map((a: any) => ({
@@ -159,10 +160,17 @@ export default function Settings() {
                 account_label: a.account_label || a.bank_name || "",
                 account_number: a.account_number || "",
                 account_name: a.account_name || "",
+                branch: a.branch || val.branch || "",
               }));
               setBankAccounts(migrated.length > 0 ? migrated : [defaultAccount]);
-            } else if (val?.bank_name || val?.account_number || val?.account_name) {
-              setBankAccounts([{ account_type: "bank", account_label: val.bank_name || "", account_number: val.account_number || "", account_name: val.account_name || "" }]);
+            } else if (val?.bank_name || val?.account_number || val?.account_name || val?.branch) {
+              setBankAccounts([{
+                account_type: "bank",
+                account_label: val.bank_name || "",
+                account_number: val.account_number || "",
+                account_name: val.account_name || "",
+                branch: val.branch || ""
+              }]);
             }
             break;
           }
@@ -543,13 +551,14 @@ export default function Settings() {
   };
 
   const handleSavePayment = () => {
-    const validAccounts = bankAccounts.filter(a => a.account_label || a.account_number || a.account_name);
+    const validAccounts = bankAccounts.filter(a => a.account_label || a.account_number || a.account_name || a.branch);
     saveSettings("payment_info", {
       accounts: validAccounts.length > 0 ? validAccounts : bankAccounts,
       // Legacy compat
       bank_name: bankAccounts[0]?.account_label || "",
       account_number: bankAccounts[0]?.account_number || "",
       account_name: bankAccounts[0]?.account_name || "",
+      branch: bankAccounts[0]?.branch || "",
     });
   };
 
@@ -1254,7 +1263,7 @@ export default function Settings() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setBankAccounts(prev => [...prev, { account_type: "bank", account_label: "", account_number: "", account_name: "" }])}
+                    onClick={() => setBankAccounts(prev => [...prev, { account_type: "bank", account_label: "", account_number: "", account_name: "", branch: "" }])}
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Account
@@ -1277,7 +1286,7 @@ export default function Settings() {
                         </Button>
                       )}
                     </div>
-                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                       <div className="space-y-2">
                         <Label>Account Type</Label>
                         <select
@@ -1304,7 +1313,7 @@ export default function Settings() {
                             updated[index] = { ...updated[index], account_label: e.target.value };
                             setBankAccounts(updated);
                           }}
-                          placeholder={account.account_type === "crypto" ? "e.g., Binance, USDT TRC20" : account.account_type === "digital" ? "e.g., PayPal, Skrill" : "e.g., Commercial Bank"}
+                          placeholder={account.account_type === "crypto" ? "e.g., Binance, USDT TRC20" : account.account_type === "digital" ? "e.g., PayPal, Skrill" : "e.g., Bank Name"}
                         />
                       </div>
                       <div className="space-y-2">
@@ -1329,6 +1338,18 @@ export default function Settings() {
                             setBankAccounts(updated);
                           }}
                           placeholder="e.g., Your Name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>{account.account_type === "bank" ? "Branch Name" : "Branch / Note"}</Label>
+                        <Input
+                          value={account.branch || ""}
+                          onChange={(e) => {
+                            const updated = [...bankAccounts];
+                            updated[index] = { ...updated[index], branch: e.target.value };
+                            setBankAccounts(updated);
+                          }}
+                          placeholder={account.account_type === "bank" ? "e.g., Colombo Fort" : "e.g., Optional note"}
                         />
                       </div>
                     </div>
