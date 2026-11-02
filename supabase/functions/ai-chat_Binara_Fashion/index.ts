@@ -12,7 +12,97 @@ interface ConversationMessage {
   created_at: string;
 }
 
-function calculateOrderTotals(orderData: any): {
+interface ProductPricingTiers {
+  unitPrice: number;
+  price5?: number;
+  price10?: number;
+  tiers: Array<{ qty: number; price: number }>;
+}
+
+function parseProductPricing(p: any): ProductPricingTiers {
+  const unitPrice = Number(p.price) || 0;
+  const tiersMap = new Map<number, number>();
+
+  // Check variations if configured
+  if (Array.isArray(p.variations)) {
+    for (const v of p.variations) {
+      if (Array.isArray(v.options)) {
+        for (const opt of v.options) {
+          const lbl = String(opt.label || "").toLowerCase().trim();
+          const pr = Number(opt.price);
+          if (pr > 0) {
+            const qMatch = lbl.match(/\b(\d+)\b/);
+            if (qMatch) {
+              const q = parseInt(qMatch[1], 10);
+              if (q >= 1 && q <= 100) {
+                tiersMap.set(q, pr);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Check description if not found or to supplement tiers (e.g. "5ක් 2500" or "05ම 2600" or "10ක 4500")
+  const desc = String(p.description || "");
+  const tierRegexes = [
+    /(?:^|[^\d])(\d+)\s*(?:ක්|ම|ක|items?|pcs?|pack)?\s*(?:[=:\-–\/]|LKR|රු|Rs)?\s*(\d[\d,]{2,})\s*(?:\/=|LKR|රු|Rs|[\/–-]|යි|\b)/gi,
+    /(?:^|[^\d])(\d+)\s*(?:ක්|ම|ක|items?|pcs?)[^\d\n]*?(\d[\d,]{2,})\s*(?:\/=|LKR|රු|Rs|[\/–-]|යි|\b)/gi
+  ];
+  for (const re of tierRegexes) {
+    let match;
+    while ((match = re.exec(desc)) !== null) {
+      const q = parseInt(match[1], 10);
+      const pr = parseInt(match[2].replace(/,/g, ""), 10);
+      if (q >= 1 && q <= 100 && pr >= 10 && !tiersMap.has(q)) {
+        tiersMap.set(q, pr);
+      }
+    }
+  }
+
+  const tiers = Array.from(tiersMap.entries())
+    .map(([qty, price]) => ({ qty, price }))
+    .sort((a, b) => b.qty - a.qty);
+
+  const price5 = tiersMap.get(5);
+  const price10 = tiersMap.get(10);
+
+  return { unitPrice, price5, price10, tiers };
+}
+
+function calculateItemSubtotal(p: any, qty: number): number {
+  const { unitPrice, tiers } = parseProductPricing(p);
+
+  if (tiers && tiers.length > 0) {
+    let remainingQty = qty;
+    let total = 0;
+
+    for (const tier of tiers) {
+      if (tier.qty > 1 && remainingQty >= tier.qty) {
+        const count = Math.floor(remainingQty / tier.qty);
+        total += count * tier.price;
+        remainingQty %= tier.qty;
+      }
+    }
+
+    if (remainingQty > 0) {
+      const tier1 = tiers.find(t => t.qty === 1);
+      const singlePrice = tier1 ? tier1.price : unitPrice;
+      total += remainingQty * singlePrice;
+    }
+
+    return total;
+  }
+
+  return qty * unitPrice;
+}
+
+function calculateOrderTotals(
+  orderData: any,
+  products: any[] = [],
+  deliverySettings: any = {}
+): {
   subtotal: number;
   deliveryFee: number;
   totalAmount: number;
@@ -26,41 +116,51 @@ function calculateOrderTotals(orderData: any): {
   let totalQty = 0;
   let calculatedSubtotal = 0;
 
+  const defaultDeliveryFee = typeof deliverySettings?.delivery_fee === "number"
+    ? deliverySettings.delivery_fee
+    : (products[0]?.delivery_price ? Number(products[0].delivery_price) : 0);
+  const freeItemThreshold = typeof deliverySettings?.free_delivery_item_threshold === "number"
+    ? deliverySettings.free_delivery_item_threshold
+    : (deliverySettings?.free_delivery_item_threshold ? parseInt(deliverySettings.free_delivery_item_threshold, 10) : 0);
+  const freeAmountThreshold = typeof deliverySettings?.free_delivery_threshold === "number"
+    ? deliverySettings.free_delivery_threshold
+    : 0;
+
   for (const item of items) {
     const qty = Math.max(1, parseInt(String(item.quantity || 1), 10) || 1);
     totalQty += qty;
-    const nameLower = String(item.name || item.id || item.title || "").toLowerCase();
+    const nameLower = String(item.name || item.id || item.title || "").toLowerCase().trim();
 
-    if (nameLower.includes("rib") || nameLower.includes("rip") || nameLower.includes("jacquard")) {
-      // Rib Jacquard pricing: 1 = 540, 5 = 2700, 10 = 5100
-      // For qty > 10: price of 10 + (extra quantity * price of 1)
-      if (qty >= 10) {
-        calculatedSubtotal += Math.floor(qty / 10) * 5100 + (qty % 10) * 540;
-      } else if (qty >= 5) {
-        calculatedSubtotal += 2700 + (qty - 5) * 540;
-      } else {
-        calculatedSubtotal += qty * 540;
-      }
+    // Match product against database products
+    const matchedProduct = products.find((p: any) => {
+      const pName = String(p.name || "").toLowerCase().trim();
+      return p.id === item.id ||
+        pName === nameLower ||
+        (nameLower.length > 2 && pName.includes(nameLower)) ||
+        (pName.length > 2 && nameLower.includes(pName));
+    }) || products[0];
+
+    if (matchedProduct) {
+      calculatedSubtotal += calculateItemSubtotal(matchedProduct, qty);
     } else {
-      // Kyela Single Jersey Cotton pricing: 1 = 500, 5 = 2500, 10 = 4500
-      // For qty > 10: price of 10 + (extra quantity * price of 1)
-      if (qty >= 10) {
-        calculatedSubtotal += Math.floor(qty / 10) * 4500 + (qty % 10) * 500;
-      } else if (qty >= 5) {
-        calculatedSubtotal += 2500 + (qty - 5) * 500;
-      } else {
-        calculatedSubtotal += qty * 500;
-      }
+      const itemPrice = parseFloat(String(item.price || 0)) || 0;
+      calculatedSubtotal += qty * itemPrice;
     }
   }
 
   if (totalQty === 0) {
     totalQty = 1;
-    calculatedSubtotal = 500;
+    calculatedSubtotal = products[0]?.price ? Number(products[0].price) : 0;
   }
 
-  // Delivery fee rule: Strictly Rs. 450 for <5 items, Free (Rs. 0) for >= 5 items
-  const deliveryFee = totalQty < 5 ? 450 : 0;
+  // Delivery fee rule from database settings
+  let deliveryFee = defaultDeliveryFee;
+  if (freeItemThreshold > 0 && totalQty >= freeItemThreshold) {
+    deliveryFee = 0;
+  } else if (freeAmountThreshold > 0 && calculatedSubtotal >= freeAmountThreshold) {
+    deliveryFee = 0;
+  }
+
   const totalAmount = calculatedSubtotal + deliveryFee;
 
   return {
@@ -96,7 +196,7 @@ serve(async (req) => {
 
     // Fetch products, FAQs, settings, profile, and platform limits
     const [productsRes, faqsRes, settingsRes, profileRes, platformLimitsRes] = await Promise.all([
-      supabase.from("products").select("*").eq("is_active", true).eq("user_id", userId),
+      supabase.from("products").select("*").eq("is_active", true).eq("user_id", userId).order("created_at", { ascending: true }),
       supabase.from("faqs").select("*, products(name)").eq("is_active", true).eq("user_id", userId),
       supabase.from("settings").select("key, value").eq("user_id", userId),
       supabase.from("profiles").select("plan_tier, billing_cycle_start, is_paused, addon_contacts, addon_orders").eq("user_id", userId).single(),
@@ -178,7 +278,6 @@ serve(async (req) => {
     const welcomeMessage = settings.find(s => s.key === "welcome_message")?.value?.text || "Welcome! How can I help you?";
     const paymentInfo = settings.find(s => s.key === "payment_info")?.value || {};
     const deliverySettings = settings.find(s => s.key === "delivery_settings")?.value || {};
-    const freeDeliveryThreshold = deliverySettings.free_delivery_threshold || 0;
 
     const formatBankDetails = (info: any) => {
       const rawAccounts = info.accounts;
@@ -333,25 +432,82 @@ serve(async (req) => {
       }
     }
 
-    const kyelaProduct = products.find((p: any) =>
-      p.name?.toLowerCase().includes("jersey") || p.name?.toLowerCase().includes("kyela")
-    ) || products[0];
+    // Build per-product image sets and tracking dynamically for ALL products from DB
+    const productImagesAlreadySentMap: Record<string, boolean> = {};
+    const productNormPathsMap: Record<string, Set<string>> = {};
 
-    const ribProduct = products.find((p: any) =>
-      p.name?.toLowerCase().includes("rib") || p.name?.toLowerCase().includes("rip") || p.name?.toLowerCase().includes("jacquard")
-    ) || products[1];
+    for (const p of products) {
+      const pImages: string[] = Array.isArray(p.images) ? p.images.filter(Boolean) : [];
+      const normPaths = new Set(pImages.map((u: string) => normalizeImgPath(u)));
+      productNormPathsMap[p.id] = normPaths;
+      productImagesAlreadySentMap[p.id] = pImages.length > 0 && pImages.some((u: string) => alreadySentNormalizedPaths.has(normalizeImgPath(u)));
+    }
 
-    const kyelaImages: string[] = Array.isArray(kyelaProduct?.images) && kyelaProduct.images.length > 0
-      ? kyelaProduct.images
-      : [];
+    const deliveryFeeDefault = typeof deliverySettings?.delivery_fee === "number"
+      ? deliverySettings.delivery_fee
+      : (products[0]?.delivery_price ? Number(products[0].delivery_price) : 0);
+    const freeDeliveryItemThreshold = typeof deliverySettings?.free_delivery_item_threshold === "number"
+      ? deliverySettings.free_delivery_item_threshold
+      : (deliverySettings?.free_delivery_item_threshold ? parseInt(deliverySettings.free_delivery_item_threshold, 10) : 0);
+    const freeDeliveryThreshold = typeof deliverySettings?.free_delivery_threshold === "number" ? deliverySettings.free_delivery_threshold : 0;
+    const deliveryRuleText = deliverySettings?.description
+      ? deliverySettings.description
+      : (freeDeliveryItemThreshold > 0
+        ? `අයිතම ${freeDeliveryItemThreshold}ක් හෝ ඊට වැඩි නම් නොමිලේ (Free Delivery 🚚). ඊට අඩු නම් Delivery ගාස්තුව රු. ${deliveryFeeDefault}යි.`
+        : (freeDeliveryThreshold > 0
+          ? `රු. ${freeDeliveryThreshold.toLocaleString()}ට වැඩි නම් නොමිලේ (Free Delivery 🚚). ඊට අඩු නම් Delivery ගාස්තුව රු. ${deliveryFeeDefault}යි.`
+          : (deliveryFeeDefault > 0 ? `Delivery ගාස්තුව රු. ${deliveryFeeDefault}යි.` : "Delivery නොමිලේ (Free Delivery 🚚).")));
 
-    const ribImages: string[] = Array.isArray(ribProduct?.images) && ribProduct.images.length > 0
-      ? ribProduct.images
-      : [];
+    const productsPricingFormatted = products.map((p: any, idx: number) => {
+      const { unitPrice, tiers } = parseProductPricing(p);
+      const num = idx + 1;
+      let priceLine = `${num}. ${p.name}: 1ක් = රු. ${unitPrice.toLocaleString()}`;
 
-    // Check if photos for either product were already sent to this customer
-    const kyelaImagesAlreadySent = kyelaImages.length > 0 && kyelaImages.some((u: string) => alreadySentNormalizedPaths.has(normalizeImgPath(u)));
-    const ribImagesAlreadySent = ribImages.length > 0 && ribImages.some((u: string) => alreadySentNormalizedPaths.has(normalizeImgPath(u)));
+      // List all quantity package tiers in ascending order
+      const ascTiers = [...tiers].sort((a, b) => a.qty - b.qty);
+      for (const t of ascTiers) {
+        if (t.qty > 1) {
+          priceLine += ` | ${t.qty}ක් = රු. ${t.price.toLocaleString()}`;
+        }
+      }
+
+      // If there are variations from DB
+      let variationsLine = "";
+      if (Array.isArray(p.variations) && p.variations.length > 0) {
+        const varStrs = p.variations.map((v: any) => {
+          const optStrs = (v.options || []).map((o: any) => {
+            if (typeof o !== "object") return String(o);
+            let s = o.label;
+            if (o.price && Number(o.price) > 0) s += ` (රු. ${Number(o.price).toLocaleString()})`;
+            if (Array.isArray(o.subVariants) && o.subVariants.length > 0) {
+              const subStr = o.subVariants.map((sv: any) => {
+                const subOpts = (sv.options || []).map((so: any) => typeof so === "object" ? so.label : String(so)).join(", ");
+                return `${sv.name}: ${subOpts}`;
+              }).join(" | ");
+              s += ` [${subStr}]`;
+            }
+            return s;
+          }).join(", ");
+          return `   * ${v.name}: ${optStrs}`;
+        }).join("\n");
+        if (varStrs) variationsLine = `\n${varStrs}`;
+      }
+
+      let extraCalcLine = "";
+      const maxTier = tiers.length > 0 ? tiers[0] : null;
+      if (maxTier && maxTier.qty > 1) {
+        extraCalcLine = `   * ${maxTier.qty}ට වැඩි ප්‍රමාණ සඳහා: (${maxTier.qty} පැකේජයේ මිල රු. ${maxTier.price.toLocaleString()}) + (අමතර ප්‍රමාණය × 1ක මිල රු. ${unitPrice.toLocaleString()})`;
+      }
+
+      const descSnippet = p.description ? `\n   * විස්තර (Description): ${p.description.replace(/\n+/g, " | ").trim()}` : "";
+      return `${priceLine}${variationsLine}${extraCalcLine ? `\n${extraCalcLine}` : ""}${descSnippet}`;
+    }).join("\n\n");
+
+    const productImageRulesFormatted = products.map((p: any, idx: number) => {
+      const alreadySent = productImagesAlreadySentMap[p.id];
+      const name = p.name || `Product ${idx + 1}`;
+      return `- ${name}: ${alreadySent ? "දැනටමත් ඡායාරූප යවා ඇත. නැවත නොයවන්න." : `තනි නිෂ්පාදනයක් ලෙස ඉල්ලූ විට පමණක් අදාළ ${name} ඡායාරූප <IMAGE_URL> ටැග් අමුණන්න.`}`;
+    }).join("\n");
 
     // Build FAQ context with IDs so AI can report which ones it used
     const faqContext = faqs.map(f =>
@@ -363,58 +519,55 @@ serve(async (req) => {
 
     const conversationContext = (conversationHistory as ConversationMessage[])
       .map(msg => `${msg.direction === "inbound" ? "Customer" : "Assistant"}: ${msg.message}`)
-      .join("\n");    const systemPrompt = `ඔබ "Binara Fashion" හි නිල WhatsApp AI සහයකයා වේ.
+      .join("\n"); const systemPrompt = `ඔබ "Binara Fashion" හි නිල WhatsApp AI සහයකයා වේ.
 
 🔥 අතිශය වැදගත් WhatsApp කෙටි පණිවිඩ නීති (MANDATORY WHATSAPP BREVITY & COMPACTNESS RULES):
 1. කිසිවිටෙකත් ඡේද පිටු ගණන් (NO MULTI-PARAGRAPH WALLS OF TEXT / NO ESSAYS) නොලියන්න!
-   - සෑම WhatsApp පණිවිඩයක්ම ඉතා කෙටි, සංයුක්ත සහ කියවීමට පහසු විය යුතුය (උපරිම පේළි 2 සිට 4 දක්වා).
-   - කෙටි වාක්‍ය අතර හිස් පේළි (blank lines / double newlines) තබමින් පණිවිඩය ඡේද වලට කඩන්න එපා.
+   - සෑම WhatsApp පණිවිඩයක්ම කෙටි, සංයුක්ත සහ පාරිභෝගිකයාට කියවීමට පහසු වන සේ පේළි අතර පැහැදිලි පරතරයක් (clean space between lines) තබන්න.
    - Do NOT use asterisks (*) for bold or any markdown formatting. Write plain, clean text only.
 2. ප්‍රශ්න වලට පමණක් සෘජු පිළිතුරු (STRICT QUESTION-ONLY RULE):
-   - පාරිභෝගිකයා යම් ප්‍රශ්නයක් ඇසුවහොත් (උදා: Delivery, Shop location, Fabric, Size, Price), එම ප්‍රශ්නයට පමණක් පේළි 1-2කින් සෘජුව පිළිතුරු දෙන්න.
-   - 🚫 දැඩි තහනම: පාරිභෝගිකයා නිෂ්පාදන විස්තර හෝ මිල ඉල්ලා නැතිනම්, ප්‍රශ්නයකට පිළිතුරු දෙන විට කිසිසේත්ම නිෂ්පාදන මෙනුව (Option 1 හෝ 2) හෝ මිල ලැයිස්තු අමුණා නොයවන්න!
+   - පාරිභෝගිකයා යම් ප්‍රශ්නයක් ඇසුවහොත් (උදා: Delivery, Shop location, Details, Price), එම ප්‍රශ්නයට පමණක් පේළි 1-2කින් සෘජුව පිළිතුරු දෙන්න.
+   - 🚫 දැඩි තහනම: පාරිභෝගිකයා නිෂ්පාදන විස්තර හෝ මිල ඉල්ලා නැතිනම්, ප්‍රශ්නයකට පිළිතුරු දෙන විට කිසිසේත්ම නිෂ්පාදන මෙනුව හෝ මිල ලැයිස්තු අමුණා නොයවන්න!
    - පාරිභෝගිකයා Bank Details / ගිණුම් විස්තර ඉල්ලුවහොත්, පහත ගෙවීම් ගිණුම් විස්තර (Bank, Account Number, Name, Branch) ලබාදී slip එකේ photo එකක් එවන්නැයි කියන්න.
-   - පාරිභෝගිකයා වර්ණ තෝරාගත් පසු, ඇණවුමේ කෙටි සාරාංශය පෙන්වා ඇණවුම ඉදිරියට කරගෙන යාමට නම, ලිපිනය, ලගම නගරය සහ දුරකථන අංක දෙකක් එවන්නැයි විමසන්න.
+   - පාරිභෝගිකයා නිෂ්පාදනයේ අවශ්‍ය තේරීම් (විකල්ප/වර්ණ/ප්‍රමාණ) තෝරාගත් පසු (හෝ එවැනි තේරීම් නැතිනම් කෙලින්ම), ඇණවුමේ කෙටි සාරාංශය පෙන්වා ඇණවුම ඉදිරියට කරගෙන යාමට නම, ලිපිනය, ලගම නගරය සහ දුරකථන අංක දෙකක් එවන්නැයි විමසන්න.
    - නිවැරදි උදාහරණය: පාරිභෝගිකයා "Delivery theyanawada" ඇසුවහොත් පිළිතුර:
-     "ඔව්, අපේ Delivery සේවාව දිවයින පුරාම තියෙනවා. අයිතම 5ක් හෝ ඊට වැඩි නම් Free Delivery 🚚 (5ට අඩු නම් Delivery ගාස්තුව රු. 450යි)."
+     "ඔව්, අපේ Delivery සේවාව දිවයින පුරාම තියෙනවා. ${deliveryRuleText}"
      (මෙපමණයි! මෙනුව හෝ අනවශ්‍ය විස්තර නොයවන්න!)
 3. ගණනය කිරීම් පාරිභෝගිකයාට නොපෙන්වීම (NO MATH SCRATCHPADS):
-   - පාරිභෝගිකයා ප්‍රමාණයක් පැවසූ විට (උදා: Shorts 12ක්), සූත්‍ර හෝ ගණන් හැදූ පියවර (10 පැකේජය = ..., අමතර 2 = ...) පාරිභෝගිකයාට නොලියන්න!
-   - අවසන් මුළු මුදල සහ Free Delivery තත්ත්වය පමණක් පේළි 1-2කින් පවසා වර්ණ විමසන්න:
-     "Rib Jacquard Shorts 12කට මුළු මුදල රු. 6,180යි (Free Delivery 🚚). කරුණාකර ඔබ කැමති වර්ණ අංක (01 සිට 12 දක්වා) 12 අපිට කියන්න. 🎨"
-4. තනි නිෂ්පාදනයක් තෝරාගත් විට (Option 1 හෝ 2):
-   - නිෂ්පාදන විස්තර, Free Size, මිල සහ ප්‍රමාණය විමසීම එකම කෙටි සංයුක්ත පණිවිඩයකින් (පේළි 2-3කින්) එවන්න. වෙන වෙනම ඡේද වලට නොකඩන්න.
-   - නිවැරදි උදාහරණය (Option 2 සඳහා):
-     "නියමයි! Rib Jacquard Shorts (Free Size: ඉණ 26-42, උස 16).
-     මිල: 1ක් රු. 540 (Delivery රු. 450) | 5ක් රු. 2,700 (Free Delivery) | 10ක් රු. 5,100 (Free Delivery).
-     ඔයාට shorts කීයක් අවශ්‍යද? 🎯"
+   - පාරිභෝගිකයා ප්‍රමාණයක් පැවසූ විට, සූත්‍ර හෝ ගණන් හැදූ පියවර පාරිභෝගිකයාට නොලියන්න!
+   - අවසන් මුළු මුදල සහ Free Delivery තත්ත්වය පමණක් පේළි 1-2කින් පවසන්න:
+     "[භාණ්ඩයේ නම] [ප්‍රමාණය]කට මුළු මුදල රු. [මුදල]යි ([Free Delivery 🚚 හෝ Delivery රු. ...]). [ඩේටාබේස් එකේ අදාළ භාණ්ඩයට විකල්ප/වර්ණ තිබේ නම් ඒවා තෝරාගැනීමට විමසන්න, නැතහොත් ඇණවුම සඳහා විස්තර විමසන්න]. 🎯"
+4. පාරිභෝගිකයා තනි නිෂ්පාදනයක් තෝරාගත් විට (Specific Product Selected):
+   - "නියමයි" වැනි වචන කිසිසේත්ම නොයොදන්න.
+   - ඩේටාබේස් එකෙහි ඇති අදාළ නිෂ්පාදනයේ විස්තර සහ මිල ගණන් පේළි අතර පැහැදිලි පරතරයක් (space between lines) සහිතව දක්වන්න.
+   - ඡායාරූප වල වර්ණ අංක (Colors numbered in photos) සඳහන් කර ඇති බැවින්, පාරිභෝගිකයාගෙන් ප්‍රමාණය හෝ "කීයක් අවශ්‍යද" නොඅසා, ඡායාරූප වල ඇති අංක වලින් අවශ්‍ය වර්ණ අංක මොනවාදැයි විමසන්න.
+   - නිවැරදි උදාහරණය:
+     "[නිෂ්පාදනයේ නම සහ විස්තර කෙටියෙන්]
+
+     මිල: [ඩේටාබේස් එකේ ඇති මිල / පැකේජ මිල ගණන්]
+
+     ඡායාරූප වල වර්ණ අංක සඳහන් කර ඇත. ඔබ කැමති වර්ණ අංක මොනවාද? 🎨"
 
 භාෂාව සහ විලාසය:
-- සුහදශීලී (friendly) ස්වභාවික සිංහල සමඟ ඉංග්‍රීසි වචන මිශ්‍ර කර භාවිතා කරන්න (Shorts, Order, Free Size, Colors, Package, COD, Bank Transfer, Delivery, Staff, Confirm).
+- සුහදශීලී (friendly) ස්වභාවික සිංහල සමඟ ඉංග්‍රීසි වචන මිශ්‍ර කර භාවිතා කරන්න (Order, Colors, Package, COD, Bank Transfer, Delivery, Staff, Confirm).
 - ඕනෑවට වඩා තද හෝ පොතේ භාෂාව භාවිතා නොකරන්න.
 
-නිෂ්පාදන සහ මිල ගණන් (PRICING & PRODUCTS):
-- සියලුම Shorts Free Size වේ (ඉණ 26-42, උස අඟල් 16). M, L, XL sizes නොඅසන්න!
-- 1. Kyela Brand Single Jersey Cotton Shorts:
-  1ක් = රු. 500 (Delivery රු. 450) | 5ක් = රු. 2,500 (Free Delivery) | 10ක් = රු. 4,500 (Free Delivery)
-- 2. Rib Jacquard Shorts:
-  1ක් = රු. 540 (Delivery රු. 450) | 5ක් = රු. 2,700 (Free Delivery) | 10ක් = රු. 5,100 (Free Delivery)
-- ⚠️ අයිතම 10කට වැඩි ප්‍රමාණ සඳහා (CALCULATION FOR >10 SHORTS):
-  * සූත්‍රය: (10 පැකේජයේ මිල) + (අමතර ගණන × 1ක මිල), Free Delivery.
-  * Kyela: 11ක් = රු. 5,000 | 12ක් = රු. 5,500 | 15ක් = රු. 7,000 | 20ක් = රු. 9,000
-  * Rib: 11ක් = රු. 5,640 | 12ක් = රු. 6,180 | 15ක් = රු. 7,800 | 20ක් = රු. 10,200
-- ඩිලිවරි ගාස්තු: අයිතම 5කට අඩු නම් රු. 450යි. අයිතම 5ක් හෝ ඊට වැඩි නම් Free Delivery (නොමිලේ).
+නිෂ්පාදන සහ මිල ගණන් (PRICING & PRODUCTS FROM DATABASE):
+${productsPricingFormatted || "No active products in database."}
+
+ඩිලිවරි ගාස්තු සහ නීති (DELIVERY RULES FROM DATABASE):
+- ${deliveryRuleText}
 
 පියවරෙන් පියවර ඇණවුම් ගැනීමේ අනුපිළිවෙල (ORDERING WORKFLOW):
 - පියවර 1 (පැකේජය / ප්‍රමාණය පැවසූ විට):
-  * මුළු මුදල (Delivery සමඟ) පවසා, වර්ණ අංක (Color Numbers 01 සිට 12 දක්වා) පමණක් විමසන්න.
-  * ⚠️ දැඩි තහනම: වර්ණ තෝරාගැනීමට පෙර කිසිසේත්ම නම, ලිපිනය, නගරය, දුරකථන අංකය හෝ ගෙවීම් ක්‍රමය (COD/Bank) නොඅසන්න!
-- පියවර 2 (පාරිභෝගිකයා වර්ණ තෝරාගත් පසු - කෙටි සාරාංශය සහ විස්තර විමසීම):
-  * පාරිභෝගිකයා වර්ණ ලබාදුන් විට, පහත නිවැරදි ආකෘතියෙන් කෙටි සාරාංශය පෙන්වා ඇණවුම ඉදිරියට කරගෙන යාමට අවශ්‍ය විස්තර විමසන්න:
+  * මුළු මුදල (Delivery සමඟ) පවසා, නිෂ්පාදනයට අදාළව ඩේටාබේස් එකේ විකල්ප/වර්ණ/ප්‍රමාණ (Variations/Colors) තිබේ නම් පමණක් ඒවා විමසන්න. එසේ විකල්ප නොමැති නම් කෙලින්ම නම, ලිපිනය ඇතුළු විස්තර විමසන්න.
+  * ⚠️ නිෂ්පාදනයට විකල්ප/වර්ණ තිබේ නම්, ඒවා තෝරාගැනීමට පෙර නම, ලිපිනය හෝ ගෙවීම් ක්‍රමය (COD/Bank) නොඅසන්න.
+- පියවර 2 (පාරිභෝගිකයා අවශ්‍ය විකල්ප/වර්ණ තෝරාගත් පසු - කෙටි සාරාංශය සහ විස්තර විමසීම):
+  * පහත නිවැරදි ආකෘතියෙන් කෙටි සාරාංශය පෙන්වා ඇණවුම ඉදිරියට කරගෙන යාමට අවශ්‍ය විස්තර විමසන්න:
     📋 ඇණවුමේ කෙටි සාරාංශය:
-    • භාණ්ඩය: [නිෂ්පාදනයේ නම - උදා: Rib Jacquard Shorts] ([ප්‍රමාණය]ක්)
-    • වර්ණ: [තෝරාගත් වර්ණ අංක]
-    • මුළු මුදල: රු. [මුදල] ([Free Delivery 🚚 හෝ Delivery රු. 450])
+    • භාණ්ඩය: [නිෂ්පාදනයේ නම] ([ප්‍රමාණය]ක්)
+    • විකල්ප/වර්ණ: [තෝරාගත් විස්තර - තිබේ නම් පමණි]
+    • මුළු මුදල: රු. [මුදල] ([Free Delivery 🚚 හෝ Delivery ගාස්තුව])
 
     ඇණවුම ඉදිරියට කරගෙන යාමට:
     නම
@@ -428,19 +581,17 @@ serve(async (req) => {
     📋 ඔබගේ සම්පූර්ණ ඇණවුම් සාරාංශය:
     • නම: [නම] | දුරකථනය: [අංකය]
     • ලිපිනය: [ලිපිනය, නගරය]
-    • ඇණවුම: [භාණ්ඩය, ප්‍රමාණය, වර්ණ]
-    • අයිතම එකතුව: රු. [මුදල] | ඩිලිවරි: [නොමිලේ / රු. 450]
-    • මුළු මුදල: රු. [මුළු මුදල] ([COD හෝ Bank Transfer])
+    • ඇණවුම: [භාණ්ඩය, ප්‍රමාණය, විකල්ප/වර්ණ]
+    • අයිතම එකතුව: රු. [මුදල] | ඩිලිවරි: [නොමිලේ / රු. ...]
   * Bank Transfer නම්, සාරාංශයට පහළින් පහත දැක්වෙන බැංකු ගිණුම් විස්තර (Bank Name, Account Number, Account Name, Branch ඇතුළුව) නිවැරදිව දක්වා slip එකේ photo එකක් එවන්නැයි කියන්න.
   * අවසානයට: "ස්තූතියි ඔබගේ ඇණවුම ලැබී ඇත.කුරියර් සේවයෙන් ඔබට ඇමතුමක් ලබාදෙනු ඇත. කරුණාකර ඔබගේ ඇණවුම යලි return වීමට නොදී මුදල් ලබාදී භාරගන්න"
-  * පණිවිඩය අවසානයට සඟවා <ORDER_JSON> ටැගය අමුණන්න. තත්ත්වය Pending විය යුතුය (Confirmed නොකියන්න).
+  * පණිවිඩය අවසානයට සඟවා <ORDER_JSON> ටැගය එක් වරක් පමණක් (ONCE ONLY) අමුණන්න. ඇණවුම ගත් පසු (COD තහවුරු කිරීම, Thank you, විමසීම් වලදී) නැවත කිසිවිටෙකත් <ORDER_JSON> නොයවන්න. තත්ත්වය Pending විය යුතුය (Confirmed නොකියන්න).
 
 ඡායාරූප නීති (CRITICAL PHOTO & IMAGE RULES):
 - 🚫 බහුවිධ නිෂ්පාදන / මෙනුව පෙන්වන විට හෝ සාමාන්‍ය කතාබහේදී කිසිසේත්ම ඡායාරූප නොයවන්න (ZERO <IMAGE_URL> tags).
-- ✅ ඡායාරූප යැවිය යුත්තේ තනි නිෂ්පාදනයක විස්තර පෙන්වන විට (Option 1 හෝ 2 තෝරාගත් විට) හෝ පාරිභෝගිකයා ඡායාරූප ඉල්ලූ විට පමණි.
+- ✅ ඡායාරූප යැවිය යුත්තේ තනි නිෂ්පාදනයක විස්තර පෙන්වන විට හෝ පාරිභෝගිකයා ඡායාරූප ඉල්ලූ විට පමණි.
 - 🚫 ප්‍රමාණය පවසන විට, වර්ණ තෝරන විට හෝ ලිපින ලබාදෙන විට කිසිවිටෙකත් ඡායාරූප නැවත නොයවන්න.
-- Kyela Brand: ${kyelaImagesAlreadySent ? "දැනටමත් ඡායාරූප යවා ඇත. නැවත නොයවන්න." : "තනි නිෂ්පාදනයක් ලෙස ඉල්ලූ විට පමණක් අදාළ Kyela ඡායාරූප <IMAGE_URL> ටැග් අමුණන්න."}
-- Rib Jacquard: ${ribImagesAlreadySent ? "දැනටමත් ඡායාරූප යවා ඇත. නැවත නොයවන්න." : "තනි නිෂ්පාදනයක් ලෙස ඉල්ලූ විට පමණක් අදාළ Rib Jacquard ඡායාරූප <IMAGE_URL> ටැග් අමුණන්න."}
+${productImageRulesFormatted || "ඡායාරූප ලබාගත නොහැක."}
 
 ගෙවීම් ගිණුම් විස්තර (PAYMENT DETAILS):
 ${paymentDetailsFormatted}
@@ -456,6 +607,7 @@ ${welcomeMessage}
 
 CRITICAL ORDER & SECURITY RULES:
 - ORDER_JSON, IMAGE_URL, VIDEO_URL, USED_FAQS ටැග් පාරිභෝගිකයාට නොපෙනෙන තාක්ෂණික ටැග් වේ. ඒවා සැමවිටම පණිවිඩයේ කෙළවරටම පමණක් අමුණන්න. කිසිවිටෙකත් පණිවිඩයේ මැද හෝ JSON කෝඩ් ලෙස නොලියන්න.
+- <ORDER_JSON> යැවිය යුත්තේ නම/ලිපිනය/දුරකථන විස්තර ලැබී ඇණවුම මුල්වරට ගන්නා විට පමණි. දැනටමත් ඇණවුම සටහන් කර ඇති පසු නැවත කිසිසේත්ම <ORDER_JSON> නොයවන්න.
 - පාරිභෝගිකයා Photo එකක් (Receipt/Slip) එව්වොත්: "ස්තූතියි, ඔබගේ ගෙවීම් රිසිට්පත ලැබුණා. අපගේ කාර්ය මණ්ඩලය මෙය පරීක්ෂා කර තහවුරු කරනු ඇත." ලෙස කෙටියෙන් පවසන්න.
 - <ORDER_JSON> ආකෘතිය:
   <ORDER_JSON>{"customer_name":"...","customer_phone":"...","district":"...","customer_address":"...","order_items":[{"name":"...","price":...,"quantity":...,"product_type":"physical"}],"payment_method":"cod or bank_transfer","subtotal":...,"delivery_fee":...,"total_amount":...,"status":"pending","special_instructions":"Colors: ..."}</ORDER_JSON>`;
@@ -475,12 +627,32 @@ CRITICAL ORDER & SECURITY RULES:
 
     // Handle numeric selection intent and photo/media messages
     const trimmedMessage = (message || "").trim();
+    const numericMatch = trimmedMessage.match(/^(?:option\s*)?(\d+)\.?$|^(එක|දෙක|තුන|හතර|පහ|හය|හත|අට|නවය|දහය)$/i);
+    let selectedProductIndex = -1;
+
+    if (numericMatch) {
+      if (numericMatch[1]) {
+        selectedProductIndex = parseInt(numericMatch[1], 10) - 1;
+      } else if (numericMatch[2]) {
+        const sinhalaNums: Record<string, number> = { "එක": 0, "දෙක": 1, "තුන": 2, "හතර": 3, "පහ": 4, "හය": 5, "හත": 6, "අට": 7, "නවය": 8, "දහය": 9 };
+        selectedProductIndex = sinhalaNums[numericMatch[2]] ?? -1;
+      }
+    }
+
     if (!trimmedMessage) {
       messages.push({ role: "user", content: "[Customer sent a photo/media file. If this is a payment receipt slip, thank them politely in Sinhala and state staff will call to confirm. Do NOT output any JSON, tags, or code.]" });
-    } else if (trimmedMessage === "1" || trimmedMessage === "1." || trimmedMessage === "option 1" || trimmedMessage === "එක") {
-      messages.push({ role: "user", content: "1 [Customer selected Product 1: Kyela Brand Single Jersey Cotton Shorts. In 2-3 short lines max without paragraphs, confirm product with Free Size, state prices for 1/5/10, and ask how many shorts they need. Include ALL Kyela <IMAGE_URL> tags if not sent yet.]" });
-    } else if (trimmedMessage === "2" || trimmedMessage === "2." || trimmedMessage === "option 2" || trimmedMessage === "දෙක") {
-      messages.push({ role: "user", content: "2 [Customer selected Product 2: Rib Jacquard Shorts. In 2-3 short lines max without paragraphs, confirm product with Free Size, state prices for 1/5/10, and ask how many shorts they need. Include ALL Rib Jacquard <IMAGE_URL> tags if not sent yet.]" });
+    } else if (selectedProductIndex >= 0 && selectedProductIndex < products.length) {
+      const selectedProduct = products[selectedProductIndex];
+      const prodName = selectedProduct.name;
+      const alreadySent = productImagesAlreadySentMap[selectedProduct.id];
+      const imageInstruction = alreadySent
+        ? "Do NOT include image tags as they were already sent."
+        : `Include ALL <IMAGE_URL> tags for this product (${prodName}) if not sent yet.`;
+
+      messages.push({
+        role: "user",
+        content: `${trimmedMessage} [Customer selected Product ${selectedProductIndex + 1}: ${prodName}. Do NOT say "නියමයි!". Present product details and pricing from the database catalog clearly with blank lines between sections. Inform the customer that colors are numbered in the photos, and ask what color numbers they need (do NOT ask how many units they need). ${imageInstruction}]`
+      });
     } else {
       messages.push({ role: "user", content: trimmedMessage });
     }
@@ -588,50 +760,92 @@ CRITICAL ORDER & SECURITY RULES:
           console.log("Processing order JSON from LLM:", JSON.stringify(orderData));
 
           // Intercept and recalculate totals with rigid mathematical logic
-          const math = calculateOrderTotals(orderData);
+          const math = calculateOrderTotals(orderData, products, deliverySettings);
           calculatedOrderTotals = math;
           savedOrderData = orderData;
 
-          // Preserve phone number formatting (e.g. 07XXXXXXXX)
+          // Extract clean phone numbers without breaking numbers that contain spaces (e.g. "077 560 5590")
           const rawPhone = String(orderData.customer_phone || orderData.customer?.phone || orderData.customer_details?.phone || phoneNumber || "").trim();
-          let phoneToSave = rawPhone.replace(/[^0-9+]/g, "");
-          if (phoneToSave.startsWith("+94") && phoneToSave.length === 12) {
-            phoneToSave = "0" + phoneToSave.slice(3);
-          } else if (phoneToSave.startsWith("94") && phoneToSave.length === 11) {
-            phoneToSave = "0" + phoneToSave.slice(2);
-          } else if (!phoneToSave.startsWith("0") && phoneToSave.length === 9) {
-            phoneToSave = "0" + phoneToSave;
+          const segments = rawPhone.split(/[\/,\n\r&|]|\band\b|\bor\b/i).map(s => s.trim()).filter(Boolean);
+          const rawCandidates: string[] = [];
+          for (const seg of segments) {
+            const fullPhoneMatches = seg.match(/(?:\+94|94|0)?\s*[1-9]\d(?:\s*\d){7}/g);
+            if (fullPhoneMatches && fullPhoneMatches.length > 1) {
+              rawCandidates.push(...fullPhoneMatches);
+            } else {
+              rawCandidates.push(seg);
+            }
           }
+
+          const normalizePhone = (p: string) => {
+            let digits = p.replace(/[^0-9+]/g, "");
+            if (digits.startsWith("+94") && digits.length === 12) {
+              digits = "0" + digits.slice(3);
+            } else if (digits.startsWith("94") && digits.length === 11) {
+              digits = "0" + digits.slice(2);
+            } else if (!digits.startsWith("0") && digits.length === 9) {
+              digits = "0" + digits;
+            }
+            if (digits.length >= 20 && digits.startsWith("0")) {
+              digits = digits.slice(0, 10);
+            }
+            return digits;
+          };
+
+          const validPhones = rawCandidates.map(normalizePhone).filter(p => p.length >= 9);
+          let phoneToSave = validPhones[0] || (phoneNumber ? phoneNumber.replace(/[^0-9]/g, "") : "");
+          let secondPhone: string | null = validPhones.length > 1 && validPhones[1] !== phoneToSave ? validPhones[1] : null;
+
           savedPhoneToSave = phoneToSave;
 
-          // Deduplication: check if a similar order was created in the last 5 minutes
-          const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-          const { data: recentOrders } = await supabase
+          // Parse payment method
+          let paymentMethod = String(orderData.payment_method || orderData.customer?.payment_method || orderData.customer_details?.payment_method || "cod").toLowerCase().trim();
+          if (paymentMethod.includes("bank") || paymentMethod.includes("transfer")) {
+            paymentMethod = "bank_transfer";
+          } else if (paymentMethod.includes("cod") || paymentMethod.includes("cash") || paymentMethod.includes("delivery")) {
+            paymentMethod = "cod";
+          } else {
+            paymentMethod = "yet to decide";
+          }
+
+          // Deduplication: check if a similar order was created in the last 15 minutes by customer_phone OR whatsapp_phone
+          const deduplicationWindow = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+          let dedupeQuery = supabase
             .from("orders")
-            .select("id")
+            .select("id, payment_method, status")
             .eq("user_id", userId)
-            .eq("customer_phone", phoneToSave)
-            .gte("created_at", fiveMinAgo);
+            .gte("created_at", deduplicationWindow);
+
+          if (phoneToSave && phoneNumber) {
+            dedupeQuery = dedupeQuery.or(`customer_phone.eq.${phoneToSave},whatsapp_phone.eq.${phoneNumber}`);
+          } else if (phoneToSave) {
+            dedupeQuery = dedupeQuery.eq("customer_phone", phoneToSave);
+          } else if (phoneNumber) {
+            dedupeQuery = dedupeQuery.eq("whatsapp_phone", phoneNumber);
+          }
+
+          const { data: recentOrders } = await dedupeQuery;
 
           if (recentOrders && recentOrders.length > 0) {
             console.log("Duplicate order detected, skipping creation. Existing:", recentOrders[0].id);
             createdOrderId = recentOrders[0].id;
+
+            // If the customer provided a definitive payment method, update the existing order
+            if (paymentMethod && paymentMethod !== "yet to decide" && recentOrders[0].payment_method !== paymentMethod) {
+              await supabase
+                .from("orders")
+                .update({ payment_method: paymentMethod })
+                .eq("id", recentOrders[0].id);
+              console.log(`Updated payment method of existing order ${recentOrders[0].id} to ${paymentMethod}`);
+            }
           } else {
             const rawItems = Array.isArray(orderData.order_items) && orderData.order_items.length > 0
               ? orderData.order_items
               : (Array.isArray(orderData.items) && orderData.items.length > 0
-                ? orderData.items.map((p: any) => ({ name: p.name || p.id || "Shorts", quantity: p.quantity || 1, price: p.price || 0 }))
-                : (Array.isArray(orderData.products) ? orderData.products.map((p: any) => ({ name: p.id || p.name || "Shorts", quantity: p.quantity || 1, price: p.price || 0 })) : []));
+                ? orderData.items.map((p: any) => ({ name: p.name || p.id || (products[0]?.name || "Product"), quantity: p.quantity || 1, price: p.price || 0 }))
+                : (Array.isArray(orderData.products) ? orderData.products.map((p: any) => ({ name: p.id || p.name || (products[0]?.name || "Product"), quantity: p.quantity || 1, price: p.price || 0 })) : []));
             const custName = orderData.customer_name || orderData.customer?.name || orderData.customer_details?.name || "Customer";
             const custAddress = orderData.customer_address || orderData.customer?.address || orderData.customer_details?.address || null;
-            let paymentMethod = String(orderData.payment_method || orderData.customer?.payment_method || orderData.customer_details?.payment_method || "cod").toLowerCase().trim();
-            if (paymentMethod.includes("bank") || paymentMethod.includes("transfer")) {
-              paymentMethod = "bank_transfer";
-            } else if (paymentMethod.includes("cod") || paymentMethod.includes("cash") || paymentMethod.includes("delivery")) {
-              paymentMethod = "cod";
-            } else {
-              paymentMethod = "yet to decide";
-            }
 
             let specialInstructions = orderData.special_instructions || null;
             if (!specialInstructions && orderData.items?.[0]?.sub_variants) {
@@ -655,6 +869,7 @@ CRITICAL ORDER & SECURITY RULES:
                 payment_method: paymentMethod,
                 total_amount: math.totalAmount,
                 special_instructions: specialInstructions,
+                call_phone: secondPhone || null,
                 status: "pending",
                 user_id: userId,
               })
@@ -782,24 +997,26 @@ CRITICAL ORDER & SECURITY RULES:
       }
     }
 
-    const kyelaNormPaths = new Set(kyelaImages.map(u => normalizeImgPath(u)));
-    const ribNormPaths = new Set(ribImages.map(u => normalizeImgPath(u)));
-
-    const containsKyelaImages = imageUrls.some(u => kyelaNormPaths.has(normalizeImgPath(u)));
-    const containsRibImages = imageUrls.some(u => ribNormPaths.has(normalizeImgPath(u)));
-
     // Safety guard 1: NEVER send images when showing multiple product details. Only send images for ONE product.
-    if (containsKyelaImages && containsRibImages) {
-      console.log(`[Image Filter] Suppressing images: response contained images for multiple products (${imageUrls.length} images dropped). Images only allowed for ONE product.`);
+    const productsInImages = products.filter(p => {
+      const paths = productNormPathsMap[p.id];
+      return paths && paths.size > 0 && imageUrls.some(u => paths.has(normalizeImgPath(u)));
+    });
+
+    if (productsInImages.length > 1) {
+      console.log(`[Image Filter] Suppressing images: response contained images for multiple products (${productsInImages.length} products, ${imageUrls.length} images dropped). Images only allowed for ONE product.`);
       imageUrls = [];
     }
 
     // Safety guard 2: If the bot response presents multiple products (catalog menu), suppress all images.
     const respLower = responseText.toLowerCase();
-    const isPresentingMultipleProducts =
-      (respLower.includes("kyela") || respLower.includes("jersey")) &&
-      (respLower.includes("rib") || respLower.includes("rip") || respLower.includes("jacquard")) &&
-      (respLower.includes("1.") || respLower.includes("2.") || respLower.includes("වර්ග 2") || respLower.includes("වර්ග දෙක") || respLower.includes("කැමති වර්ගය") || respLower.includes("1 හෝ 2") || respLower.includes("1 da 2"));
+    const mentionedProductsCount = products.filter(p => {
+      const pName = String(p.name || "").toLowerCase().replace(/[^\w\s\u0D80-\u0DFF]/g, "").trim();
+      return pName.length > 2 && respLower.includes(pName);
+    }).length;
+
+    const hasMenuKeywords = /(?:1\.|2\.|වර්ග\s*\d|වර්ග\s*දෙක|කැමති\s*වර්ගය|\b1\s*හෝ\s*2\b|\b1\s*da\s*2\b|තෝරාගන්න|menu)/i.test(respLower);
+    const isPresentingMultipleProducts = (mentionedProductsCount >= 2 || (products.length >= 2 && hasMenuKeywords && respLower.includes("1.") && respLower.includes("2.")));
 
     if (isPresentingMultipleProducts && imageUrls.length > 0) {
       console.log(`[Image Filter] Suppressing images: bot response presents multiple product details (menu). Suppressing all ${imageUrls.length} images.`);
@@ -815,13 +1032,11 @@ CRITICAL ORDER & SECURITY RULES:
     if (!isExplicitRePhotoRequest && imageUrls.length > 0) {
       imageUrls = imageUrls.filter(url => {
         const norm = normalizeImgPath(url);
-        if (ribImagesAlreadySent && ribNormPaths.has(norm)) {
-          console.log(`Suppressing duplicate Rib Jacquard image: ${norm}`);
-          return false;
-        }
-        if (kyelaImagesAlreadySent && kyelaNormPaths.has(norm)) {
-          console.log(`Suppressing duplicate Kyela image: ${norm}`);
-          return false;
+        for (const p of products) {
+          if (productImagesAlreadySentMap[p.id] && productNormPathsMap[p.id]?.has(norm)) {
+            console.log(`Suppressing duplicate image for ${p.name}: ${norm}`);
+            return false;
+          }
         }
         return true;
       });
@@ -864,8 +1079,11 @@ CRITICAL ORDER & SECURITY RULES:
     // Remove [FAQ_ID:...] references that may leak into response
     cleanResponse = cleanResponse.replace(/\[FAQ_ID:[^\]]*\]/g, "");
 
-    // Enforce mathematical logic on order summary in customer response text
-    if (calculatedOrderTotals && savedOrderData) {
+    // Ensure "නියමයි" or similar celebratory greetings are removed from customer response
+    cleanResponse = cleanResponse.replace(/^\s*(?:නියමයි!?|Great!?|Awesome!?)[,\s]*/i, "");
+
+    // Enforce mathematical logic on order summary in customer response text only when a new order was actually created
+    if (orderCreated && calculatedOrderTotals && savedOrderData) {
       const { subtotal, deliveryFee, totalAmount } = calculatedOrderTotals;
       const delivText = deliveryFee === 0 ? "නොමිලේ (Free Delivery)" : `රු. ${deliveryFee}`;
 
@@ -880,11 +1098,12 @@ CRITICAL ORDER & SECURITY RULES:
         const rawItems = Array.isArray(savedOrderData.order_items) && savedOrderData.order_items.length > 0
           ? savedOrderData.order_items
           : (Array.isArray(savedOrderData.products) ? savedOrderData.products.map((p: any) => ({ name: p.id || p.name, quantity: p.quantity })) : []);
+        const defaultProdName = products[0]?.name || "Item";
         const itemsList = rawItems
-          .map((it: any) => `${it.name || "Shorts"} (${it.quantity || 1} pcs)`)
-          .join(", ") || "Shorts";
+          .map((it: any) => `${it.name || defaultProdName} (${it.quantity || 1} pcs)`)
+          .join(", ") || defaultProdName;
         const specialInstr = savedOrderData.special_instructions || (Array.isArray(savedOrderData.products?.[0]?.sub_variants) ? savedOrderData.products[0].sub_variants.join(", ") : null);
-        const colorsText = specialInstr ? `\n• වර්ණ (Colors): ${specialInstr.replace(/^Colors:\s*/i, "")}` : "";
+        const colorsText = specialInstr ? `\n• විකල්ප/වර්ණ (Options/Colors): ${specialInstr.replace(/^Colors:\s*/i, "")}` : "";
         const paymentMethodRaw = savedOrderData.payment_method || savedOrderData.customer_details?.payment_method || "";
         const paymentMethodText = String(paymentMethodRaw).toLowerCase().includes("bank") ? "Bank Transfer" : "Cash on Delivery (COD)";
         const custName = savedOrderData.customer_name || savedOrderData.customer_details?.name || "සඳහන් කර නැත";

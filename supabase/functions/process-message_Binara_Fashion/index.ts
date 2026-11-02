@@ -436,7 +436,7 @@ async function processBatch(
       if (combinedTexts) {
         aggregatedMessage = `[System: Customer sent ${imageCount} product photo(s). Customer text: "${combinedTexts}"]`;
       } else {
-        aggregatedMessage = `[System: Customer sent ${imageCount} product photo(s). Greet them warmly in Sinhala and ask which shorts package or colors they would like to order.]`;
+        aggregatedMessage = `[System: Customer sent ${imageCount} product photo(s). Greet them warmly in Sinhala and ask which product, package, or options they would like to order.]`;
       }
     }
   }
@@ -453,7 +453,7 @@ async function processBatch(
     .eq("user_id", userId);
 
   const isFirstMessage = (convoCount || 0) <= batch.length;
-  const isNumericSelection = ["1", "2", "1.", "2.", "option 1", "option 2", "එක", "දෙක"].includes(aggregatedMessage.trim().toLowerCase());
+  const isNumericSelection = /^(?:option\s*)?(\d+)\.?$|^(එක|දෙක|තුන|හතර|පහ|හය|හත|අට|නවය|දහය)$/i.test(aggregatedMessage.trim());
   if (isFirstMessage && imageCount === 0 && !isNumericSelection) {
     const sent = await handleWelcomeMessage(
       supabase, supabaseUrl, supabaseServiceKey, userId, phoneNumber, aggregatedMessage, sessionApiKey, corrId, timings, mark
@@ -596,7 +596,7 @@ async function handleWelcomeMessage(
   // Check bypass triggers
   const bypassTriggers: string[] = welcomeSettings?.value?.bypass_triggers || [];
   const msgLower = messageText.toLowerCase().trim();
-  const isNumeric = ["1", "2", "1.", "2.", "option 1", "option 2", "එක", "දෙක"].includes(msgLower);
+  const isNumeric = /^(?:option\s*)?(\d+)\.?$|^(එක|දෙක|තුන|හතර|පහ|හය|හත|අට|නවය|දහය)$/i.test(msgLower);
   const shouldBypass = isNumeric || (bypassTriggers.length > 0 && bypassTriggers.some((t: string) => msgLower.includes(t)));
 
   if (shouldBypass) {
