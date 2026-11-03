@@ -1034,16 +1034,6 @@ CRITICAL ORDER & SECURITY RULES:
       imageUrls = [];
     }
 
-    // Safety guard 3: Suppress product images during order placement / checkout confirmation.
-    // When the customer is placing an order or order JSON is generated, do not clutter with product images.
-    // NOTE: Fragile keyword regex filtering for 2nd-time image requests was removed so the LLM's natural language understanding
-    // can properly serve customer requests in any phrasing, dialect, or language (Sinhala, Singlish, English).
-    if (orderJsonMatches.length > 0 || orderCreated) {
-      if (imageUrls.length > 0) {
-        console.log(`[Image Filter] Suppressing images: order being created or confirmed (${imageUrls.length} images dropped).`);
-        imageUrls = [];
-      }
-    }
 
     const imageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
 
