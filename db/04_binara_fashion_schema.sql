@@ -59,7 +59,7 @@ CREATE TYPE "Binara_fashion".plan_tier AS ENUM (
 
 CREATE FUNCTION "Binara_fashion".can_read_usage(_user_id uuid) RETURNS boolean
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
   SELECT auth.uid() IS NULL
       OR auth.uid() = _user_id
@@ -74,7 +74,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".enforce_order_limit() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
 DECLARE
   current_count INT;
@@ -142,7 +142,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".get_ai_message_usage(_user_id uuid, _since timestamp with time zone) RETURNS integer
     LANGUAGE plpgsql STABLE SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
 DECLARE c integer;
 BEGIN
@@ -163,7 +163,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".get_contact_usage(_user_id uuid, _since timestamp with time zone) RETURNS integer
     LANGUAGE plpgsql STABLE SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
 DECLARE c integer;
 BEGIN
@@ -184,7 +184,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".get_staff_owner_id(_user_id uuid) RETURNS uuid
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
   SELECT owner_id FROM "Binara_fashion".staff_accounts
   WHERE staff_user_id = _user_id AND is_active = true
@@ -198,7 +198,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".handle_new_user() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
 BEGIN
   INSERT INTO "Binara_fashion".profiles (user_id, email, full_name)
@@ -214,7 +214,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".handle_new_user_role() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
 BEGIN
   INSERT INTO "Binara_fashion".user_roles (user_id, role)
@@ -230,7 +230,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".handle_new_user_settings() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
 BEGIN
   INSERT INTO "Binara_fashion".settings (user_id, key, value) VALUES
@@ -248,7 +248,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".has_role(_user_id uuid, _role "Binara_fashion".app_role) RETURNS boolean
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
   SELECT EXISTS (
     SELECT 1 FROM "Binara_fashion".user_roles
@@ -263,7 +263,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".is_admin() RETURNS boolean
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
 BEGIN
   RETURN EXISTS (
@@ -280,7 +280,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".is_staff_of(_staff_user_id uuid, _owner_id uuid) RETURNS boolean
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
   SELECT EXISTS (
     SELECT 1 FROM "Binara_fashion".staff_accounts
@@ -297,7 +297,7 @@ $$;
 
 CREATE FUNCTION "Binara_fashion".update_updated_at_column() RETURNS trigger
     LANGUAGE plpgsql
-    SET search_path TO '"Binara_fashion"'
+    SET search_path = "Binara_fashion", public
     AS $$
 BEGIN
   NEW.updated_at = now();

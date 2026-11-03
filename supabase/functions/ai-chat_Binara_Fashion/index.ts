@@ -20,7 +20,7 @@ interface ProductPricingTiers {
 }
 
 function parseProductPricing(p: any): ProductPricingTiers {
-  const unitPrice = Number(p.price) || 0;
+  let unitPrice = Number(p.price) || 0;
   const tiersMap = new Map<number, number>();
 
   // Check variations if configured
@@ -64,6 +64,18 @@ function parseProductPricing(p: any): ProductPricingTiers {
   const tiers = Array.from(tiersMap.entries())
     .map(([qty, price]) => ({ qty, price }))
     .sort((a, b) => b.qty - a.qty);
+
+  // If 1-item price is explicitly found, use it
+  if (tiersMap.has(1)) {
+    unitPrice = tiersMap.get(1)!;
+  } else {
+    // If no explicit 1-item price exists, check if unitPrice was entered as the bundle/package price
+    // (e.g. unitPrice was set to 2700, which equals or exceeds the lowest tier package price)
+    const ascTiers = [...tiers].sort((a, b) => a.qty - b.qty);
+    if (ascTiers.length > 0 && ascTiers[0].qty > 1 && (unitPrice <= 0 || unitPrice >= ascTiers[0].price)) {
+      unitPrice = Math.round(ascTiers[0].price / ascTiers[0].qty);
+    }
+  }
 
   const price5 = tiersMap.get(5);
   const price10 = tiersMap.get(10);
@@ -494,9 +506,8 @@ serve(async (req) => {
       }
 
       let extraCalcLine = "";
-      const maxTier = tiers.length > 0 ? tiers[0] : null;
-      if (maxTier && maxTier.qty > 1) {
-        extraCalcLine = `   * ${maxTier.qty}ට වැඩි ප්‍රමාණ සඳහා: (${maxTier.qty} පැකේජයේ මිල රු. ${maxTier.price.toLocaleString()}) + (අමතර ප්‍රමාණය × 1ක මිල රු. ${unitPrice.toLocaleString()})`;
+      if (tiers.length > 0) {
+        extraCalcLine = `   * පැකේජ අතරමැදි හෝ වැඩි ප්‍රමාණ සඳහා: විශාලතම අදාළ පැකේජයේ මිල + ඉතිරි ඒකක ගණන × 1ක මිල රු. ${unitPrice.toLocaleString()} (උදා: 6ක් = 5 පැකේජයේ මිල + 1ක් රු. ${unitPrice.toLocaleString()}).`;
       }
 
       const descSnippet = p.description ? `\n   * විස්තර (Description): ${p.description.replace(/\n+/g, " | ").trim()}` : "";
@@ -529,7 +540,7 @@ serve(async (req) => {
    - පාරිභෝගිකයා යම් ප්‍රශ්නයක් ඇසුවහොත් (උදා: Delivery, Shop location, Details, Price), එම ප්‍රශ්නයට පමණක් පේළි 1-2කින් සෘජුව පිළිතුරු දෙන්න.
    - 🚫 දැඩි තහනම: පාරිභෝගිකයා නිෂ්පාදන විස්තර හෝ මිල ඉල්ලා නැතිනම්, ප්‍රශ්නයකට පිළිතුරු දෙන විට කිසිසේත්ම නිෂ්පාදන මෙනුව හෝ මිල ලැයිස්තු අමුණා නොයවන්න!
    - පාරිභෝගිකයා Bank Details / ගිණුම් විස්තර ඉල්ලුවහොත්, පහත ගෙවීම් ගිණුම් විස්තර (Bank, Account Number, Name, Branch) ලබාදී slip එකේ photo එකක් එවන්නැයි කියන්න.
-   - පාරිභෝගිකයා නිෂ්පාදනයේ අවශ්‍ය තේරීම් (විකල්ප/වර්ණ/ප්‍රමාණ) තෝරාගත් පසු (හෝ එවැනි තේරීම් නැතිනම් කෙලින්ම), ඇණවුමේ කෙටි සාරාංශය පෙන්වා ඇණවුම ඉදිරියට කරගෙන යාමට නම, ලිපිනය, ලගම නගරය සහ දුරකථන අංක දෙකක් එවන්නැයි විමසන්න.
+   - පාරිභෝගිකයා නිෂ්පාදනයේ අවශ්‍ය තේරීම් (විකල්ප/වර්ණ/ප්‍රමාණ) තෝරාගත් පසු (හෝ එවැනි තේරීම් නැතිනම් කෙලින්ම), ඇණවුමේ කෙටි සාරාංශය පෙන්වා ඇණවුම ඉදිරියට කරගෙන යාමට නම, ලිපිනය, ලගම නගරය සහ දුරකථන අංක එවන්නැයි විමසන්න.
    - නිවැරදි උදාහරණය: පාරිභෝගිකයා "Delivery theyanawada" ඇසුවහොත් පිළිතුර:
      "ඔව්, අපේ Delivery සේවාව දිවයින පුරාම තියෙනවා. ${deliveryRuleText}"
      (මෙපමණයි! මෙනුව හෝ අනවශ්‍ය විස්තර නොයවන්න!)
@@ -573,7 +584,7 @@ ${productsPricingFormatted || "No active products in database."}
     නම
     ලිපිනය
     ලගම නගරය 
-    දුරකථන අංක දෙකක්
+    දුරකථන අංක
   * ⚠️ මෙම පියවරේදී (පාරිභෝගිකයා නම සහ ලිපින විස්තර ලබාදෙන තුරු) <ORDER_JSON> නොයවන්න!
 - පියවර 3 (පාරිභෝගිකයා නම, ලිපිනය සහ විස්තර ලබාදුන් පසු):
   * පාරිභෝගිකයා ප්‍රශ්නයක් ඇසුවහොත් (උදා: Delivery විස්තර, Bank details, ආදිය): එම ප්‍රශ්නයට පමණක් සෘජුව සහ කෙටියෙන් (පේළි 1-2කින්) පිළිතුරු දෙන්න.
