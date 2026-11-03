@@ -453,7 +453,15 @@ async function processBatch(
     .eq("user_id", userId);
 
   const isFirstMessage = (convoCount || 0) <= batch.length;
-  const isNumericSelection = /^(?:option|choice|item|product)?\s*(\d+)\.?$|^(?:(\d+)(?:st|nd|rd|th)\s*(?:choice|option)?)$|^(first|second|third|fourth|fifth)\s*(?:choice|option)?$|^(එක|දෙක|තුන|හතර|පහ|හය|හත|අට|නවය|දහය)$/i.test(aggregatedMessage.trim());
+  const isNumericSelection =
+    /^(?:option|choice|item|product)?\s*(\d+)\.?$/i.test(aggregatedMessage.trim()) ||
+    /^(?:(\d+)(?:st|nd|rd|th)\s*(?:choice|option)?)$/i.test(aggregatedMessage.trim()) ||
+    /^(first|second|third|fourth|fifth)\s*(?:choice|option)?$/i.test(aggregatedMessage.trim()) ||
+    /^(එක|දෙක|තුන|හතර|පහ|හය|හත|අට|නවය|දහය)$/i.test(aggregatedMessage.trim()) ||
+    /^(?:පළමු|දෙවන|තුන්වන|හතරවන|පස්වන|පලවෙනි|දෙවෙනි|තුන්වෙනි|හතරවෙනි|පස්වෙනි)/i.test(aggregatedMessage.trim()) ||
+    /^\d+\s*(?:වෙනි|වන|eka|wistara|විස්තර)/i.test(aggregatedMessage.trim()) ||
+    /(?:wistara|විස්තර|details|photos?|images?|4to|pic|pics|price|mila|ගණන්|මිල|keeyada|kiyada|order|buy|ganna|oni|one|have|theyenawada|thiyenawada|send|danna|evanna|available)/i.test(aggregatedMessage.trim()) ||
+    /(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්|usa\s*\d+|kyela|කයිලා|ක්යේලා|rib|jacquard|රිබ්)/i.test(aggregatedMessage.trim());
   if (isFirstMessage && imageCount === 0 && !isNumericSelection) {
     const sent = await handleWelcomeMessage(
       supabase, supabaseUrl, supabaseServiceKey, userId, phoneNumber, aggregatedMessage, sessionApiKey, corrId, timings, mark
@@ -596,7 +604,15 @@ async function handleWelcomeMessage(
   // Check bypass triggers
   const bypassTriggers: string[] = welcomeSettings?.value?.bypass_triggers || [];
   const msgLower = messageText.toLowerCase().trim();
-  const isNumeric = /^(?:option|choice|item|product)?\s*(\d+)\.?$|^(?:(\d+)(?:st|nd|rd|th)\s*(?:choice|option)?)$|^(first|second|third|fourth|fifth)\s*(?:choice|option)?$|^(එක|දෙක|තුන|හතර|පහ|හය|හත|අට|නවය|දහය)$/i.test(msgLower);
+  const isNumeric =
+    /^(?:option|choice|item|product)?\s*(\d+)\.?$/i.test(msgLower) ||
+    /^(?:(\d+)(?:st|nd|rd|th)\s*(?:choice|option)?)$/i.test(msgLower) ||
+    /^(first|second|third|fourth|fifth)\s*(?:choice|option)?$/i.test(msgLower) ||
+    /^(එක|දෙක|තුන|හතර|පහ|හය|හත|අට|නවය|දහය)$/i.test(msgLower) ||
+    /^(?:පළමු|දෙවන|තුන්වන|හතරවන|පස්වන|පලවෙනි|දෙවෙනි|තුන්වෙනි|හතරවෙනි|පස්වෙනි)/i.test(msgLower) ||
+    /^\d+\s*(?:වෙනි|වන|eka|wistara|විස්තර)/i.test(msgLower) ||
+    /(?:wistara|විස්තර|details|photos?|images?|4to|pic|pics|price|mila|ගණන්|මිල|keeyada|kiyada|order|buy|ganna|oni|one|have|theyenawada|thiyenawada|send|danna|evanna|available)/i.test(msgLower) ||
+    /(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්|usa\s*\d+|kyela|කයිලා|ක්යේලා|rib|jacquard|රිබ්)/i.test(msgLower);
   const shouldBypass = isNumeric || (bypassTriggers.length > 0 && bypassTriggers.some((t: string) => msgLower.includes(t)));
 
   if (shouldBypass) {

@@ -289,7 +289,13 @@ serve(async (req) => {
 
     const ordersLimitReached = (ordersCount || 0) >= ordersLimit;
 
-    const products = productsRes.data || [];
+    // Sanitize and normalize product names and descriptions (collapses double spaces and trims)
+    const rawProducts = productsRes.data || [];
+    const products = rawProducts.map((p: any) => ({
+      ...p,
+      name: (p.name || "").replace(/\s+/g, " ").trim(),
+      description: p.description ? p.description.replace(/\s+/g, " ").trim() : p.description,
+    }));
     const faqs = faqsRes.data || [];
     const settings = settingsRes.data || [];
 
@@ -374,20 +380,25 @@ serve(async (req) => {
       }
     }
 
-    // Fetch prior outbound messages to check which product images were already sent to this customer
+    // Fetch prior outbound messages within the active conversation window (last 2.5 hours)
+    // Images sent in prior days/sessions should NOT block images when a customer returns.
     const rawPhoneDigits = String(phoneNumber || "").replace(/\D/g, "");
     const localPhone = rawPhoneDigits.startsWith("94") && rawPhoneDigits.length === 11 ? "0" + rawPhoneDigits.slice(2) : rawPhoneDigits;
     const intlPhone = localPhone.startsWith("0") && localPhone.length === 10 ? "94" + localPhone.slice(1) : rawPhoneDigits;
     const phoneCandidates = Array.from(new Set([phoneNumber, rawPhoneDigits, localPhone, intlPhone].filter(Boolean)));
 
+    const sessionWindowHours = 2.5;
+    const sessionCutoff = new Date(Date.now() - sessionWindowHours * 60 * 60 * 1000).toISOString();
+
     const { data: priorOutbound } = await supabase
       .from("conversations")
-      .select("metadata, message")
+      .select("metadata, message, created_at")
       .eq("user_id", userId)
       .in("phone_number", phoneCandidates)
       .eq("direction", "outbound")
+      .gte("created_at", sessionCutoff)
       .order("created_at", { ascending: false })
-      .limit(100);
+      .limit(50);
 
     const normalizeImgPath = (url: string) => {
       if (!url) return "";
@@ -421,10 +432,14 @@ serve(async (req) => {
       }
     }
 
-    // Also inspect conversationHistory passed in the request
+    // Also inspect conversationHistory passed in the request (only within session window)
+    const sessionCutoffMs = Date.now() - sessionWindowHours * 60 * 60 * 1000;
     if (Array.isArray(conversationHistory)) {
       for (const msg of conversationHistory as ConversationMessage[]) {
         if (msg.direction === "outbound") {
+          if (msg.created_at && new Date(msg.created_at).getTime() < sessionCutoffMs) {
+            continue;
+          }
           const meta = (msg as any)?.metadata;
           if (Array.isArray(meta?.imageUrls)) {
             for (const u of meta.imageUrls) {
@@ -523,7 +538,7 @@ serve(async (req) => {
     const productImageRulesFormatted = products.map((p: any, idx: number) => {
       const alreadySent = productImagesAlreadySentMap[p.id];
       const name = p.name || `Product ${idx + 1}`;
-      return `- ${name}: ${alreadySent ? "දැනටමත් ඡායාරූප යවා ඇත. පාරිභෝගිකයා නැවත ඡායාරූප/විස්තර ඉල්ලා සිටියහොත් පමණක් <IMAGE_URL> ටැග් අමුණන්න (ප්‍රමාණය, වර්ණ හෝ ලිපිනය ලබාදෙන විට නැවත නොයවන්න)." : `තනි නිෂ්පාදනයක් ලෙස ඉල්ලූ විට පමණක් අදාළ ${name} ඡායාරූප <IMAGE_URL> ටැග් අමුණන්න.`}`;
+      return `- ${name}: ${alreadySent ? "දැනටමත් මෙම Session එක තුළ ඡායාරූප යවා ඇත. පාරිභෝගිකයා නිෂ්පාදනය තෝරාගතහොත් හෝ විස්තර/ඡායාරූප ඉල්ලුවහොත් පමණක් <IMAGE_URL> ටැග් අමුණන්න (ප්‍රමාණය, වර්ණ හෝ ලිපිනය ලබාදෙන විට නැවත නොයවන්න)." : `තනි නිෂ්පාදනයක් ලෙස තෝරාගත් විට හෝ විස්තර/ඡායාරූප ඉල්ලූ විට අදාළ ${name} ඡායාරූප <IMAGE_URL> ටැග් අමුණන්න.`}`;
     }).join("\n");
 
     // Build FAQ context with IDs so AI can report which ones it used
@@ -534,7 +549,7 @@ serve(async (req) => {
     // Get list of tracked FAQ IDs
     const trackedFaqIds = faqs.filter(f => f.is_tracked).map(f => f.id);
 
-    const conversationContext = (conversationHistory as ConversationMessage[])
+    const conversationContext = ((conversationHistory || []) as ConversationMessage[])
       .map(msg => `${msg.direction === "inbound" ? "Customer" : "Assistant"}: ${msg.message}`)
       .join("\n"); const systemPrompt = `ඔබ "Binara Fashion" හි නිල WhatsApp AI සහයකයා වේ.
 
@@ -683,13 +698,14 @@ CRITICAL ORDER & SECURITY RULES:
 
     const lowerMsg = trimmedMessage.toLowerCase();
 
-    // Match explicit choice phrases (e.g. "1st choice", "first choice", "option 1", "choice 2", "පළමු තේරීම", "1 වෙනි එක")
+    // Match explicit choice phrases with optional conversational suffixes (e.g. "1st choice", "option 1", "පළමු තේරීම", "1 වෙනි එක", "දෙවෙනි එක විස්තර දාන්න", "1 eka wistara")
     const explicitChoiceMatch =
-      lowerMsg.match(/^(?:i\s*(?:want|choose|prefer|select)\s*)?(?:option|choice|item|product|no|number)\s*(\d+)\.?$/i) ||
-      lowerMsg.match(/^(?:i\s*(?:want|choose|prefer|select)\s*)?(\d+)(?:st|nd|rd|th)\s*(?:choice|option|item|product)?\.?$/i) ||
-      lowerMsg.match(/^(?:i\s*(?:want|choose|prefer|select)\s*)?(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\s*(?:choice|option|item|product)?\.?$/i) ||
-      lowerMsg.match(/^(?:පළමු|දෙවන|තුන්වන|හතරවන|පස්වන|පලවෙනි|දෙවෙනි|තුන්වෙනි|හතරවෙනි|පස්වෙනි)\s*(?:තේරීම|එක|නිෂ්පාදනය)?$/i) ||
-      lowerMsg.match(/^(\d+)\s*(?:වෙනි|වන)\s*(?:තේරීම|එක|නිෂ්පාදනය)?$/i);
+      lowerMsg.match(/^(?:i\s*(?:want|choose|prefer|select)\s*)?(?:option|choice|item|product|no|number)\s*(\d+)(?:\s*(?:eka|one|thama|danna|wistara|wistaradannako|විස්තර|එවන්න|දාන්න|ඕන|oni|one|photos?|images?))?\.?$/i) ||
+      lowerMsg.match(/^(?:i\s*(?:want|choose|prefer|select)\s*)?(\d+)(?:st|nd|rd|th)\s*(?:choice|option|item|product)?(?:\s*(?:eka|one|thama|danna|wistara|wistaradannako|විස්තර|එවන්න|දාන්න|ඕන|oni|one|photos?|images?))?\.?$/i) ||
+      lowerMsg.match(/^(?:i\s*(?:want|choose|prefer|select)\s*)?(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\s*(?:choice|option|item|product)?(?:\s*(?:eka|one|thama|danna|wistara|wistaradannako|විස්තර|එවන්න|දාන්න|ඕන|oni|one|photos?|images?))?\.?$/i) ||
+      lowerMsg.match(/^(පළමු|දෙවන|තුන්වන|හතරවන|පස්වන|පලවෙනි|දෙවෙනි|තුන්වෙනි|හතරවෙනි|පස්වෙනි)\s*(?:තේරීම|එක|නිෂ්පාදනය)?(?:\s*(?:විස්තර|දාන්න|එවන්න|ඕන|wistara|danna|photos?|images?))?\.?$/i) ||
+      lowerMsg.match(/^(\d+)\s*(?:වෙනි|වන)\s*(?:තේරීම|එක|නිෂ්පාදනය)?(?:\s*(?:විස්තර|දාන්න|එවන්න|ඕන|wistara|danna|photos?|images?))?\.?$/i) ||
+      lowerMsg.match(/^(\d+)\s*(?:eka|one|wistara|wistaradannako|විස්තර|photos?|images?)(?:\s*(?:danna|wistara|දාන්න|එවන්න|ඕන))?\.?$/i);
 
     // Bare numbers (e.g. "1", "2", "3", "එක", "දෙක")
     const bareNumberMatch = lowerMsg.match(/^(\d+)\.?$/i) ||
@@ -719,6 +735,112 @@ CRITICAL ORDER & SECURITY RULES:
       }
     }
 
+    // Generic Dynamic Catalog Matcher:
+    // Automatically matches customer inquiries against whatever products the vendor has in the database!
+    if (selectedProductIndex === -1 && products.length > 0 && !isAwaitingColorSelection) {
+      const cleanMsg = lowerMsg.replace(/[^\w\s\u0D80-\u0DFF]/g, " ").replace(/\s+/g, " ").trim();
+      const msgWords = cleanMsg.split(" ").filter(w => w.length >= 2);
+
+      // 1. Direct full name match
+      for (let i = 0; i < products.length; i++) {
+        const p = products[i];
+        const pNameClean = (p.name || "").toLowerCase().replace(/[^\w\s\u0D80-\u0DFF]/g, " ").replace(/\s+/g, " ").trim();
+        if (pNameClean.length >= 3 && cleanMsg.includes(pNameClean)) {
+          selectedProductIndex = i;
+          break;
+        }
+      }
+
+      // 2. Dynamic Token & Measurement Scoring against ALL database products (supports any new products vendor adds)
+      if (selectedProductIndex === -1) {
+        const stopWords = new Set([
+          "the", "and", "for", "with", "from", "item", "product", "items", "products",
+          "eka", "wistara", "wistaradannako", "danna", "evanna", "one", "oni", "thama", "please",
+          "විස්තර", "දාන්න", "එවන්න", "ඕන", "ඕනේ", "මෙක", "මේක", "brand",
+          "photos", "photo", "image", "images", "pics", "pic", "4to",
+          "මිල", "ගණන්", "price", "size", "colors", "colour", "colours", "delivery", "free", "can", "get"
+        ]);
+
+        let bestScore = 0;
+        let bestIndex = -1;
+        let secondBestScore = 0;
+
+        for (let i = 0; i < products.length; i++) {
+          const p = products[i];
+          const pNameClean = (p.name || "").toLowerCase().replace(/[^\w\s\u0D80-\u0DFF]/g, " ").replace(/\s+/g, " ").trim();
+          const pWords = pNameClean.split(" ").filter(w => w.length >= 2 && !stopWords.has(w));
+          const pNumbers = pNameClean.match(/\b\d+\b/g) || [];
+
+          let score = 0;
+
+          // Word matches
+          for (const pw of pWords) {
+            if (msgWords.includes(pw) || cleanMsg.includes(pw)) {
+              score += pw.length >= 4 ? 3 : 2;
+            }
+          }
+
+          // Distinguishing numbers / measurements (e.g. 16, 18, 20, 28, 32, 40)
+          for (const num of pNumbers) {
+            const numRegex = new RegExp(`\\b${num}\\b`);
+            if (numRegex.test(cleanMsg)) {
+              score += 4;
+            }
+          }
+
+          if (score > bestScore) {
+            secondBestScore = bestScore;
+            bestScore = score;
+            bestIndex = i;
+          } else if (score > secondBestScore) {
+            secondBestScore = score;
+          }
+        }
+
+        // Require a confident score that clearly distinguishes this product
+        if (bestScore >= 3 && (bestScore > secondBestScore || products.length === 1)) {
+          selectedProductIndex = bestIndex;
+        }
+      }
+
+      // 3. Fallback transliteration synonyms (supports Sinhala/Singlish variations for current catalog)
+      if (selectedProductIndex === -1) {
+        // Popcorn 18 / Usa 18
+        if (/\b(?:usa\s*18|18\s*(?:inch|අඟල්|short)|popcorn\s*18|popcon\s*18|පොප්කෝන්\s*18|පොප්කොන්\s*18)\b/i.test(cleanMsg) ||
+            (/(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්|usa)/i.test(cleanMsg) && /\b18\b/.test(cleanMsg))) {
+          const idx = products.findIndex(p => /18/.test(p.name));
+          if (idx !== -1) selectedProductIndex = idx;
+        }
+        // Popcorn 16 / Usa 16
+        else if (/\b(?:usa\s*16|16\s*(?:inch|අඟල්|short)|popcorn\s*16|popcon\s*16|පොප්කෝන්\s*16|පොප්කොන්\s*16)\b/i.test(cleanMsg) ||
+                 (/(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්|usa)/i.test(cleanMsg) && /\b16\b/.test(cleanMsg))) {
+          const idx = products.findIndex(p => /16/.test(p.name));
+          if (idx !== -1) selectedProductIndex = idx;
+        }
+        // Single Jersey 20 / Usa 20
+        else if (/\b(?:usa\s*20|20\s*(?:inch|අඟල්|short)|single\s*jersey\s*20|singlejersey\s*20)\b/i.test(cleanMsg) ||
+                 (/(?:single\s*jersey|singlejersey|cotton)/i.test(cleanMsg) && /\b20\b/.test(cleanMsg))) {
+          const idx = products.findIndex(p => /20/.test(p.name));
+          if (idx !== -1) selectedProductIndex = idx;
+        }
+        // Kyela shorts
+        else if (/(?:kyela|කයිලා|ක්යේලා)/i.test(cleanMsg)) {
+          const idx = products.findIndex(p => /(?:kyela|කයිලා|ක්යේලා)/i.test(p.name));
+          if (idx !== -1) selectedProductIndex = idx;
+        }
+        // Rib Jacquard shorts
+        else if (/(?:rib|jacquard|රිබ්|ජැකුවර්ඩ්)/i.test(cleanMsg)) {
+          const idx = products.findIndex(p => /(?:rib|jacquard|රිබ්|ජැකුවර්ඩ්)/i.test(p.name));
+          if (idx !== -1) selectedProductIndex = idx;
+        }
+        // Popcorn (without specifying 16 or 18) - defaults to 1st popcorn in list (Option 3 / Popcorn 16)
+        else if (/(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්)/i.test(cleanMsg)) {
+          const idx = products.findIndex(p => /(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්)/i.test(p.name));
+          if (idx !== -1) selectedProductIndex = idx;
+        }
+      }
+    }
+
     const choiceOrdinals = ["first", "second", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"];
 
     if (!trimmedMessage) {
@@ -728,9 +850,10 @@ CRITICAL ORDER & SECURITY RULES:
       const prodName = selectedProduct.name;
       const choiceOrdinal = choiceOrdinals[selectedProductIndex] || `${selectedProductIndex + 1}th`;
       const alreadySent = productImagesAlreadySentMap[selectedProduct.id];
-      const imageInstruction = alreadySent
+      const isAskingForDetailsOrPhotos = /(?:විස්තර|ඡායාරූප|පින්තූර|photo|photos|image|images|pic|pics|4to|wistara|details|balanna|penna|danna|evanna|send|show|can i get|oni|one|නැවත|again)/i.test(trimmedMessage);
+      const imageInstruction = (alreadySent && !isAskingForDetailsOrPhotos)
         ? `If the customer is asking to see the product/photos again, include ALL <IMAGE_URL> tags for ${prodName}, otherwise do not include.`
-        : `Include ALL <IMAGE_URL> tags for this product (${prodName}) if not sent yet.`;
+        : `Include ALL <IMAGE_URL> tags for this product (${prodName}).`;
 
       messages.push({
         role: "user",
@@ -1157,19 +1280,30 @@ CRITICAL ORDER & SECURITY RULES:
       imageUrls = [];
     }
 
-    // Safety guard 2: If the bot response presents multiple products (catalog menu), suppress all images.
-    const respLower = responseText.toLowerCase();
-    const mentionedProductsCount = products.filter(p => {
-      const pName = String(p.name || "").toLowerCase().replace(/[^\w\s\u0D80-\u0DFF]/g, "").trim();
-      return pName.length > 2 && respLower.includes(pName);
-    }).length;
+    // Safety guard 2: Suppress images if the bot response presents an actual catalog menu of multiple distinct products.
+    // However, if all images belong to ONE product and that product was selected or inquired by the customer, ALWAYS preserve them.
+    const respLower = responseText.toLowerCase().replace(/\s+/g, " ");
 
-    const hasMenuKeywords = /(?:1\.|2\.|වර්ග\s*\d|වර්ග\s*දෙක|කැමති\s*වර්ගය|\b1\s*හෝ\s*2\b|\b1\s*da\s*2\b|තෝරාගන්න|menu)/i.test(respLower);
-    const isPresentingMultipleProducts = (mentionedProductsCount >= 2 || (products.length >= 2 && hasMenuKeywords && respLower.includes("1.") && respLower.includes("2.")));
+    if (imageUrls.length > 0 && productsInImages.length === 1) {
+      const singleProduct = productsInImages[0];
+      const isSelectedProduct = selectedProductIndex >= 0 && products[selectedProductIndex]?.id === singleProduct.id;
 
-    if (isPresentingMultipleProducts && imageUrls.length > 0) {
-      console.log(`[Image Filter] Suppressing images: bot response presents multiple product details (menu). Suppressing all ${imageUrls.length} images.`);
-      imageUrls = [];
+      // If customer explicitly selected/inquired this product, NEVER suppress its images!
+      if (!isSelectedProduct) {
+        // Check if the bot response is actually presenting a menu of multiple distinct products
+        const distinctMentionedProducts = products.filter(p => {
+          const cleanPName = (p.name || "").toLowerCase().replace(/[^\w\s\u0D80-\u0DFF]/g, "").replace(/\s+/g, " ").trim();
+          return cleanPName.length >= 4 && respLower.includes(cleanPName);
+        });
+
+        const isCatalogMenu = distinctMentionedProducts.length >= 2 &&
+          /(?:වර්ග\s*(?:\d|දෙක|තුන|හතර|පහ)|කැමති\s*වර්ගය|නිෂ්පාදන\s*ලැයිස්තුව|our\s*products|product\s*menu|තෝරාගන්න)/i.test(respLower);
+
+        if (isCatalogMenu) {
+          console.log(`[Image Filter] Suppressing images: bot response presents catalog menu (${distinctMentionedProducts.length} products listed). Suppressing all ${imageUrls.length} images.`);
+          imageUrls = [];
+        }
+      }
     }
 
 
