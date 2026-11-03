@@ -341,8 +341,7 @@ serve(async (req) => {
         line += ` | Video: ${p.video_url}`;
       }
       if (p.images && Array.isArray(p.images) && p.images.length > 0) {
-        line += `\n  - Product Photos (${p.images.length} photos available - ONLY output these <IMAGE_URL> tags when presenting this ONE specific product by itself, or when customer explicitly asks for photos of this product. NEVER output ANY images when listing or showing multiple products or the menu. NEVER output images when customer specifies quantity, colors, or checkout info):\n` +
-          p.images.map((img: string) => `    <IMAGE_URL>${img}</IMAGE_URL>`).join("\n");
+        line += ` | Images: ${p.images.join(", ")}`;
       }
       if (p.variations && Array.isArray(p.variations) && p.variations.length > 0) {
         const varLines = p.variations.map((v: any) => {
@@ -378,102 +377,6 @@ serve(async (req) => {
       if (p.video_url) {
         productVideoMap[p.name.toLowerCase()] = p.video_url;
       }
-    }
-
-    // Fetch prior outbound messages within the active conversation window (last 2.5 hours)
-    // Images sent in prior days/sessions should NOT block images when a customer returns.
-    const rawPhoneDigits = String(phoneNumber || "").replace(/\D/g, "");
-    const localPhone = rawPhoneDigits.startsWith("94") && rawPhoneDigits.length === 11 ? "0" + rawPhoneDigits.slice(2) : rawPhoneDigits;
-    const intlPhone = localPhone.startsWith("0") && localPhone.length === 10 ? "94" + localPhone.slice(1) : rawPhoneDigits;
-    const phoneCandidates = Array.from(new Set([phoneNumber, rawPhoneDigits, localPhone, intlPhone].filter(Boolean)));
-
-    const sessionWindowHours = 2.5;
-    const sessionCutoff = new Date(Date.now() - sessionWindowHours * 60 * 60 * 1000).toISOString();
-
-    const { data: priorOutbound } = await supabase
-      .from("conversations")
-      .select("metadata, message, created_at")
-      .eq("user_id", userId)
-      .in("phone_number", phoneCandidates)
-      .eq("direction", "outbound")
-      .gte("created_at", sessionCutoff)
-      .order("created_at", { ascending: false })
-      .limit(50);
-
-    const normalizeImgPath = (url: string) => {
-      if (!url) return "";
-      return url.trim().replace(/^https?:\/\/[^\/]+/, "").split("?")[0];
-    };
-
-    const alreadySentNormalizedPaths = new Set<string>();
-    for (const row of priorOutbound || []) {
-      const imgs = (row as any)?.metadata?.imageUrls;
-      if (Array.isArray(imgs)) {
-        for (const u of imgs) {
-          if (typeof u === "string") alreadySentNormalizedPaths.add(normalizeImgPath(u));
-        }
-      }
-      const single = (row as any)?.metadata?.imageUrl || (row as any)?.metadata?.mediaUrl;
-      if (typeof single === "string") {
-        alreadySentNormalizedPaths.add(normalizeImgPath(single));
-      }
-      if (typeof row.message === "string") {
-        const matches = row.message.matchAll(/<IMAGE_URL>([\s\S]*?)<\/IMAGE_URL>/g);
-        for (const m of matches) {
-          alreadySentNormalizedPaths.add(normalizeImgPath(m[1]));
-        }
-        // Also capture direct image URLs in text (e.g. from storage/MinIO)
-        const directUrlMatches = row.message.match(/https?:\/\/[^\s"'<>]+\.(?:jpe?g|png|webp|gif)/gi);
-        if (directUrlMatches) {
-          for (const u of directUrlMatches) {
-            alreadySentNormalizedPaths.add(normalizeImgPath(u));
-          }
-        }
-      }
-    }
-
-    // Also inspect conversationHistory passed in the request (only within session window)
-    const sessionCutoffMs = Date.now() - sessionWindowHours * 60 * 60 * 1000;
-    if (Array.isArray(conversationHistory)) {
-      for (const msg of conversationHistory as ConversationMessage[]) {
-        if (msg.direction === "outbound") {
-          if (msg.created_at && new Date(msg.created_at).getTime() < sessionCutoffMs) {
-            continue;
-          }
-          const meta = (msg as any)?.metadata;
-          if (Array.isArray(meta?.imageUrls)) {
-            for (const u of meta.imageUrls) {
-              if (typeof u === "string") alreadySentNormalizedPaths.add(normalizeImgPath(u));
-            }
-          }
-          if (typeof meta?.imageUrl === "string") {
-            alreadySentNormalizedPaths.add(normalizeImgPath(meta.imageUrl));
-          }
-          if (typeof msg.message === "string") {
-            const matches = msg.message.matchAll(/<IMAGE_URL>([\s\S]*?)<\/IMAGE_URL>/g);
-            for (const m of matches) {
-              alreadySentNormalizedPaths.add(normalizeImgPath(m[1]));
-            }
-            const directUrlMatches = msg.message.match(/https?:\/\/[^\s"'<>]+\.(?:jpe?g|png|webp|gif)/gi);
-            if (directUrlMatches) {
-              for (const u of directUrlMatches) {
-                alreadySentNormalizedPaths.add(normalizeImgPath(u));
-              }
-            }
-          }
-        }
-      }
-    }
-
-    // Build per-product image sets and tracking dynamically for ALL products from DB
-    const productImagesAlreadySentMap: Record<string, boolean> = {};
-    const productNormPathsMap: Record<string, Set<string>> = {};
-
-    for (const p of products) {
-      const pImages: string[] = Array.isArray(p.images) ? p.images.filter(Boolean) : [];
-      const normPaths = new Set(pImages.map((u: string) => normalizeImgPath(u)));
-      productNormPathsMap[p.id] = normPaths;
-      productImagesAlreadySentMap[p.id] = pImages.length > 0 && pImages.some((u: string) => alreadySentNormalizedPaths.has(normalizeImgPath(u)));
     }
 
     const deliveryFeeDefault = typeof deliverySettings?.delivery_fee === "number"
@@ -534,12 +437,6 @@ serve(async (req) => {
       const descSnippet = p.description ? `\n   * විස්තර (Description): ${p.description.replace(/\n+/g, " | ").trim()}` : "";
       return `${priceLine}${variationsLine}${extraCalcLine ? `\n${extraCalcLine}` : ""}${descSnippet}`;
     }).join("\n\n");
-
-    const productImageRulesFormatted = products.map((p: any, idx: number) => {
-      const alreadySent = productImagesAlreadySentMap[p.id];
-      const name = p.name || `Product ${idx + 1}`;
-      return `- ${name}: ${alreadySent ? "දැනටමත් මෙම Session එක තුළ ඡායාරූප යවා ඇත. පාරිභෝගිකයා නිෂ්පාදනය තෝරාගතහොත් හෝ විස්තර/ඡායාරූප ඉල්ලුවහොත් පමණක් <IMAGE_URL> ටැග් අමුණන්න (ප්‍රමාණය, වර්ණ හෝ ලිපිනය ලබාදෙන විට නැවත නොයවන්න)." : `තනි නිෂ්පාදනයක් ලෙස තෝරාගත් විට හෝ විස්තර/ඡායාරූප ඉල්ලූ විට අදාළ ${name} ඡායාරූප <IMAGE_URL> ටැග් අමුණන්න.`}`;
-    }).join("\n");
 
     // Build FAQ context with IDs so AI can report which ones it used
     const faqContext = faqs.map(f =>
@@ -640,11 +537,9 @@ ${productsPricingFormatted || "No active products in database."}
   * අවසානයට: "ස්තූතියි ඔබගේ ඇණවුම ලැබී ඇත.කුරියර් සේවයෙන් ඔබට ඇමතුමක් ලබාදෙනු ඇත. කරුණාකර ඔබගේ ඇණවුම යලි return වීමට නොදී මුදල් ලබාදී භාරගන්න"
   * පණිවිඩය අවසානයට සඟවා <ORDER_JSON> ටැගය අමුණන්න. ඇණවුම ගත් පසු (COD තහවුරු කිරීම, Thank you, සාමාන්‍ය විමසීම් වලදී) නැවත <ORDER_JSON> නොයවන්න. නමුත් පාරිභෝගිකයා අලුතින් භාණ්ඩ එකතු කළහොත් හෝ ඇණවුම වෙනස් කළහොත් (Modify/Update), සම්පූර්ණ යාවත්කාලීන වූ ඇණවුම් විස්තර සහිතව නැවත <ORDER_JSON> අමුණන්න. තත්ත්වය Pending විය යුතුය (Confirmed නොකියන්න).
 
-ඡායාරූප නීති (CRITICAL PHOTO & IMAGE RULES):
-- 🚫 බහුවිධ නිෂ්පාදන / මෙනුව පෙන්වන විට හෝ සාමාන්‍ය කතාබහේදී කිසිසේත්ම ඡායාරූප නොයවන්න (ZERO <IMAGE_URL> tags).
-- ✅ ඡායාරූප යැවිය යුත්තේ තනි නිෂ්පාදනයක විස්තර පෙන්වන විට හෝ පාරිභෝගිකයා ඡායාරූප ඉල්ලූ විට පමණි.
-- 🚫 ප්‍රමාණය පවසන විට, වර්ණ තෝරන විට හෝ ලිපින ලබාදෙන විට කිසිවිටෙකත් ඡායාරූප නැවත නොයවන්න.
-${productImageRulesFormatted || "ඡායාරූප ලබාගත නොහැක."}
+PRODUCT IMAGES:
+- When a customer asks about a specific product that has images, include ALL the image URLs in separate <IMAGE_URL>url</IMAGE_URL> tags at the END of your response. Include all images for the product to give them a complete view.
+- Only use image URLs from the product catalog below. Never make up image URLs.
 
 ගෙවීම් ගිණුම් විස්තර (PAYMENT DETAILS):
 ${paymentDetailsFormatted}
@@ -868,15 +763,10 @@ CRITICAL ORDER & SECURITY RULES:
       const selectedProduct = products[selectedProductIndex];
       const prodName = selectedProduct.name;
       const choiceOrdinal = choiceOrdinals[selectedProductIndex] || `${selectedProductIndex + 1}th`;
-      const alreadySent = productImagesAlreadySentMap[selectedProduct.id];
-      const isAskingForDetailsOrPhotos = /(?:විස්තර|ඡායාරූප|පින්තූර|photo|photos|image|images|pic|pics|4to|wistara|details|balanna|penna|danna|evanna|send|show|can i get|oni|one|නැවත|again)/i.test(trimmedMessage);
-      const imageInstruction = (alreadySent && !isAskingForDetailsOrPhotos)
-        ? `If the customer is asking to see the product/photos again, include ALL <IMAGE_URL> tags for ${prodName}, otherwise do not include.`
-        : `Include ALL <IMAGE_URL> tags for this product (${prodName}).`;
 
       messages.push({
         role: "user",
-        content: `${trimmedMessage} [Customer selected Option ${selectedProductIndex + 1} (${choiceOrdinal} choice): ${prodName}. 1 means first choice, 2 means second choice, 3 means 3rd choice, etc. Do NOT say "නියමයි!". Present product details and pricing from the database catalog clearly with blank lines between sections. Inform the customer that colors are numbered in the photos, and ask what color numbers they need (do NOT ask how many units they need). ${imageInstruction}]`
+        content: `${trimmedMessage} [Customer selected Option ${selectedProductIndex + 1} (${choiceOrdinal} choice): ${prodName}. 1 means first choice, 2 means second choice, 3 means 3rd choice, etc. Do NOT say "නියමයි!". Present product details and pricing from the database catalog clearly with blank lines between sections. Inform the customer that colors are numbered in the photos, and ask what color numbers they need (do NOT ask how many units they need).]`
       });
     } else {
       messages.push({ role: "user", content: trimmedMessage });
@@ -1273,59 +1163,9 @@ CRITICAL ORDER & SECURITY RULES:
       }
     }
 
-    // Extract image URLs generated by AI (prompt engineering governs when to send images)
+    // Extract image URLs if present
     const imageUrlMatches = Array.from(responseText.matchAll(/<IMAGE_URL>([\s\S]*?)<\/IMAGE_URL>/g));
-    const rawImageUrls = imageUrlMatches.map(m => m[1].trim()).filter(Boolean);
-
-    // Deduplicate any repeated URLs within this response while preserving order (no hard cap)
-    const seenImages = new Set<string>();
-    let imageUrls: string[] = [];
-    for (const rawUrl of rawImageUrls) {
-      const norm = normalizeImgPath(rawUrl);
-      if (norm && !seenImages.has(norm)) {
-        seenImages.add(norm);
-        imageUrls.push(rawUrl);
-      }
-    }
-
-    // Safety guard 1: NEVER send images when showing multiple product details. Only send images for ONE product.
-    const productsInImages = products.filter(p => {
-      const paths = productNormPathsMap[p.id];
-      return paths && paths.size > 0 && imageUrls.some(u => paths.has(normalizeImgPath(u)));
-    });
-
-    if (productsInImages.length > 1) {
-      console.log(`[Image Filter] Suppressing images: response contained images for multiple products (${productsInImages.length} products, ${imageUrls.length} images dropped). Images only allowed for ONE product.`);
-      imageUrls = [];
-    }
-
-    // Safety guard 2: Suppress images if the bot response presents an actual catalog menu of multiple distinct products.
-    // However, if all images belong to ONE product and that product was selected or inquired by the customer, ALWAYS preserve them.
-    const respLower = responseText.toLowerCase().replace(/\s+/g, " ");
-
-    if (imageUrls.length > 0 && productsInImages.length === 1) {
-      const singleProduct = productsInImages[0];
-      const isSelectedProduct = selectedProductIndex >= 0 && products[selectedProductIndex]?.id === singleProduct.id;
-
-      // If customer explicitly selected/inquired this product, NEVER suppress its images!
-      if (!isSelectedProduct) {
-        // Check if the bot response is actually presenting a menu of multiple distinct products
-        const distinctMentionedProducts = products.filter(p => {
-          const cleanPName = (p.name || "").toLowerCase().replace(/[^\w\s\u0D80-\u0DFF]/g, "").replace(/\s+/g, " ").trim();
-          return cleanPName.length >= 4 && respLower.includes(cleanPName);
-        });
-
-        const isCatalogMenu = distinctMentionedProducts.length >= 2 &&
-          /(?:වර්ග\s*(?:\d|දෙක|තුන|හතර|පහ)|කැමති\s*වර්ගය|නිෂ්පාදන\s*ලැයිස්තුව|our\s*products|product\s*menu|තෝරාගන්න)/i.test(respLower);
-
-        if (isCatalogMenu) {
-          console.log(`[Image Filter] Suppressing images: bot response presents catalog menu (${distinctMentionedProducts.length} products listed). Suppressing all ${imageUrls.length} images.`);
-          imageUrls = [];
-        }
-      }
-    }
-
-
+    const imageUrls = Array.from(new Set(imageUrlMatches.map(m => m[1].trim()).filter(Boolean)));
     const imageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
 
     // Extract video URL if present
