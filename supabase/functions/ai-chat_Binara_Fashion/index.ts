@@ -596,7 +596,7 @@ ${productsPricingFormatted || "No active products in database."}
     • අයිතම එකතුව: රු. [මුදල] | ඩිලිවරි: [නොමිලේ / රු. ...]
   * Bank Transfer නම්, සාරාංශයට පහළින් පහත දැක්වෙන බැංකු ගිණුම් විස්තර (Bank Name, Account Number, Account Name, Branch ඇතුළුව) නිවැරදිව දක්වා slip එකේ photo එකක් එවන්නැයි කියන්න.
   * අවසානයට: "ස්තූතියි ඔබගේ ඇණවුම ලැබී ඇත.කුරියර් සේවයෙන් ඔබට ඇමතුමක් ලබාදෙනු ඇත. කරුණාකර ඔබගේ ඇණවුම යලි return වීමට නොදී මුදල් ලබාදී භාරගන්න"
-  * පණිවිඩය අවසානයට සඟවා <ORDER_JSON> ටැගය එක් වරක් පමණක් (ONCE ONLY) අමුණන්න. ඇණවුම ගත් පසු (COD තහවුරු කිරීම, Thank you, විමසීම් වලදී) නැවත කිසිවිටෙකත් <ORDER_JSON> නොයවන්න. තත්ත්වය Pending විය යුතුය (Confirmed නොකියන්න).
+  * පණිවිඩය අවසානයට සඟවා <ORDER_JSON> ටැගය අමුණන්න. ඇණවුම ගත් පසු (COD තහවුරු කිරීම, Thank you, සාමාන්‍ය විමසීම් වලදී) නැවත <ORDER_JSON> නොයවන්න. නමුත් පාරිභෝගිකයා අලුතින් භාණ්ඩ එකතු කළහොත් හෝ ඇණවුම වෙනස් කළහොත් (Modify/Update), සම්පූර්ණ යාවත්කාලීන වූ ඇණවුම් විස්තර සහිතව නැවත <ORDER_JSON> අමුණන්න. තත්ත්වය Pending විය යුතුය (Confirmed නොකියන්න).
 
 ඡායාරූප නීති (CRITICAL PHOTO & IMAGE RULES):
 - 🚫 බහුවිධ නිෂ්පාදන / මෙනුව පෙන්වන විට හෝ සාමාන්‍ය කතාබහේදී කිසිසේත්ම ඡායාරූප නොයවන්න (ZERO <IMAGE_URL> tags).
@@ -618,7 +618,7 @@ ${welcomeMessage}
 
 CRITICAL ORDER & SECURITY RULES:
 - ORDER_JSON, IMAGE_URL, VIDEO_URL, USED_FAQS ටැග් පාරිභෝගිකයාට නොපෙනෙන තාක්ෂණික ටැග් වේ. ඒවා සැමවිටම පණිවිඩයේ කෙළවරටම පමණක් අමුණන්න. කිසිවිටෙකත් පණිවිඩයේ මැද හෝ JSON කෝඩ් ලෙස නොලියන්න.
-- <ORDER_JSON> යැවිය යුත්තේ නම/ලිපිනය/දුරකථන විස්තර ලැබී ඇණවුම මුල්වරට ගන්නා විට පමණි. දැනටමත් ඇණවුම සටහන් කර ඇති පසු නැවත කිසිසේත්ම <ORDER_JSON> නොයවන්න.
+- <ORDER_JSON> යැවිය යුත්තේ නම/ලිපිනය/දුරකථන විස්තර ලැබී ඇණවුම ගන්නා විට සහ පාරිභෝගිකයා ඇණවුමට අලුතින් භාණ්ඩ එකතු කර හෝ වෙනස් කර යාවත්කාලීන (Modify/Update) කරන විට පමණි. කිසිදු වෙනසක් නැති සාමාන්‍ය කතාබහේදී නැවත <ORDER_JSON> නොයවන්න.
 - පාරිභෝගිකයා Photo එකක් (Receipt/Slip) එව්වොත්: "ස්තූතියි, ඔබගේ ගෙවීම් රිසිට්පත ලැබුණා. අපගේ කාර්ය මණ්ඩලය මෙය පරීක්ෂා කර තහවුරු කරනු ඇත." ලෙස කෙටියෙන් පවසන්න.
 - <ORDER_JSON> ආකෘතිය:
   <ORDER_JSON>{"customer_name":"...","customer_phone":"...","district":"...","customer_address":"...","order_items":[{"name":"...","price":...,"quantity":...,"product_type":"physical"}],"payment_method":"cod or bank_transfer","subtotal":...,"delivery_fee":...,"total_amount":...,"status":"pending","special_instructions":"Colors: ..."}</ORDER_JSON>`;
@@ -819,13 +819,49 @@ CRITICAL ORDER & SECURITY RULES:
             paymentMethod = "yet to decide";
           }
 
-          // Deduplication: check if a similar order was created in the last 15 minutes by customer_phone OR whatsapp_phone
+          const rawItems = Array.isArray(orderData.order_items) && orderData.order_items.length > 0
+            ? orderData.order_items
+            : (Array.isArray(orderData.items) && orderData.items.length > 0
+              ? orderData.items.map((p: any) => ({ name: p.name || p.id || (products[0]?.name || "Product"), quantity: p.quantity || 1, price: p.price || 0 }))
+              : (Array.isArray(orderData.products) ? orderData.products.map((p: any) => ({ name: p.id || p.name || (products[0]?.name || "Product"), quantity: p.quantity || 1, price: p.price || 0 })) : []));
+          const custName = orderData.customer_name || orderData.customer?.name || orderData.customer_details?.name || "Customer";
+          const custAddress = orderData.customer_address || orderData.customer?.address || orderData.customer_details?.address || null;
+
+          let specialInstructions = orderData.special_instructions || null;
+          if (!specialInstructions && orderData.items?.[0]?.sub_variants) {
+            const sv = orderData.items[0].sub_variants;
+            specialInstructions = typeof sv === "object" ? (sv.colors ? `Colors: ${sv.colors}` : JSON.stringify(sv)) : String(sv);
+          } else if (!specialInstructions && Array.isArray(orderData.products?.[0]?.sub_variants)) {
+            specialInstructions = orderData.products[0].sub_variants.join(", ");
+          } else if (!specialInstructions && orderData.customer_email) {
+            specialInstructions = `Email: ${orderData.customer_email}`;
+          }
+
+          const areItemsEqual = (a: any[], b: any[]) => {
+            if (!Array.isArray(a) || !Array.isArray(b)) return false;
+            if (a.length !== b.length) return false;
+            const sortFn = (x: any, y: any) => String(x.name || "").localeCompare(String(y.name || ""));
+            const sortedA = [...a].sort(sortFn);
+            const sortedB = [...b].sort(sortFn);
+            for (let i = 0; i < sortedA.length; i++) {
+              const itemA = sortedA[i];
+              const itemB = sortedB[i];
+              if (String(itemA.name || "").toLowerCase().trim() !== String(itemB.name || "").toLowerCase().trim()) return false;
+              if (Number(itemA.quantity || 1) !== Number(itemB.quantity || 1)) return false;
+            }
+            return true;
+          };
+
+          // Deduplication & modification check: find recent active/pending order in the last 15 minutes by customer_phone OR whatsapp_phone
           const deduplicationWindow = new Date(Date.now() - 15 * 60 * 1000).toISOString();
           let dedupeQuery = supabase
             .from("orders")
-            .select("id, payment_method, status")
+            .select("id, payment_method, status, total_amount, order_items, special_instructions, customer_address, district, customer_name")
             .eq("user_id", userId)
-            .gte("created_at", deduplicationWindow);
+            .gte("created_at", deduplicationWindow)
+            .in("status", ["pending", "pending_call", "pending call", "waiting_for_slip_verification", "waiting for slip verification", "pending_verification", "pendingverification", "processing"])
+            .order("created_at", { ascending: false })
+            .limit(1);
 
           if (phoneToSave && phoneNumber) {
             dedupeQuery = dedupeQuery.or(`customer_phone.eq.${phoneToSave},whatsapp_phone.eq.${phoneNumber}`);
@@ -837,37 +873,60 @@ CRITICAL ORDER & SECURITY RULES:
 
           const { data: recentOrders } = await dedupeQuery;
 
-          if (recentOrders && recentOrders.length > 0) {
-            console.log("Duplicate order detected, skipping creation. Existing:", recentOrders[0].id);
-            createdOrderId = recentOrders[0].id;
+          let isUpdate = false;
+          let targetOrderId = "";
+          let shouldNotifyOwner = false;
 
-            // If the customer provided a definitive payment method, update the existing order
-            if (paymentMethod && paymentMethod !== "yet to decide" && recentOrders[0].payment_method !== paymentMethod) {
-              await supabase
+          if (recentOrders && recentOrders.length > 0) {
+            const existingOrder = recentOrders[0];
+            const hasPriceChanged = Number(existingOrder.total_amount) !== Number(math.totalAmount);
+            const hasItemsChanged = !areItemsEqual(existingOrder.order_items, rawItems);
+            const hasPaymentChanged = paymentMethod && paymentMethod !== "yet to decide" && existingOrder.payment_method !== paymentMethod;
+            const hasInstructionsChanged = !!specialInstructions && specialInstructions.trim() !== (existingOrder.special_instructions || "").trim();
+            const hasAddressChanged = !!custAddress && custAddress.trim() !== (existingOrder.customer_address || "").trim();
+            const hasDistrictChanged = !!orderData.district && orderData.district.trim() !== (existingOrder.district || "").trim();
+
+            const isModified = hasItemsChanged || hasPriceChanged || hasPaymentChanged || hasInstructionsChanged || hasAddressChanged || hasDistrictChanged;
+
+            if (isModified) {
+              console.log(`Order modification detected for existing order ${existingOrder.id}. Updating order details in database...`);
+              const updatePayload: Record<string, any> = {
+                order_items: rawItems,
+                total_amount: math.totalAmount,
+                updated_at: new Date().toISOString(),
+              };
+              if (paymentMethod && paymentMethod !== "yet to decide") {
+                updatePayload.payment_method = paymentMethod;
+              }
+              if (custAddress) updatePayload.customer_address = custAddress;
+              if (orderData.district) updatePayload.district = orderData.district;
+              if (custName && custName !== "Customer") updatePayload.customer_name = custName;
+              if (specialInstructions) updatePayload.special_instructions = specialInstructions;
+              if (secondPhone) updatePayload.call_phone = secondPhone;
+
+              const { data: updatedOrder, error: updateError } = await supabase
                 .from("orders")
-                .update({ payment_method: paymentMethod })
-                .eq("id", recentOrders[0].id);
-              console.log(`Updated payment method of existing order ${recentOrders[0].id} to ${paymentMethod}`);
+                .update(updatePayload)
+                .eq("id", existingOrder.id)
+                .select()
+                .single();
+
+              if (updateError) {
+                console.error("Error updating existing order:", updateError);
+              } else {
+                console.log("Order updated successfully:", existingOrder.id, "Verified new total:", math.totalAmount);
+                orderCreated = true;
+                createdOrderId = existingOrder.id;
+                targetOrderId = existingOrder.id;
+                isUpdate = true;
+                shouldNotifyOwner = true;
+              }
+            } else {
+              console.log("Duplicate order with identical details detected, skipping changes. Existing:", existingOrder.id);
+              createdOrderId = existingOrder.id;
             }
           } else {
-            const rawItems = Array.isArray(orderData.order_items) && orderData.order_items.length > 0
-              ? orderData.order_items
-              : (Array.isArray(orderData.items) && orderData.items.length > 0
-                ? orderData.items.map((p: any) => ({ name: p.name || p.id || (products[0]?.name || "Product"), quantity: p.quantity || 1, price: p.price || 0 }))
-                : (Array.isArray(orderData.products) ? orderData.products.map((p: any) => ({ name: p.id || p.name || (products[0]?.name || "Product"), quantity: p.quantity || 1, price: p.price || 0 })) : []));
-            const custName = orderData.customer_name || orderData.customer?.name || orderData.customer_details?.name || "Customer";
-            const custAddress = orderData.customer_address || orderData.customer?.address || orderData.customer_details?.address || null;
-
-            let specialInstructions = orderData.special_instructions || null;
-            if (!specialInstructions && orderData.items?.[0]?.sub_variants) {
-              const sv = orderData.items[0].sub_variants;
-              specialInstructions = typeof sv === "object" ? (sv.colors ? `Colors: ${sv.colors}` : JSON.stringify(sv)) : String(sv);
-            } else if (!specialInstructions && Array.isArray(orderData.products?.[0]?.sub_variants)) {
-              specialInstructions = orderData.products[0].sub_variants.join(", ");
-            } else if (!specialInstructions && orderData.customer_email) {
-              specialInstructions = `Email: ${orderData.customer_email}`;
-            }
-
+            // New order insertion
             const { data: orderResult, error: orderError } = await supabase
               .from("orders")
               .insert({
@@ -893,60 +952,67 @@ CRITICAL ORDER & SECURITY RULES:
               console.log("Order saved successfully:", orderResult.id, "Verified total:", math.totalAmount);
               orderCreated = true;
               createdOrderId = orderResult.id;
+              targetOrderId = orderResult.id;
+              isUpdate = false;
+              shouldNotifyOwner = true;
+            }
+          }
 
-              // Send order notification to owner
-              try {
-                const { data: notifSettings } = await supabase
-                  .from("settings")
-                  .select("value")
-                  .eq("key", "order_notifications")
-                  .eq("user_id", userId)
-                  .single();
+          // Send order notification to owner if order was newly placed or updated
+          if (shouldNotifyOwner && targetOrderId) {
+            try {
+              const { data: notifSettings } = await supabase
+                .from("settings")
+                .select("value")
+                .eq("key", "order_notifications")
+                .eq("user_id", userId)
+                .single();
 
-                let ownerPhone = notifSettings?.value?.phone ? String(notifSettings.value.phone).replace(/\D/g, "") : null;
-                if (ownerPhone) {
-                  if (ownerPhone.startsWith("0") && ownerPhone.length === 10) {
-                    ownerPhone = "94" + ownerPhone.substring(1);
-                  } else if (ownerPhone.length === 9) {
-                    ownerPhone = "94" + ownerPhone;
-                  }
-                  const items = (orderData.order_items || [])
-                    .map((item: any) => `${item.quantity}x ${item.name}`)
-                    .join(", ");
-                  const notifMessage = `📦 New Order #${orderResult.id.substring(0, 8)}\n👤 ${orderData.customer_name}\n📱 ${phoneToSave}\n🛒 ${items}\n💰 Total: Rs. ${math.totalAmount}\n💳 ${orderData.payment_method === "cod" ? "Cash on Delivery" : (orderData.payment_method === "bank_transfer" ? "Bank Transfer" : "Yet to decide")}${orderData.district ? `\n🏘️ District: ${orderData.district}` : ""}${orderData.customer_address ? `\n📍 ${orderData.customer_address}` : ""}`;
-
-                  let sendApiKey = sessionApiKey || null;
-                  if (!sendApiKey) {
-                    const { data: sessionData } = await supabase
-                      .from("user_wsender_sessions")
-                      .select("session_api_key")
-                      .eq("user_id", userId)
-                      .limit(1)
-                      .maybeSingle();
-                    sendApiKey = sessionData?.session_api_key || null;
-                  }
-
-                  const sendNotif = await fetch(`${supabaseUrl}/functions/v1/send-whatsapp_Binara_Fashion`, {
-                    method: "POST",
-                    headers: {
-                      Authorization: `Bearer ${supabaseServiceKey}`,
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      to: ownerPhone,
-                      message: notifMessage,
-                      sessionApiKey: sendApiKey,
-                    }),
-                  });
-                  if (!sendNotif.ok) {
-                    console.error("Failed to send owner notification:", await sendNotif.text());
-                  } else {
-                    console.log("Owner notification sent to", ownerPhone);
-                  }
+              let ownerPhone = notifSettings?.value?.phone ? String(notifSettings.value.phone).replace(/\D/g, "") : null;
+              if (ownerPhone) {
+                if (ownerPhone.startsWith("0") && ownerPhone.length === 10) {
+                  ownerPhone = "94" + ownerPhone.substring(1);
+                } else if (ownerPhone.length === 9) {
+                  ownerPhone = "94" + ownerPhone;
                 }
-              } catch (notifError) {
-                console.error("Error sending owner notification:", notifError);
+                const itemsSummary = rawItems
+                  .map((item: any) => `${item.quantity || 1}x ${item.name || "Item"}`)
+                  .join(", ");
+                const notifTitle = isUpdate ? `📝 Updated Order #${targetOrderId.substring(0, 8)}` : `📦 New Order #${targetOrderId.substring(0, 8)}`;
+                const resolvedPayMethod = paymentMethod === "cod" ? "Cash on Delivery" : (paymentMethod === "bank_transfer" ? "Bank Transfer" : "Yet to decide");
+                const notifMessage = `${notifTitle}\n👤 ${custName}\n📱 ${phoneToSave}\n🛒 ${itemsSummary}\n💰 Total: Rs. ${math.totalAmount}\n💳 ${resolvedPayMethod}${orderData.district ? `\n🏘️ District: ${orderData.district}` : ""}${custAddress ? `\n📍 ${custAddress}` : ""}`;
+
+                let sendApiKey = sessionApiKey || null;
+                if (!sendApiKey) {
+                  const { data: sessionData } = await supabase
+                    .from("user_wsender_sessions")
+                    .select("session_api_key")
+                    .eq("user_id", userId)
+                    .limit(1)
+                    .maybeSingle();
+                  sendApiKey = sessionData?.session_api_key || null;
+                }
+
+                const sendNotif = await fetch(`${supabaseUrl}/functions/v1/send-whatsapp_Binara_Fashion`, {
+                  method: "POST",
+                  headers: {
+                    Authorization: `Bearer ${supabaseServiceKey}`,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    to: ownerPhone,
+                    message: notifMessage,
+                    sessionApiKey: sendApiKey,
+                  }),
+                });
+                if (!sendNotif.ok) {
+                  console.error("Failed to send owner notification:", await sendNotif.text());
+                } else {
+                  console.log(`Owner notification (${isUpdate ? "update" : "new"}) sent to`, ownerPhone);
+                }
               }
+            } catch (notifError) {
+              console.error("Error sending owner notification:", notifError);
             }
           }
         } catch (parseError) {
