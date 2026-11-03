@@ -288,6 +288,19 @@ async function processBatch(
   const senderName = firstMsg.sender_name || "Unknown";
   const sessionApiKey = firstMsg.session_api_key;
 
+  // 0. Fetch prior conversation history before saving current incoming batch
+  mark("history_start");
+  const { data: priorHistory } = await supabase
+    .from("conversations")
+    .select("message, direction, created_at")
+    .eq("phone_number", phoneNumber)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(12);
+  mark("history_end");
+
+  const conversationHistory = priorHistory || [];
+
   // 1. Store each incoming message in conversations & transcribe voice if any
   mark("store_inbound_start");
   let transcribedVoiceTexts: string[] = [];
@@ -413,16 +426,7 @@ async function processBatch(
     return;
   }
 
-  // 4. Fetch conversation history
-  mark("history_start");
-  const { data: conversationHistory } = await supabase
-    .from("conversations")
-    .select("message, direction, created_at")
-    .eq("phone_number", phoneNumber)
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false })
-    .limit(12);
-  mark("history_end");
+  // 4. Conversation history is already loaded in Step 0 (prior to current batch)
 
   // 5. Construct aggregated prompt for the LLM
   const combinedTexts = [...transcribedVoiceTexts, ...userTextMessages].join("\n").trim();
@@ -446,13 +450,7 @@ async function processBatch(
   }
 
   // 6. Check if first message (for welcome message flow)
-  const { count: convoCount } = await supabase
-    .from("conversations")
-    .select("id", { count: "exact", head: true })
-    .eq("phone_number", phoneNumber)
-    .eq("user_id", userId);
-
-  const isFirstMessage = (convoCount || 0) <= batch.length;
+  const isFirstMessage = conversationHistory.length === 0;
   const isNumericSelection =
     /^(?:option|choice|item|product)?\s*(\d+)\.?$/i.test(aggregatedMessage.trim()) ||
     /^(?:(\d+)(?:st|nd|rd|th)\s*(?:choice|option)?)$/i.test(aggregatedMessage.trim()) ||

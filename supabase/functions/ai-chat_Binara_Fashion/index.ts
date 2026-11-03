@@ -595,10 +595,11 @@ serve(async (req) => {
      (eg: pack 5 select කරානම් 1, 2 ,3 , 4,5)"
 
 5. වර්ණ අංක (Color Numbers) සහ ප්‍රමාණය (Quantity) වෙන්කර හඳුනාගැනීම:
-   - ඔබ පාරිභෝගිකයාගෙන් වර්ණ අංක විමසූ විට, පාරිභෝගිකයා අංකයක් හෝ අංක කිහිපයක් ලබාදුන් විට (උදා: "9" හෝ "1, 2, 3, 4"):
+   - ඔබ පාරිභෝගිකයාගෙන් වර්ණ අංක විමසූ විට, පාරිභෝගිකයා අංකයක් හෝ අංක කිහිපයක් ලබාදුන් විට (උදා: "9" හෝ "1, 2, 3, 4" හෝ "1 2 3 3 3"):
      * එය ඡායාරූප වල ඇති වර්ණ අංක (Color Numbers) මිස කිසිසේත්ම "99ක්" හෝ අතිවිශාල භාණ්ඩ ප්‍රමාණයක් නොවේ! කිසිවිටෙකත් අංක එකතු කර (concatenate) "99" ලෙස නොසිතන්න.
-     * පාරිභෝගිකයා තෝරාගත් වර්ණ ගණන = අවශ්‍ය භාණ්ඩ ප්‍රමාණය වේ (උදා: "9" ලබාදුනහොත් = වර්ණ අංක 9න් 1ක්; "1, 2, 3, 4" ලබාදුනහොත් = තෝරාගත් වර්ණ 4න් 4ක්).
+     * පාරිභෝගිකයා තෝරාගත් වර්ණ ගණන = අවශ්‍ය භාණ්ඩ ප්‍රමාණය වේ (උදා: "9" ලබාදුනහොත් = වර්ණ අංක 9න් 1ක්; "1, 2, 3, 4" ලබාදුනහොත් = තෝරාගත් වර්ණ 4න් 4ක්; "1, 2, 3, 3, 3" ලබාදුනහොත් = තෝරාගත් වර්ණ 5න් 5ක්).
      * පාරිභෝගිකයා වර්ණ අංකය පැවසූ පසු, නැවත "ඔබ කැමති වර්ණ අංකය කුමක්ද" කියා නොඅසන්න! කෙලින්ම පියවර 2 අනුව කෙටි සාරාංශය පෙන්වා නම, ලිපිනය විමසන්න.
+     * පාරිභෝගිකයා කලින් සාරාංශයක් ලබාදී තිබියදී නැවත නව වර්ණ අංක එවුවහොත් හෝ සංශෝධනය කළහොත් (උදා: "1,2,3,3,3" නැවත එවුවහොත්), කලින් තිබූ වැරදි ප්‍රමාණය මත නොසිට, නව වර්ණ අංක ගණනට අදාළව (5ක් සඳහා රු. 2600) නව කෙටි සාරාංශය සහ මුදල වහාම යාවත්කාලීන කර පෙන්වන්න.
 
 භාෂාව සහ විලාසය:
 - සුහදශීලී (friendly) ස්වභාවික සිංහල සමඟ ඉංග්‍රීසි වචන මිශ්‍ර කර භාවිතා කරන්න (Order, Colors, Package, COD, Bank Transfer, Delivery, Staff, Confirm).
@@ -664,12 +665,31 @@ CRITICAL ORDER & SECURITY RULES:
 - <ORDER_JSON> ආකෘතිය:
   <ORDER_JSON>{"customer_name":"...","customer_phone":"...","district":"...","customer_address":"...","order_items":[{"name":"...","price":...,"quantity":...,"product_type":"physical"}],"payment_method":"cod or bank_transfer","subtotal":...,"delivery_fee":...,"total_amount":...,"status":"pending","special_instructions":"Colors: ..."}</ORDER_JSON>`;
 
+    const trimmedMessage = (message || "").trim();
+
     const messages = [
       { role: "system", content: systemPrompt },
     ];
 
-    if (conversationHistory && conversationHistory.length > 0) {
-      for (const msg of conversationHistory as ConversationMessage[]) {
+    // Sanitize conversationHistory: ensure prior history does not already end with the incoming user message
+    const historyList = Array.isArray(conversationHistory) ? [...conversationHistory] : [];
+    const cleanCurrentMsg = trimmedMessage.toLowerCase();
+
+    while (
+      historyList.length > 0 &&
+      historyList[historyList.length - 1].direction === "inbound"
+    ) {
+      const lastHistoryText = (historyList[historyList.length - 1].message || "").trim().toLowerCase();
+      if (lastHistoryText === cleanCurrentMsg || (cleanCurrentMsg && lastHistoryText && (cleanCurrentMsg.includes(lastHistoryText) || lastHistoryText.includes(cleanCurrentMsg)))) {
+        console.log(`[ai-chat] Stripping duplicated current message from history tail: "${lastHistoryText.substring(0, 50)}"`);
+        historyList.pop();
+      } else {
+        break;
+      }
+    }
+
+    if (historyList.length > 0) {
+      for (const msg of historyList as ConversationMessage[]) {
         messages.push({
           role: msg.direction === "inbound" ? "user" : "assistant",
           content: msg.message,
@@ -679,14 +699,13 @@ CRITICAL ORDER & SECURITY RULES:
 
     // Handle numeric selection intent and photo/media messages
     // Rule: 1 means first choice, 2 means second choice, 3 means 3rd choice...
-    const trimmedMessage = (message || "").trim();
     let selectedProductIndex = -1;
 
     // Check if previous outbound message was actively asking for color selection
     let isAwaitingColorSelection = false;
-    if (Array.isArray(conversationHistory) && conversationHistory.length > 0) {
-      for (let i = conversationHistory.length - 1; i >= 0; i--) {
-        const h = conversationHistory[i];
+    if (historyList.length > 0) {
+      for (let i = historyList.length - 1; i >= 0; i--) {
+        const h = historyList[i];
         if (h.direction === "outbound" && h.message) {
           if (/(?:වර්ණ\s*අංක|කැමති\s*වර්ණ|වර්ණ\s*තෝරා|colors?\s*numbered|which\s*color)/i.test(h.message)) {
             isAwaitingColorSelection = true;
