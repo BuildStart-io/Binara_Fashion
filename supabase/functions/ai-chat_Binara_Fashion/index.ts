@@ -554,23 +554,27 @@ serve(async (req) => {
    - පාරිභෝගිකයා ප්‍රමාණයක් පැවසූ විට, සූත්‍ර හෝ ගණන් හැදූ පියවර පාරිභෝගිකයාට නොලියන්න!
    - අවසන් මුළු මුදල සහ Free Delivery තත්ත්වය පමණක් පේළි 1-2කින් පවසන්න:
      "[භාණ්ඩයේ නම] [ප්‍රමාණය]කට මුළු මුදල රු. [මුදල]යි ([Free Delivery 🚚 හෝ Delivery රු. ...]). [ඩේටාබේස් එකේ අදාළ භාණ්ඩයට විකල්ප/වර්ණ තිබේ නම් ඒවා තෝරාගැනීමට විමසන්න, නැතහොත් ඇණවුම සඳහා විස්තර විමසන්න]. 🎯"
-4. පාරිභෝගිකයා තනි නිෂ්පාදනයක් තෝරාගත් විට (Specific Product Selected):
-   - "නියමයි" වැනි වචන කිසිසේත්ම නොයොදන්න.
-   - ඩේටාබේස් එකෙහි ඇති අදාළ නිෂ්පාදනයේ විස්තර සහ මිල ගණන් පේළි අතර පැහැදිලි පරතරයක් (space between lines) සහිතව දක්වන්න.
-   - ඡායාරූප වල වර්ණ අංක (Colors numbered in photos) සඳහන් කර ඇති බැවින්, පාරිභෝගිකයාගෙන් ප්‍රමාණය හෝ "කීයක් අවශ්‍යද" නොඅසා, ඡායාරූප වල ඇති අංක වලින් අවශ්‍ය වර්ණ අංක මොනවාදැයි විමසන්න. වර්ණ තේරීමේ පණිවිඩයට පහළින් උදාහරණය: (eg: pack 5 select කරානම් 1, 2 ,3 , 4,5) අනිවාර්යයෙන්ම එක් කරන්න.
-   - නිවැරදි උදාහරණය(THIS IS AN EXAMPLE MESSGAGE REMEMBER IT):
-     "✌️ Unisex short✌️
+4. නිෂ්පාදන තේරීම් සහ අංක නීති (PRODUCT SELECTION & NUMERIC CHOICE RULES):
+   - අංක වල තේරුම (Meaning of Numbers):
+     * කිසිදු අංකයක් කිසිදු නිෂ්පාදනයකට ස්ථිරව (hardcode කර) නොසිතන්න (උදා: 1 යනු rib shorts හෝ 2 යනු kyela shorts නොවේ!).
+     * 1 යනු පළමු තේරීම වේ (1 means first choice - 1st product in database catalog).
+     * 2 යනු දෙවන තේරීම වේ (2 means second choice - 2nd product in database catalog).
+     * 3 යනු තුන්වන තේරීම වේ (3 means 3rd choice - 3rd product in database catalog).
+     * 4, 5, 6... ආදී වශයෙන් ඉදිරියට (4 means 4th choice, 5 means 5th choice...).
+   - පාරිභෝගිකයා අංකයක් (1, 2, 3...) හෝ තේරීමක් ("1st choice", "2nd choice", "3rd choice", "Option 1", "Option 2", "පළමු තේරීම", "1 වෙනි එක", ආදිය) ලබාදුන් විට:
+     * ඩේටාබේස් එකෙහි ඇති අදාළ ස්ථානයේ නිෂ්පාදනය (1 = 1st product, 2 = 2nd product, 3 = 3rd product...) නිවැරදිව තෝරාගන්න.
+     * "නියමයි" වැනි වචන කිසිසේත්ම නොයොදන්න.
+     * ඩේටාබේස් එකෙහි ඇති අදාළ නිෂ්පාදනයේම නම, විස්තර සහ මිල ගණන් පේළි අතර පැහැදිලි පරතරයක් (space between lines) සහිතව දක්වන්න. වෙනත් භාණ්ඩවල විස්තර පටලවා නොගන්න.
+     * ඡායාරූප වල වර්ණ අංක (Colors numbered in photos) සඳහන් කර ඇති බැවින්, පාරිභෝගිකයාගෙන් ප්‍රමාණය හෝ "කීයක් අවශ්‍යද" නොඅසා, ඡායාරූප වල ඇති අංක වලින් අවශ්‍ය වර්ණ අංක මොනවාදැයි විමසන්න. වර්ණ තේරීමේ පණිවිඩයට පහළින් උදාහරණය: (eg: pack 5 select කරානම් 1, 2 ,3 , 4,5) අනිවාර්යයෙන්ම එක් කරන්න.
+   - නිවැරදි ආකෘතියේ උදාහරණය (EXAMPLE TEMPLATE):
+     "[තෝරාගත් නිෂ්පාදනයේ නම]
 
-     🚚 Deliver free🚚
-     05ම 2700යි!
-     10ම් 5100 යි!
+     🚚 [Free Delivery හෝ Delivery ගාස්තු තත්ත්වය]
+     [අදාළ නිෂ්පාදනයේ පැකේජ මිල ගණන්]
 
-     🩳 ගැහැනු පිරිමි දෙගොල්ලන්ටම ඇදිය හැක.
-     🩳 රිබ් ජැකුවර්ඩ් මැටීරියල්
-     🩳 උස අගල් 16
-     🩳 ඉන 26 සිට 42 දක්වා ෆ්‍රී සයිස්
+     [ඩේටාබේස් එකෙහි ඇති අදාළ භාණ්ඩයේ විස්තර / Material / Features / Size]
 
-     (ශොර්ට් 5 ට අඩුවෙන් ලබා ගන්නා සෑම ඔඩරයකටම ඩිලිවරි චාජ් 450 ක් එකතු වේ..)
+     ([Delivery ගාස්තු නීතිය])
 
      ඡායාරූප වල වර්ණ අංක සඳහන් කර ඇත. ඔබ කැමති වර්ණ අංක මොනවාද? 🎨
      (eg: pack 5 select කරානම් 1, 2 ,3 , 4,5)"
@@ -659,24 +663,70 @@ CRITICAL ORDER & SECURITY RULES:
     }
 
     // Handle numeric selection intent and photo/media messages
+    // Rule: 1 means first choice, 2 means second choice, 3 means 3rd choice...
     const trimmedMessage = (message || "").trim();
-    const numericMatch = trimmedMessage.match(/^(?:option\s*)?(\d+)\.?$|^(එක|දෙක|තුන|හතර|පහ|හය|හත|අට|නවය|දහය)$/i);
     let selectedProductIndex = -1;
 
-    if (numericMatch) {
-      if (numericMatch[1]) {
-        selectedProductIndex = parseInt(numericMatch[1], 10) - 1;
-      } else if (numericMatch[2]) {
-        const sinhalaNums: Record<string, number> = { "එක": 0, "දෙක": 1, "තුන": 2, "හතර": 3, "පහ": 4, "හය": 5, "හත": 6, "අට": 7, "නවය": 8, "දහය": 9 };
-        selectedProductIndex = sinhalaNums[numericMatch[2]] ?? -1;
+    // Check if previous outbound message was actively asking for color selection
+    let isAwaitingColorSelection = false;
+    if (Array.isArray(conversationHistory) && conversationHistory.length > 0) {
+      for (let i = conversationHistory.length - 1; i >= 0; i--) {
+        const h = conversationHistory[i];
+        if (h.direction === "outbound" && h.message) {
+          if (/(?:වර්ණ\s*අංක|කැමති\s*වර්ණ|වර්ණ\s*තෝරා|colors?\s*numbered|which\s*color)/i.test(h.message)) {
+            isAwaitingColorSelection = true;
+          }
+          break;
+        }
       }
     }
+
+    const lowerMsg = trimmedMessage.toLowerCase();
+
+    // Match explicit choice phrases (e.g. "1st choice", "first choice", "option 1", "choice 2", "පළමු තේරීම", "1 වෙනි එක")
+    const explicitChoiceMatch =
+      lowerMsg.match(/^(?:i\s*(?:want|choose|prefer|select)\s*)?(?:option|choice|item|product|no|number)\s*(\d+)\.?$/i) ||
+      lowerMsg.match(/^(?:i\s*(?:want|choose|prefer|select)\s*)?(\d+)(?:st|nd|rd|th)\s*(?:choice|option|item|product)?\.?$/i) ||
+      lowerMsg.match(/^(?:i\s*(?:want|choose|prefer|select)\s*)?(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\s*(?:choice|option|item|product)?\.?$/i) ||
+      lowerMsg.match(/^(?:පළමු|දෙවන|තුන්වන|හතරවන|පස්වන|පලවෙනි|දෙවෙනි|තුන්වෙනි|හතරවෙනි|පස්වෙනි)\s*(?:තේරීම|එක|නිෂ්පාදනය)?$/i) ||
+      lowerMsg.match(/^(\d+)\s*(?:වෙනි|වන)\s*(?:තේරීම|එක|නිෂ්පාදනය)?$/i);
+
+    // Bare numbers (e.g. "1", "2", "3", "එක", "දෙක")
+    const bareNumberMatch = lowerMsg.match(/^(\d+)\.?$/i) ||
+      lowerMsg.match(/^(එක|දෙක|තුන|හතර|පහ|හය|හත|අට|නවය|දහය)$/i);
+
+    const wordToNum: Record<string, number> = {
+      "first": 0, "second": 1, "third": 2, "fourth": 3, "fifth": 4, "sixth": 5, "seventh": 6, "eighth": 7, "ninth": 8, "tenth": 9,
+      "එක": 0, "දෙක": 1, "තුන": 2, "හතර": 3, "පහ": 4, "හය": 5, "හත": 6, "අට": 7, "නවය": 8, "දහය": 9,
+      "පළමු": 0, "දෙවන": 1, "තුන්වන": 2, "හතරවන": 3, "පස්වන": 4,
+      "පලවෙනි": 0, "දෙවෙනි": 1, "තුන්වෙනි": 2, "හතරවෙනි": 3, "පස්වෙනි": 4,
+    };
+
+    if (explicitChoiceMatch) {
+      const val = (explicitChoiceMatch[1] || "").toLowerCase();
+      if (wordToNum[val] !== undefined) {
+        selectedProductIndex = wordToNum[val];
+      } else {
+        selectedProductIndex = parseInt(val, 10) - 1;
+      }
+    } else if (bareNumberMatch && !isAwaitingColorSelection) {
+      // If not in color selection step, 1 means first choice, 2 means second choice, 3 means 3rd choice...
+      const val = (bareNumberMatch[1] || "").toLowerCase();
+      if (wordToNum[val] !== undefined) {
+        selectedProductIndex = wordToNum[val];
+      } else {
+        selectedProductIndex = parseInt(val, 10) - 1;
+      }
+    }
+
+    const choiceOrdinals = ["first", "second", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"];
 
     if (!trimmedMessage) {
       messages.push({ role: "user", content: "[Customer sent a photo/media file. If this is a payment receipt slip, thank them politely in Sinhala and state staff will call to confirm. Do NOT output any JSON, tags, or code.]" });
     } else if (selectedProductIndex >= 0 && selectedProductIndex < products.length) {
       const selectedProduct = products[selectedProductIndex];
       const prodName = selectedProduct.name;
+      const choiceOrdinal = choiceOrdinals[selectedProductIndex] || `${selectedProductIndex + 1}th`;
       const alreadySent = productImagesAlreadySentMap[selectedProduct.id];
       const imageInstruction = alreadySent
         ? `If the customer is asking to see the product/photos again, include ALL <IMAGE_URL> tags for ${prodName}, otherwise do not include.`
@@ -684,7 +734,7 @@ CRITICAL ORDER & SECURITY RULES:
 
       messages.push({
         role: "user",
-        content: `${trimmedMessage} [Customer selected Product ${selectedProductIndex + 1}: ${prodName}. Do NOT say "නියමයි!". Present product details and pricing from the database catalog clearly with blank lines between sections. Inform the customer that colors are numbered in the photos, and ask what color numbers they need (do NOT ask how many units they need). ${imageInstruction}]`
+        content: `${trimmedMessage} [Customer selected Option ${selectedProductIndex + 1} (${choiceOrdinal} choice): ${prodName}. 1 means first choice, 2 means second choice, 3 means 3rd choice, etc. Do NOT say "නියමයි!". Present product details and pricing from the database catalog clearly with blank lines between sections. Inform the customer that colors are numbered in the photos, and ask what color numbers they need (do NOT ask how many units they need). ${imageInstruction}]`
       });
     } else {
       messages.push({ role: "user", content: trimmedMessage });
