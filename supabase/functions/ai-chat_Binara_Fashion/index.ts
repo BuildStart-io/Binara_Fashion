@@ -165,11 +165,17 @@ function calculateOrderTotals(
     calculatedSubtotal = products[0]?.price ? Number(products[0].price) : 0;
   }
 
-  // Delivery fee rule from database settings
-  let deliveryFee = defaultDeliveryFee;
+  const incomingDeliveryFee = typeof orderData?.delivery_fee === "number"
+    ? orderData.delivery_fee
+    : (parseFloat(String(orderData?.delivery_fee || 0)) || 0);
+
+  // Delivery fee rule from database settings or incoming order
+  let deliveryFee = defaultDeliveryFee > 0 ? defaultDeliveryFee : (incomingDeliveryFee > 0 ? incomingDeliveryFee : 450);
   if (freeItemThreshold > 0 && totalQty >= freeItemThreshold) {
     deliveryFee = 0;
   } else if (freeAmountThreshold > 0 && calculatedSubtotal >= freeAmountThreshold) {
+    deliveryFee = 0;
+  } else if (freeItemThreshold === 0 && totalQty >= 5) {
     deliveryFee = 0;
   }
 
@@ -1198,8 +1204,20 @@ CRITICAL ORDER & SECURITY RULES:
 
       // Overwrite subtotal, delivery fee, and total amount in text summary if present
       cleanResponse = cleanResponse.replace(/(?:(?:අයිතම\s*එකතුව|භාණ්ඩ\s*එකතුව|Subtotal|Items\s*Subtotal)\s*[:\-]?\s*)(?:රු\.?|Rs\.?|LKR)?\s*[\d,]+/gi, `අයිතම එකතුව: රු. ${subtotal.toLocaleString()}`);
-      cleanResponse = cleanResponse.replace(/(?:(?:ඩිලිවරි\s*(?:ගාස්තු|ගාස්තුව)|Delivery\s+(?:Fee|Charge))\s*[:\-]?\s*)(?:රු\.?|Rs\.?|LKR|\bFree\b|නොමිලේ)?[^\n]*/gi, `ඩිලිවරි ගාස්තුව: ${delivText}`);
+      cleanResponse = cleanResponse.replace(/(?:(?:(?:\|\s*)?ඩිලිවරි\s*(?:ගාස්තු|ගාස්තුව)?|Delivery\s+(?:Fee|Charge)?)\s*[:\-]?\s*)(?:රු\.?|Rs\.?|LKR|\bFree\b|නොමිලේ)?\s*(?:[\d,]+)?/gi, (m) => {
+        const isPipe = m.trim().startsWith("|");
+        return isPipe ? `| ඩිලිවරි: ${delivText}` : `ඩිලිවරි: ${delivText}`;
+      });
       cleanResponse = cleanResponse.replace(/(?:(?:මුළු\s*(?:මුදල|එකතුව)?|Total\s*(?:Amount)?)\s*[:\-]?\s*)(?:රු\.?|Rs\.?|LKR)?\s*[\d,]+/gi, `මුළු මුදල: රු. ${totalAmount.toLocaleString()}`);
+
+      // Fix any duplicated phone numbers in visible text summary (e.g. "077 560 5590077 560 5590" -> savedPhoneToSave)
+      const displayPhone = savedPhoneToSave || phoneNumber || "";
+      if (displayPhone) {
+        cleanResponse = cleanResponse.replace(/(?:(?:(?:\|\s*)?දුරකථනය|දුරකථන\s*අංකය|Phone|Mobile)\s*[:\-]?\s*)[^\n|]+/gi, (m) => {
+          const isPipe = m.trim().startsWith("|");
+          return isPipe ? `| දුරකථනය: ${displayPhone}` : `දුරකථනය: ${displayPhone}`;
+        });
+      }
 
       // Ensure status states courier will call and request delivery acceptance
       cleanResponse = cleanResponse.replace(/(?:Order\s*Confirmed|Order\s*is\s*confirmed|ඇණවුම\s*තහවුරු\s*විය|ඇණවුම\s*තහවුරු\s*කරන\s*ලදී|Order\s*එක\s*confirm\s*වුණා|(?:ස්තූතියි!?\s*)?ඔබගේ\s*ඇණවුම\s*ලැබී\s*ඇත[^\n]*අපගේ\s*කාර්ය\s*මණ්ඩලය[^\n]*)[^\n]*/gi, "ස්තූතියි ඔබගේ ඇණවුම ලැබී ඇත.කුරියර් සේවයෙන් ඔබට ඇමතුමක් ලබාදෙනු ඇත. කරුණාකර ඔබගේ ඇණවුම යලි return වීමට නොදී මුදල් ලබාදී භාරගන්න");
