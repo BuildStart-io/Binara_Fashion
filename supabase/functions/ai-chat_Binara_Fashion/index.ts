@@ -517,7 +517,7 @@ serve(async (req) => {
     const productImageRulesFormatted = products.map((p: any, idx: number) => {
       const alreadySent = productImagesAlreadySentMap[p.id];
       const name = p.name || `Product ${idx + 1}`;
-      return `- ${name}: ${alreadySent ? "දැනටමත් ඡායාරූප යවා ඇත. නැවත නොයවන්න." : `තනි නිෂ්පාදනයක් ලෙස ඉල්ලූ විට පමණක් අදාළ ${name} ඡායාරූප <IMAGE_URL> ටැග් අමුණන්න.`}`;
+      return `- ${name}: ${alreadySent ? "දැනටමත් ඡායාරූප යවා ඇත. පාරිභෝගිකයා නැවත ඡායාරූප/විස්තර ඉල්ලා සිටියහොත් පමණක් <IMAGE_URL> ටැග් අමුණන්න (ප්‍රමාණය, වර්ණ හෝ ලිපිනය ලබාදෙන විට නැවත නොයවන්න)." : `තනි නිෂ්පාදනයක් ලෙස ඉල්ලූ විට පමණක් අදාළ ${name} ඡායාරූප <IMAGE_URL> ටැග් අමුණන්න.`}`;
     }).join("\n");
 
     // Build FAQ context with IDs so AI can report which ones it used
@@ -657,7 +657,7 @@ CRITICAL ORDER & SECURITY RULES:
       const prodName = selectedProduct.name;
       const alreadySent = productImagesAlreadySentMap[selectedProduct.id];
       const imageInstruction = alreadySent
-        ? "Do NOT include image tags as they were already sent."
+        ? `If the customer is asking to see the product/photos again, include ALL <IMAGE_URL> tags for ${prodName}, otherwise do not include.`
         : `Include ALL <IMAGE_URL> tags for this product (${prodName}) if not sent yet.`;
 
       messages.push({
@@ -1034,23 +1034,15 @@ CRITICAL ORDER & SECURITY RULES:
       imageUrls = [];
     }
 
-    // Safety guard 3 against redundant second-time image sending:
-    // If photos for a product were ALREADY sent to this customer, and the customer did not
-    // explicitly ask to view photos again, do not re-send that product's images.
-    const userMsgLower = String(message || "").toLowerCase();
-    const isExplicitRePhotoRequest = /(?:photo|foto|4to|pic|image|pennanna|penwanna|balanna|ewanna|danna|designs?|පෙන්වන්න|පෙන්නන්න|බලන්න|එවන්න|දාන්න|පින්තූර|පාට\s*මොනවාද|show\s*me|can\s*i\s*see)/i.test(userMsgLower);
-
-    if (!isExplicitRePhotoRequest && imageUrls.length > 0) {
-      imageUrls = imageUrls.filter(url => {
-        const norm = normalizeImgPath(url);
-        for (const p of products) {
-          if (productImagesAlreadySentMap[p.id] && productNormPathsMap[p.id]?.has(norm)) {
-            console.log(`Suppressing duplicate image for ${p.name}: ${norm}`);
-            return false;
-          }
-        }
-        return true;
-      });
+    // Safety guard 3: Suppress product images during order placement / checkout confirmation.
+    // When the customer is placing an order or order JSON is generated, do not clutter with product images.
+    // NOTE: Fragile keyword regex filtering for 2nd-time image requests was removed so the LLM's natural language understanding
+    // can properly serve customer requests in any phrasing, dialect, or language (Sinhala, Singlish, English).
+    if (orderJsonMatches.length > 0 || orderCreated) {
+      if (imageUrls.length > 0) {
+        console.log(`[Image Filter] Suppressing images: order being created or confirmed (${imageUrls.length} images dropped).`);
+        imageUrls = [];
+      }
     }
 
     const imageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
