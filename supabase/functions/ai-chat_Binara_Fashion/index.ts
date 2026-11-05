@@ -678,7 +678,7 @@ ${staffContactRule}
 
 CRITICAL ORDER & SECURITY RULES:
 - දුරකථන අංක පිළිබඳ දැඩි නීතිය (STRICT PHONE NUMBER BOUNDARY):
-  * කිසිවිටෙකත් ව්‍යාජ දුරකථන අංක (උදා: 077 123 4567 හෝ වෙනත් අංක) මවාපා පාරිභෝගිකයාට නොදෙන්න!
+  * කිසිවිටෙකත් ව්‍යාජ දුරකථන අංක මවාපා පාරිභෝගිකයාට නොදෙන්න!
   * කාර්ය මණ්ඩල අංකයක් ඉල්ලූ විට ලබාදිය හැක්කේ ඉහත STAFF / SUPPORT PHONE NUMBER හි දක්වා ඇති අංකය පමණි. අංකයක් සකසා නැතිනම් WhatsApp chat එක හරහා විමසන ලෙස පවසන්න.
 - ORDER_JSON, IMAGE_URL, VIDEO_URL, USED_FAQS ටැග් පාරිභෝගිකයාට නොපෙනෙන තාක්ෂණික ටැග් වේ. ඒවා සැමවිටම පණිවිඩයේ කෙළවරටම පමණක් අමුණන්න. කිසිවිටෙකත් පණිවිඩයේ මැද හෝ JSON කෝඩ් ලෙස නොලියන්න.
 - <ORDER_JSON> යැවිය යුත්තේ නම/ලිපිනය/දුරකථන විස්තර ලැබී ඇණවුම ගන්නා විට සහ පාරිභෝගිකයා ඇණවුමට අලුතින් භාණ්ඩ එකතු කර හෝ වෙනස් කර යාවත්කාලීන (Modify/Update) කරන විට පමණි. කිසිදු වෙනසක් නැති සාමාන්‍ය කතාබහේදී නැවත <ORDER_JSON> නොයවන්න.
@@ -847,19 +847,19 @@ CRITICAL ORDER & SECURITY RULES:
       if (selectedProductIndex === -1) {
         // Popcorn 18 / Usa 18
         if (/\b(?:usa\s*18|18\s*(?:inch|අඟල්|short)|popcorn\s*18|popcon\s*18|පොප්කෝන්\s*18|පොප්කොන්\s*18)\b/i.test(cleanMsg) ||
-            (/(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්|usa)/i.test(cleanMsg) && /\b18\b/.test(cleanMsg))) {
+          (/(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්|usa)/i.test(cleanMsg) && /\b18\b/.test(cleanMsg))) {
           const idx = products.findIndex(p => /18/.test(p.name));
           if (idx !== -1) selectedProductIndex = idx;
         }
         // Popcorn 16 / Usa 16
         else if (/\b(?:usa\s*16|16\s*(?:inch|අඟල්|short)|popcorn\s*16|popcon\s*16|පොප්කෝන්\s*16|පොප්කොන්\s*16)\b/i.test(cleanMsg) ||
-                 (/(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්|usa)/i.test(cleanMsg) && /\b16\b/.test(cleanMsg))) {
+          (/(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්|usa)/i.test(cleanMsg) && /\b16\b/.test(cleanMsg))) {
           const idx = products.findIndex(p => /16/.test(p.name));
           if (idx !== -1) selectedProductIndex = idx;
         }
         // Single Jersey 20 / Usa 20
         else if (/\b(?:usa\s*20|20\s*(?:inch|අඟල්|short)|single\s*jersey\s*20|singlejersey\s*20)\b/i.test(cleanMsg) ||
-                 (/(?:single\s*jersey|singlejersey|cotton)/i.test(cleanMsg) && /\b20\b/.test(cleanMsg))) {
+          (/(?:single\s*jersey|singlejersey|cotton)/i.test(cleanMsg) && /\b20\b/.test(cleanMsg))) {
           const idx = products.findIndex(p => /20/.test(p.name));
           if (idx !== -1) selectedProductIndex = idx;
         }
