@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, MessageSquare, CreditCard, Copy, Check, Smartphone, RefreshCw, Wifi, WifiOff, Plus, Trash2, ArrowUp, ArrowDown, GripVertical, Clock, Lock, X } from "lucide-react";
+import { Loader2, Save, MessageSquare, CreditCard, Copy, Check, Smartphone, RefreshCw, Wifi, WifiOff, Plus, Trash2, ArrowUp, ArrowDown, GripVertical, Clock, Lock, X, Phone } from "lucide-react";
 import WelcomeMediaUpload from "@/components/settings/WelcomeMediaUpload";
 import StaffManager from "@/components/settings/StaffManager";
 import { useStaffAccess } from "@/hooks/useStaffAccess";
@@ -77,6 +77,9 @@ export default function Settings() {
 
   // Order Notifications
   const [notificationPhone, setNotificationPhone] = useState("");
+
+  // Staff Contact Number
+  const [staffPhone, setStaffPhone] = useState("");
 
   // Order Follow-up Message
   const [orderFollowupMessage, setOrderFollowupMessage] = useState("");
@@ -179,6 +182,9 @@ export default function Settings() {
             break;
           case "order_notifications":
             setNotificationPhone((setting.value as any)?.phone || "");
+            break;
+          case "staff_contact":
+            setStaffPhone((setting.value as any)?.phone || "");
             break;
           case "delivery_settings":
             setFreeDeliveryThreshold((setting.value as any)?.free_delivery_threshold || 0);
@@ -579,6 +585,12 @@ export default function Settings() {
     }
     setNotificationPhone(cleanPhone);
     saveSettings("order_notifications", { phone: cleanPhone });
+  };
+
+  const handleSaveStaffContact = () => {
+    const cleanPhone = staffPhone.trim();
+    setStaffPhone(cleanPhone);
+    saveSettings("staff_contact", { phone: cleanPhone });
   };
 
   const handleSaveOrderFollowup = () => {
@@ -1245,6 +1257,41 @@ export default function Settings() {
                 </Button>
               </CardContent>
             </Card>
+
+            {/* Staff Contact Number */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Phone className="h-5 w-5" />
+                  Staff Contact Number
+                </CardTitle>
+                <CardDescription>
+                  Phone number provided by the AI chatbot when customers ask to call or speak with staff
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="chatbot-staff-phone">Staff / Support Phone Number</Label>
+                  <Input
+                    id="chatbot-staff-phone"
+                    value={staffPhone}
+                    onChange={(e) => setStaffPhone(e.target.value)}
+                    placeholder="e.g., 0771234567 or +94771234567"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    When customers ask for a staff number or request a call, the chatbot will provide this number. Leave blank if you prefer customers to only communicate via this WhatsApp chat.
+                  </p>
+                </div>
+                <Button onClick={handleSaveStaffContact} disabled={saving}>
+                  {saving ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="mr-2 h-4 w-4" />
+                  )}
+                  Save Staff Number
+                </Button>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="payment" className="space-y-6">
@@ -1404,6 +1451,40 @@ export default function Settings() {
           </TabsContent>
 
           <TabsContent value="staff" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Phone className="h-5 w-5" />
+                  Staff Contact Number
+                </CardTitle>
+                <CardDescription>
+                  Phone number provided by the AI chatbot when customers ask to call or speak with staff
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="staff-phone">Staff / Support Phone Number</Label>
+                  <Input
+                    id="staff-phone"
+                    value={staffPhone}
+                    onChange={(e) => setStaffPhone(e.target.value)}
+                    placeholder="e.g., 0771234567 or +94771234567"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    When customers ask for a staff number or request a call, the chatbot will provide this number. Leave blank if you prefer customers to only communicate via this WhatsApp chat.
+                  </p>
+                </div>
+                <Button onClick={handleSaveStaffContact} disabled={saving}>
+                  {saving ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="mr-2 h-4 w-4" />
+                  )}
+                  Save Staff Number
+                </Button>
+              </CardContent>
+            </Card>
+
             <StaffManager />
           </TabsContent>
 
