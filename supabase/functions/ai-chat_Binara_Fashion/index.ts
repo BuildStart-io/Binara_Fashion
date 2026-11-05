@@ -110,6 +110,117 @@ function calculateItemSubtotal(p: any, qty: number): number {
   return qty * unitPrice;
 }
 
+function normalizeSinhala(str: string): string {
+  return String(str || "")
+    .toLowerCase()
+    .replace(/ෝ/g, "ො")
+    .replace(/ේ/g, "ෙ")
+    .replace(/ෲ/g, "ෘ")
+    .replace(/ී/g, "ි")
+    .replace(/ූ/g, "ු")
+    .replace(/ා/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function findMatchingProduct(
+  query: string,
+  products: any[] = [],
+  fallbackSubtotal: number = 0,
+  qty: number = 1
+): any {
+  if (!products || products.length === 0) return null;
+  const rawQuery = String(query || "").trim();
+  const lowerQuery = rawQuery.toLowerCase();
+
+  // 1. Direct ID match
+  const byId = products.find(p => p.id === rawQuery);
+  if (byId) return byId;
+
+  // 2. Exact name match
+  const byExactName = products.find(p => String(p.name || "").toLowerCase().trim() === lowerQuery);
+  if (byExactName) return byExactName;
+
+  // 3. Keyword / Transliteration matching (high precision for known catalog variants)
+  if (/(?:popcorn|popcon|popcone|popkon|පොප්කෝන්|පොප්කොන්|පොප්\s*කෝන්)/i.test(lowerQuery)) {
+    const match = products.find(p => /(?:popcorn|popcon|පොප්කෝන්|පොප්කොන්)/i.test(p.name + " " + (p.description || "")));
+    if (match) return match;
+  }
+  if (/(?:rip|rib|ribb|jacquard|jaquard|jakard|රිබ්|රිප්|ජැකුවර්ඩ්)/i.test(lowerQuery)) {
+    const match = products.find(p => /(?:rip|rib|jacquard|රිබ්|ජැකුවර්ඩ්)/i.test(p.name + " " + (p.description || "")));
+    if (match) return match;
+  }
+  if (/(?:kyela|kayla|kyeela|single\s*jers[ey]*|singlejersy|singel\s*jers[ey]*|කයිලා|ක්යේලා|කයිල|සින්ගල්)/i.test(lowerQuery)) {
+    const match = products.find(p => /(?:kyela|single\s*jersey|singlejersey|කයිලා|ක්යේලා|සින්ගල්)/i.test(p.name + " " + (p.description || "")));
+    if (match) return match;
+  }
+
+  // 4. Normalized Sinhala match (normalizes ෝ -> ො etc.)
+  const normQuery = normalizeSinhala(lowerQuery);
+  const byNorm = products.find(p => {
+    const pNorm = normalizeSinhala(p.name);
+    return pNorm === normQuery ||
+      (normQuery.length > 3 && pNorm.includes(normQuery)) ||
+      (pNorm.length > 3 && normQuery.includes(pNorm));
+  });
+  if (byNorm) return byNorm;
+
+  // 5. Standard includes match
+  const byIncludes = products.find(p => {
+    const pName = String(p.name || "").toLowerCase().trim();
+    return (lowerQuery.length > 2 && pName.includes(lowerQuery)) || (pName.length > 2 && lowerQuery.includes(pName));
+  });
+  if (byIncludes) return byIncludes;
+
+  // 6. Generic Dynamic Token & Measurement Scoring against ALL products in the database
+  // Works for ANY arbitrary product added in the future (dresses, jeans, shirts, accessories)
+  const queryTokens = normQuery.split(" ").filter(w => w.length >= 2);
+  const queryNumbers = normQuery.match(/\b\d+\b/g) || [];
+
+  let bestScore = 0;
+  let bestProduct: any = null;
+
+  for (const p of products) {
+    const pText = normalizeSinhala((p.name || "") + " " + (p.description || ""));
+    const pTokens = pText.split(" ").filter(w => w.length >= 2);
+    const pNumbers = pText.match(/\b\d+\b/g) || [];
+
+    let score = 0;
+    for (const t of queryTokens) {
+      if (pTokens.includes(t)) {
+        score += t.length >= 4 ? 3 : 2;
+      } else if (pText.includes(t)) {
+        score += 1;
+      }
+    }
+
+    for (const n of queryNumbers) {
+      if (pNumbers.includes(n)) {
+        score += 4;
+      }
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestProduct = p;
+    }
+  }
+
+  if (bestProduct && bestScore >= 2) {
+    return bestProduct;
+  }
+
+  // 7. Subtotal match check: if query was vague (e.g. "shorts"), check if LLM subtotal matches any product pricing calculation
+  if (fallbackSubtotal > 0 && qty > 0) {
+    const matchedByPrice = products.find(p => calculateItemSubtotal(p, qty) === fallbackSubtotal);
+    if (matchedByPrice) return matchedByPrice;
+  }
+
+  // 8. Safe fallback: only fallback to products[0] if the store only has exactly 1 product.
+  // If multiple products exist and none matched, return null to avoid overriding with the wrong product price.
+  return products.length === 1 ? products[0] : null;
+}
+
 function calculateOrderTotals(
   orderData: any,
   products: any[] = [],
@@ -141,28 +252,25 @@ function calculateOrderTotals(
   for (const item of items) {
     const qty = Math.max(1, parseInt(String(item.quantity || 1), 10) || 1);
     totalQty += qty;
-    const nameLower = String(item.name || item.id || item.title || "").toLowerCase().trim();
+    const itemQuery = item.id ? String(item.id) : String(item.name || item.title || "").toLowerCase().trim();
+    const itemSubtotal = parseFloat(String(item.price || 0)) || parseFloat(String(orderData?.subtotal || 0)) || 0;
 
-    // Match product against database products
-    const matchedProduct = products.find((p: any) => {
-      const pName = String(p.name || "").toLowerCase().trim();
-      return p.id === item.id ||
-        pName === nameLower ||
-        (nameLower.length > 2 && pName.includes(nameLower)) ||
-        (pName.length > 2 && nameLower.includes(pName));
-    }) || products[0];
+    // Match product against database products with resilient fuzzy/transliteration logic
+    const matchedProduct = findMatchingProduct(itemQuery, products, itemSubtotal, qty);
 
     if (matchedProduct) {
       calculatedSubtotal += calculateItemSubtotal(matchedProduct, qty);
     } else {
       const itemPrice = parseFloat(String(item.price || 0)) || 0;
-      calculatedSubtotal += qty * itemPrice;
+      calculatedSubtotal += itemPrice > 0 ? (qty * itemPrice) : (parseFloat(String(orderData?.subtotal || 0)) || 0);
     }
   }
 
   if (totalQty === 0) {
     totalQty = 1;
     calculatedSubtotal = products[0]?.price ? Number(products[0].price) : 0;
+  } else if (calculatedSubtotal === 0 && orderData?.subtotal) {
+    calculatedSubtotal = parseFloat(String(orderData.subtotal)) || 0;
   }
 
   const incomingDeliveryFee = typeof orderData?.delivery_fee === "number"
@@ -332,7 +440,7 @@ serve(async (req) => {
     const paymentDetailsFormatted = formatBankDetails(paymentInfo);
 
     const productCatalog = products.map(p => {
-      let line = `- ${p.name}: Base price LKR ${p.price} (${p.product_type})`;
+      let line = `- [ID: ${p.id}] "${p.name}": Base price LKR ${p.price} (${p.product_type})`;
       if (p.product_type === "physical" && p.delivery_price && p.delivery_price > 0) {
         line += ` | Delivery fee: LKR ${p.delivery_price}`;
       }
@@ -557,8 +665,8 @@ CRITICAL ORDER & SECURITY RULES:
 - ORDER_JSON, IMAGE_URL, VIDEO_URL, USED_FAQS ටැග් පාරිභෝගිකයාට නොපෙනෙන තාක්ෂණික ටැග් වේ. ඒවා සැමවිටම පණිවිඩයේ කෙළවරටම පමණක් අමුණන්න. කිසිවිටෙකත් පණිවිඩයේ මැද හෝ JSON කෝඩ් ලෙස නොලියන්න.
 - <ORDER_JSON> යැවිය යුත්තේ නම/ලිපිනය/දුරකථන විස්තර ලැබී ඇණවුම ගන්නා විට සහ පාරිභෝගිකයා ඇණවුමට අලුතින් භාණ්ඩ එකතු කර හෝ වෙනස් කර යාවත්කාලීන (Modify/Update) කරන විට පමණි. කිසිදු වෙනසක් නැති සාමාන්‍ය කතාබහේදී නැවත <ORDER_JSON> නොයවන්න.
 - පාරිභෝගිකයා Photo එකක් (Receipt/Slip) එව්වොත්: "ස්තූතියි, ඔබගේ ගෙවීම් රිසිට්පත ලැබුණා. අපගේ කාර්ය මණ්ඩලය මෙය පරීක්ෂා කර තහවුරු කරනු ඇත." ලෙස කෙටියෙන් පවසන්න.
-- <ORDER_JSON> ආකෘතිය:
-  <ORDER_JSON>{"customer_name":"...","customer_phone":"...","district":"...","customer_address":"...","order_items":[{"name":"...","price":...,"quantity":...,"product_type":"physical"}],"payment_method":"cod or bank_transfer","subtotal":...,"delivery_fee":...,"total_amount":...,"status":"pending","special_instructions":"Colors: ..."}</ORDER_JSON>`;
+- <ORDER_JSON> ආකෘතිය (order_items හි name සහ id සඳහා ඉහත PRODUCT CATALOG හි ඇති නිෂ්පාදනයේ නම සහ ID ඒ අයුරින්ම යොදන්න):
+  <ORDER_JSON>{"customer_name":"...","customer_phone":"...","district":"...","customer_address":"...","order_items":[{"id":"...","name":"...","price":...,"quantity":...,"product_type":"physical"}],"payment_method":"cod or bank_transfer","subtotal":...,"delivery_fee":...,"total_amount":...,"status":"pending","special_instructions":"Colors: ..."}</ORDER_JSON>`;
 
     const trimmedMessage = (message || "").trim();
 
@@ -923,11 +1031,20 @@ CRITICAL ORDER & SECURITY RULES:
             paymentMethod = "yet to decide";
           }
 
-          const rawItems = Array.isArray(orderData.order_items) && orderData.order_items.length > 0
+          const rawItems = (Array.isArray(orderData.order_items) && orderData.order_items.length > 0
             ? orderData.order_items
             : (Array.isArray(orderData.items) && orderData.items.length > 0
-              ? orderData.items.map((p: any) => ({ name: p.name || p.id || (products[0]?.name || "Product"), quantity: p.quantity || 1, price: p.price || 0 }))
-              : (Array.isArray(orderData.products) ? orderData.products.map((p: any) => ({ name: p.id || p.name || (products[0]?.name || "Product"), quantity: p.quantity || 1, price: p.price || 0 })) : []));
+              ? orderData.items
+              : (Array.isArray(orderData.products) ? orderData.products : []))).map((it: any) => {
+                const q = Math.max(1, parseInt(String(it.quantity || 1), 10) || 1);
+                const matched = findMatchingProduct(it.name || it.id || "", products, it.price, q);
+                return {
+                  name: matched?.name || it.name || products[0]?.name || "Product",
+                  quantity: q,
+                  price: it.price || (matched ? calculateItemSubtotal(matched, q) : 0),
+                  product_type: it.product_type || "physical",
+                };
+              });
           const custName = orderData.customer_name || orderData.customer?.name || orderData.customer_details?.name || "Customer";
           const custAddress = orderData.customer_address || orderData.customer?.address || orderData.customer_details?.address || null;
 
