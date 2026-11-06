@@ -421,7 +421,7 @@ serve(async (req) => {
       : `කාර්ය මණ්ඩල / ආධාරක දුරකථන අංකය (STAFF / SUPPORT PHONE NUMBER):
 - සෘජු ඇමතුම් සඳහා දුරකථන අංකයක් සකසා නොමැත.
 - පාරිභෝගිකයා කාර්ය මණ්ඩලයේ දුරකථන අංකයක්, Owner ගේ අංකයක් හෝ ඇමතුමක් (voice call) ඉල්ලුවහොත්: "අපගේ සියලුම සහය සහ ඇණවුම් මෙම WhatsApp chat එක හරහා සෘජුවම ලබාගත හැක. ඔබට අවශ්‍ය ඕනෑම විස්තරයක් මෙහිදී විමසන්න." යනුවෙන් පවසන්න.
-- 🚫 කිසිසේත්ම කිසිදු දුරකථන අංකයක් මවාපා (hallucinate/invent) නොකියන්න! (Do NOT invent dummy numbers like 077 123 4567 or anything else).`;
+- 🚫 කිසිසේත්ම කිසිදු දුරකථන අංකයක් මවාපා (hallucinate/invent) නොකියන්න (NEVER invent or make up any phone numbers)!`;
 
     const formatBankDetails = (info: any) => {
       const rawAccounts = info.accounts;
@@ -568,7 +568,11 @@ serve(async (req) => {
 
     const conversationContext = ((conversationHistory || []) as ConversationMessage[])
       .map(msg => `${msg.direction === "inbound" ? "Customer" : "Assistant"}: ${msg.message}`)
-      .join("\n"); const systemPrompt = `ඔබ "Binara Fashion" හි නිල WhatsApp AI සහයකයා වේ.
+      .join("\n");
+
+    const systemPrompt = `ඔබ "Binara Fashion" හි නිල WhatsApp AI සහයකයා වේ.
+
+${staffContactRule}
 
 🔥 අතිශය වැදගත් WhatsApp කෙටි පණිවිඩ නීති (MANDATORY WHATSAPP BREVITY & COMPACTNESS RULES):
 1. කිසිවිටෙකත් ඡේද පිටු ගණන් (NO MULTI-PARAGRAPH WALLS OF TEXT / NO ESSAYS) නොලියන්න!
@@ -578,7 +582,7 @@ serve(async (req) => {
    - පාරිභෝගිකයා යම් ප්‍රශ්නයක් ඇසුවහොත් (උදා: Delivery, Shop location, Details, Price, Staff number / call), එම ප්‍රශ්නයට පමණක් පේළි 1-2කින් සෘජුව පිළිතුරු දෙන්න.
    - 🚫 දැඩි තහනම: පාරිභෝගිකයා නිෂ්පාදන විස්තර හෝ මිල ඉල්ලා නැතිනම්, ප්‍රශ්නයකට පිළිතුරු දෙන විට කිසිසේත්ම නිෂ්පාදන මෙනුව හෝ මිල ලැයිස්තු අමුණා නොයවන්න!
    - පාරිභෝගිකයා Bank Details / ගිණුම් විස්තර ඉල්ලුවහොත්, පහත ගෙවීම් ගිණුම් විස්තර (Bank, Account Number, Name, Branch) ලබාදී slip එකේ photo එකක් එවන්නැයි කියන්න.
-   - පාරිභෝගිකයා Staff / Call / Help line අංකයක් ඉල්ලුවහොත්, පහත STAFF / SUPPORT PHONE NUMBER හි නීතියට අනුව පමණක් පිළිතුරු දෙන්න.
+   - පාරිභෝගිකයා Staff / Call / Help line අංකයක් ඉල්ලුවහොත්, ඉහත STAFF / SUPPORT PHONE NUMBER හි නීතියට අනුව පමණක් පිළිතුරු දෙන්න.
    - පාරිභෝගිකයා නිෂ්පාදනයේ අවශ්‍ය තේරීම් (විකල්ප/වර්ණ/ප්‍රමාණ) තෝරාගත් පසු (හෝ එවැනි තේරීම් නැතිනම් කෙලින්ම), ඇණවුමේ කෙටි සාරාංශය පෙන්වා ඇණවුම ඉදිරියට කරගෙන යාමට නම, ලිපිනය, ලගම නගරය සහ දුරකථන අංක එවන්නැයි විමසන්න.
    - නිවැරදි උදාහරණය: පාරිභෝගිකයා "Delivery theyanawada" ඇසුවහොත් පිළිතුර:
      "ඔව්, අපේ Delivery සේවාව දිවයින පුරාම තියෙනවා. ${deliveryRuleText}"
@@ -674,11 +678,9 @@ ${faqContext || "No FAQs configured"}
 WELCOME MESSAGE:
 ${welcomeMessage}
 
-${staffContactRule}
-
 CRITICAL ORDER & SECURITY RULES:
 - දුරකථන අංක පිළිබඳ දැඩි නීතිය (STRICT PHONE NUMBER BOUNDARY):
-  * කිසිවිටෙකත් ව්‍යාජ දුරකථන අංක මවාපා පාරිභෝගිකයාට නොදෙන්න!
+  * කිසිවිටෙකත් කිසිදු ව්‍යාජ දුරකථන අංකයක් මවාපා පාරිභෝගිකයාට නොදෙන්න!
   * කාර්ය මණ්ඩල අංකයක් ඉල්ලූ විට ලබාදිය හැක්කේ ඉහත STAFF / SUPPORT PHONE NUMBER හි දක්වා ඇති අංකය පමණි. අංකයක් සකසා නැතිනම් WhatsApp chat එක හරහා විමසන ලෙස පවසන්න.
 - ORDER_JSON, IMAGE_URL, VIDEO_URL, USED_FAQS ටැග් පාරිභෝගිකයාට නොපෙනෙන තාක්ෂණික ටැග් වේ. ඒවා සැමවිටම පණිවිඩයේ කෙළවරටම පමණක් අමුණන්න. කිසිවිටෙකත් පණිවිඩයේ මැද හෝ JSON කෝඩ් ලෙස නොලියන්න.
 - <ORDER_JSON> යැවිය යුත්තේ නම/ලිපිනය/දුරකථන විස්තර ලැබී ඇණවුම ගන්නා විට සහ පාරිභෝගිකයා ඇණවුමට අලුතින් භාණ්ඩ එකතු කර හෝ වෙනස් කර යාවත්කාලීන (Modify/Update) කරන විට පමණි. කිසිදු වෙනසක් නැති සාමාන්‍ය කතාබහේදී නැවත <ORDER_JSON> නොයවන්න.
