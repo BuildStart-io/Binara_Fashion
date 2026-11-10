@@ -19,7 +19,7 @@ export async function transcribeAudio(
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY") || "";
   const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY") || "";
   const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") || "";
-  const MODEL = "google/gemini-3-flash-preview";
+  const MODEL = "google/gemini-2.5-flash-lite";
 
   // 1. Download WAHA Audio
   let audioBuffer: Uint8Array;
@@ -48,7 +48,7 @@ export async function transcribeAudio(
   const base64Audio = bytesToBase64(audioBuffer);
   const dataUrl = `data:${cleanMime};base64,${base64Audio}`;
 
-  // 2. Primary: Same AI model used for texting (google/gemini-3-flash-preview via AI_GENERATE_URL / BOT_API_KEY)
+  // 2. Primary: Same AI model used for texting (google/gemini-2.5-flash-lite via AI_GENERATE_URL / BOT_API_KEY)
   if (AI_GENERATE_URL && BOT_API_KEY) {
     try {
       console.log(`Transcribing audio using primary texting AI (${MODEL} via AI_GENERATE_URL)...`);

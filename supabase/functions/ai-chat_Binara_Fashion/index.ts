@@ -910,7 +910,7 @@ CRITICAL ORDER & SECURITY RULES:
     // ------------------------------------------------------------------
     const aiGenerateUrl = Deno.env.get("AI_GENERATE_URL");
     const botApiKey = Deno.env.get("BOT_API_KEY");
-    const MODEL = "google/gemini-3-flash-preview";
+    const MODEL = "google/gemini-2.5-flash-lite";
     const MAX_TOKENS = 1500;
 
     let aiResponse: Response;
