@@ -120,6 +120,8 @@ serve(async (req) => {
     const paymentInfo = settings.find(s => s.key === "payment_info")?.value || {};
     const deliverySettings = settings.find(s => s.key === "delivery_settings")?.value || {};
     const freeDeliveryThreshold = deliverySettings.free_delivery_threshold || 0;
+    const staffNumberSetting = settings.find(s => s.key === "staff_number")?.value;
+    const staffPhoneNumber = staffNumberSetting?.phone ? String(staffNumberSetting.phone).trim() : null;
 
     const productCatalog = products.map(p => {
       let line = `- ${p.name}: Base price LKR ${p.price} (${p.product_type})`;
@@ -238,7 +240,7 @@ ${(() => {
         }
         return `  Bank: ${paymentInfo.bank_name || "Not configured"}, Account: ${paymentInfo.account_number || "Not configured"}, Name: ${paymentInfo.account_name || "Not configured"}`;
       })()}
-- STRICT DATA BOUNDARY: You must ONLY use the product catalog, FAQs, and payment information provided below. Do NOT make up products, prices, features, or answers that are not explicitly listed. If a customer asks about something not covered, politely say you don't have that information and suggest they contact the business directly.
+- STRICT DATA BOUNDARY: You must ONLY use the product catalog, FAQs, and payment information provided below${staffPhoneNumber ? `, and the official staff contact number (${staffPhoneNumber})` : ""}. Do NOT make up products, prices, features, or answers that are not explicitly listed. If a customer asks about something not covered, politely say you don't have that information and ${staffPhoneNumber ? `tell them to contact our staff at ${staffPhoneNumber}` : "suggest they contact the business directly"}. Under NO circumstances should you invent, guess, or provide any phone number other than the official staff number.
 
 PRODUCT IMAGES:
 - When a customer asks about a specific product that has images, include ALL the image URLs in separate <IMAGE_URL>url</IMAGE_URL> tags at the END of your response. Include all images for the product to give them a complete view.

@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Save, MessageSquare, CreditCard, Copy, Check, Smartphone, RefreshCw, Wifi, WifiOff, Plus, Trash2, ArrowUp, ArrowDown, GripVertical, Clock, Lock, X } from "lucide-react";
+import { Loader2, Save, MessageSquare, CreditCard, Copy, Check, Smartphone, RefreshCw, Wifi, WifiOff, Plus, Trash2, ArrowUp, ArrowDown, GripVertical, Clock, Lock, X, Phone } from "lucide-react";
 import WelcomeMediaUpload from "@/components/settings/WelcomeMediaUpload";
 import StaffManager from "@/components/settings/StaffManager";
 import { useStaffAccess } from "@/hooks/useStaffAccess";
@@ -76,6 +76,9 @@ export default function Settings() {
 
   // Order Notifications
   const [notificationPhone, setNotificationPhone] = useState("");
+
+  // Staff Contact Number
+  const [staffPhone, setStaffPhone] = useState("");
 
   // Order Follow-up Message
   const [orderFollowupMessage, setOrderFollowupMessage] = useState("");
@@ -171,6 +174,9 @@ export default function Settings() {
             break;
           case "order_notifications":
             setNotificationPhone((setting.value as any)?.phone || "");
+            break;
+          case "staff_number":
+            setStaffPhone((setting.value as any)?.phone || "");
             break;
           case "delivery_settings":
             setFreeDeliveryThreshold((setting.value as any)?.free_delivery_threshold || 0);
@@ -570,6 +576,17 @@ export default function Settings() {
     }
     setNotificationPhone(cleanPhone);
     saveSettings("order_notifications", { phone: cleanPhone });
+  };
+
+  const handleSaveStaffNumber = () => {
+    let cleanPhone = staffPhone.trim().replace(/\D/g, "");
+    if (cleanPhone.startsWith("0") && cleanPhone.length === 10) {
+      cleanPhone = "94" + cleanPhone.substring(1);
+    } else if (cleanPhone.length === 9) {
+      cleanPhone = "94" + cleanPhone;
+    }
+    setStaffPhone(cleanPhone);
+    saveSettings("staff_number", { phone: cleanPhone });
   };
 
   const handleSaveOrderFollowup = () => {
@@ -1233,6 +1250,41 @@ export default function Settings() {
                     <Save className="mr-2 h-4 w-4" />
                   )}
                   Save Notifications
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Staff Contact Number */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Phone className="h-5 w-5" />
+                  Staff Contact Number
+                </CardTitle>
+                <CardDescription>
+                  The bot will provide this number when a customer asks for staff contact or asks a question the bot cannot answer
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="staff-phone">Staff WhatsApp / Phone Number</Label>
+                  <Input
+                    id="staff-phone"
+                    value={staffPhone}
+                    onChange={(e) => setStaffPhone(e.target.value)}
+                    placeholder="e.g., 94771234567 or 0771234567"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Enter the staff phone number with country code. The bot will strictly use only this number when customers ask for human assistance or inquiry escalation.
+                  </p>
+                </div>
+                <Button onClick={handleSaveStaffNumber} disabled={saving}>
+                  {saving ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="mr-2 h-4 w-4" />
+                  )}
+                  Save Staff Number
                 </Button>
               </CardContent>
             </Card>
