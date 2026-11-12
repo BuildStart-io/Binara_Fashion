@@ -123,10 +123,12 @@ serve(async (req) => {
 
     const productCatalog = products.map(p => {
       let line = `- ${p.name}: Base price LKR ${p.price} (${p.product_type})`;
-      if (p.product_type === "physical" && p.delivery_price && p.delivery_price > 0) {
-        line += ` | Delivery fee: LKR ${p.delivery_price}`;
+      if (p.product_type === "physical") {
+        if (typeof p.delivery_price === "number") {
+          line += ` | Delivery fee: LKR ${p.delivery_price}`;
+        }
       }
-      if (p.description) line += ` - ${p.description}`;
+      if (p.description) line += ` | Description & Delivery Rules: ${p.description}`;
       if (p.images && Array.isArray(p.images) && p.images.length > 0) {
         line += ` | Images: ${p.images.join(", ")}`;
       }
@@ -170,7 +172,7 @@ serve(async (req) => {
     }
 
     // Build FAQ context with IDs so AI can report which ones it used
-    const faqContext = faqs.map(f => 
+    const faqContext = faqs.map(f =>
       `[FAQ_ID:${f.id}] Q: ${f.question}\nA: ${f.answer}${f.products?.name ? ` (Related to: ${f.products.name})` : ""}`
     ).join("\n\n");
 
@@ -181,7 +183,7 @@ serve(async (req) => {
       .map(msg => `${msg.direction === "inbound" ? "Customer" : "Assistant"}: ${msg.message}`)
       .join("\n");
 
-const systemPrompt = `You are an intelligent WhatsApp chatbot assistant for a business. You help customers with:
+    const systemPrompt = `You are an intelligent WhatsApp chatbot assistant for a business. You help customers with:
 1. Product inquiries
 2. Answering FAQs
 3. Taking orders
@@ -207,7 +209,14 @@ IMPORTANT GUIDELINES:
     Account: wallet@email.com
     Name: Jane Doe
   - For order summaries, use emojis to mark each section (📦 Items, 💰 Total, 🚚 Delivery, 💳 Payment)
-- If a customer wants to order, guide them through collecting: name, phone, product selection with variations, quantity, and payment method.
+- If a customer wants to order, guide them through the following sales steps:
+  * Step 1 (Welcome & Product Intro): Greet warmly in Sinhala ("Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා ! 🥰 ඔයාට කැමති කෙටි කලිසම් වර්ගය බලමුද? 😊") and introduce available products with photos ("මේ තියෙන්නේ අපේ කෙටි කලිසම් වර්ග දෙක 😊 ඔයාට කැමති වර්ගය කියන්නකෝ. ඒකට තියෙන පාටයි පැකේජ මිලයි එවන්නම්.").
+  * Step 2 (Package Selection): Ask for preferred package or quantity
+  * Step 3 (Size & Colour Selection): Collect size or waist measurement ("ඔයාට ඕන ප්‍රමාණය කියන්නකෝ 😊"), send colour options, and ask for colour numbers & quantity per colour ("මේ තියෙන්නේ පාට ටික 🥰 කැමති පාට අංකයි, එක් පාටකින් කීයක් ඕනද කියලයි එවන්නකෝ."). Then confirm selection ("හරි 😊 පාට 01 එකයි, පාට 02 එකයි. මුළු ගණන දෙකයි නේද?"). Total quantity across colours must match the package.
+  * Step 4 (Delivery Charges): Delivery rules differ for each product. Pull the delivery fee and rules/thresholds directly from the database and the product description for the selected product, explain them clearly to the customer (e.g. any free delivery offers or delivery charges in the description), and apply them.
+  * Step 5 (Customer Details): Collect customer name, complete delivery address, city, and contact number ("ඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ 🌸"). Do not re-ask for details already given.
+  * Step 6 (Order Summary): Send complete order summary in Sinhala ( Product, Package, Size, Colours & Qty, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address, City) and ask: "මේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊 වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න."
+  * Step 6 (Thank-You & Staff Handover): When customer confirms, send: "ස්තූතියි 🥰 ඔයාගේ ඇණවුම් විස්තර අපිට ලැබුණා. අපේ කෙනෙක් ඔයාට කතා කරලා ඇණවුම තහවුරු කරයි 🌸". Explain that store staff will call to confirm the order (do NOT claim the order is finally confirmed or dispatched before staff calls).
 - DIGITAL vs PHYSICAL PRODUCTS:
    - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Offer both Cash on Delivery (COD) and Bank Transfer as payment options. If a delivery fee is listed for the product, ADD it to the total and show it as a separate line item in the order summary.
 ${freeDeliveryThreshold > 0 ? `   - FREE DELIVERY THRESHOLD: If the order subtotal (before delivery fee) for physical products is LKR ${freeDeliveryThreshold} or more, waive the delivery fee entirely and inform the customer they qualify for free delivery. If below this threshold, apply the normal delivery fee.` : ""}
@@ -215,20 +224,20 @@ ${freeDeliveryThreshold > 0 ? `   - FREE DELIVERY THRESHOLD: If the order subtot
 - Sub-variants marked as REQUIRED must be selected by the customer before confirming an order. Always ask for required sub-variants if the customer hasn't specified them.
 - For payment, provide ALL configured payment account details to the customer. List every account with emoji separators:
 ${(() => {
-  const accounts = paymentInfo.accounts;
-  if (accounts && Array.isArray(accounts) && accounts.length > 0) {
-    return accounts.map((a: any, i: number) => {
-      const type = a.account_type || "bank";
-      const label = a.account_label || a.bank_name || "Not configured";
-      const number = a.account_number || "Not configured";
-      const name = a.account_name || "Not configured";
-      if (type === "crypto") return `  ${i + 1}. Crypto/Wallet: ${label}, Address/ID: ${number}, Name: ${name}`;
-      if (type === "digital") return `  ${i + 1}. Digital Wallet: ${label}, Account: ${number}, Name: ${name}`;
-      return `  ${i + 1}. Bank: ${label}, Account: ${number}, Name: ${name}`;
-    }).join("\n");
-  }
-  return `  Bank: ${paymentInfo.bank_name || "Not configured"}, Account: ${paymentInfo.account_number || "Not configured"}, Name: ${paymentInfo.account_name || "Not configured"}`;
-})()}
+        const accounts = paymentInfo.accounts;
+        if (accounts && Array.isArray(accounts) && accounts.length > 0) {
+          return accounts.map((a: any, i: number) => {
+            const type = a.account_type || "bank";
+            const label = a.account_label || a.bank_name || "Not configured";
+            const number = a.account_number || "Not configured";
+            const name = a.account_name || "Not configured";
+            if (type === "crypto") return `  ${i + 1}. Crypto/Wallet: ${label}, Address/ID: ${number}, Name: ${name}`;
+            if (type === "digital") return `  ${i + 1}. Digital Wallet: ${label}, Account: ${number}, Name: ${name}`;
+            return `  ${i + 1}. Bank: ${label}, Account: ${number}, Name: ${name}`;
+          }).join("\n");
+        }
+        return `  Bank: ${paymentInfo.bank_name || "Not configured"}, Account: ${paymentInfo.account_number || "Not configured"}, Name: ${paymentInfo.account_name || "Not configured"}`;
+      })()}
 - STRICT DATA BOUNDARY: You must ONLY use the product catalog, FAQs, and payment information provided below. Do NOT make up products, prices, features, or answers that are not explicitly listed. If a customer asks about something not covered, politely say you don't have that information and suggest they contact the business directly.
 
 PRODUCT IMAGES:
@@ -362,7 +371,7 @@ CRITICAL SECURITY RULE:
     if (usedFaqsMatch && trackedFaqIds.length > 0) {
       const usedIds = usedFaqIds;
       const trackedUsedIds = usedIds.filter((id: string) => trackedFaqIds.includes(id));
-      
+
       if (trackedUsedIds.length > 0) {
         console.log(`Tracked FAQs used: ${trackedUsedIds.join(", ")} for phone ${phoneNumber}`);
         const usageLogs = trackedUsedIds.map((faqId: string) => ({
