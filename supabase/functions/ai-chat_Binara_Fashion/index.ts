@@ -213,9 +213,9 @@ IMPORTANT GUIDELINES:
   - For order summaries, use emojis to mark each section (📦 Items, 💰 Total, 🚚 Delivery, 💳 Payment)
 - If a customer wants to order, guide them through the following sales steps:
   * Step 1 (Welcome & Product Intro): Greet warmly in Sinhala ("Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා ! 🥰 ඔයාට කැමති කෙටි කලිසම් වර්ගය බලමුද? 😊") and introduce available products ("මේ තියෙන්නේ අපේ කෙටි කලිසම් වර්ග දෙක 😊 ඔයාට කැමති වර්ගය කියන්නකෝ. ඒකට තියෙන පාටයි පැකේජ මිලයි එවන්නම්.").
-  * Step 2 (Package Selection): Ask for preferred package or quantity.
-  * Step 3 (Size & Colour Selection): Collect size or waist measurement ("ඔයාට ඕන ප්‍රමාණය කියන්නකෝ 😊"), send colour options, and ask for colour numbers & quantity per colour ("මේ තියෙන්නේ පාට ටික 🥰 කැමති පාට අංකයි, එක් පාටකින් කීයක් ඕනද කියලයි එවන්නකෝ."). Then confirm selection ("හරි 😊 පාට 01 එකයි, පාට 02 එකයි. මුළු ගණන දෙකයි නේද?"). Total quantity across colours must match the package.
-  * Step 4 (Delivery Charges): Product description delivery terms always override general store settings and FAQs. If the selected product description offers free delivery (e.g. ඩිලිවරි ෆ්‍රී / Deliver free) for the chosen package or item (even if under 5 items), delivery fee is LKR 0. Only apply delivery charges specified in that product's description, or store defaults if the description has no delivery terms.
+  * Step 2 (Package Selection): Ask for preferred package or quantity. Never say that the vendor will not take 1-item orders. If a customer wants 1 item or any quantity, accept the order, proceed to details collection, and tell them our staff will contact them to confirm.
+  * Step 3 (Size & Colour Selection): Collect size or waist measurement ("ඔයාට ඕන ප්‍රමාණය කියන්නකෝ 😊"), send colour options, and ask for colour numbers & quantity per colour ("මේ තියෙන්නේ පාට ටික 🥰 කැමති පාට අංකයි, එක් පාටකින් කීයක් ඕනද කියලයි එවන්නකෝ."). Then confirm selection ("හරි 😊 පාට 01 එකයි, පාට 02 එකයි. මුළු ගණන දෙකයි නේද?"). Total quantity across colours must match the customer's requested quantity.
+  * Step 4 (Pricing & Delivery Charges): Catalog prices are package prices (e.g. 4 for 2650, 5 for 2700). For quantities below a package (e.g. 1 or 2 shorts), NEVER charge the full package price for 1 item; calculate unit price by dividing the package price by its item count (e.g. 2650 ÷ 4 = ~660 each; 2700 ÷ 5 = 540 each), multiply by quantity, and add LKR 450 delivery fee for under 5 items. For full packages, use the package price with free delivery (LKR 0). Product description terms always override general store settings.
   * Step 5 (Customer Details): Collect customer name, complete delivery address, city, and contact number ("ඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ 🌸"). Do not re-ask for details already given.
   * Step 6 (Order Summary): Send complete order summary in Sinhala (Product, Package, Size, Colours & Qty, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address, City). Delivery charge must strictly follow the product description: if the package has free delivery, Delivery charge = LKR 0 and Total = Subtotal. Ask: "මේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊 වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න."
   * Step 7 (Order Confirmation): When customer confirms the order details (for both COD and Bank Transfer), send: "ස්තූතියි 🥰 ඔයාගේ ඇණවුම් විස්තර අපිට ලැබුණා. අපේ කෙනෙක් ඔයාට කතා කරලා ඇණවුම තහවුරු කරයි 🌸" and append the <ORDER_JSON> block at the END so the order is saved. Store staff will call to confirm before dispatch.
@@ -241,11 +241,12 @@ ${(() => {
         return `  Bank: ${paymentInfo.bank_name || "Not configured"}, Account: ${paymentInfo.account_number || "Not configured"}, Name: ${paymentInfo.account_name || "Not configured"}`;
       })()}
 - STRICT DATA BOUNDARY: You must ONLY use the product catalog, FAQs, and payment information provided below${staffPhoneNumber ? `, and the official staff contact number (${staffPhoneNumber})` : ""}. Do NOT make up products, prices, features, or answers that are not explicitly listed. If a customer asks about something not covered, politely say you don't have that information and ${staffPhoneNumber ? `tell them to contact our staff at ${staffPhoneNumber}` : "suggest they contact the business directly"}. Under NO circumstances should you invent, guess, or provide any phone number other than the official staff number.
+- LANGUAGE: Always reply in the customer's language (Sinhala or English). Never use or mix other Indic scripts (e.g. Malayalam, Tamil, Hindi).
 - DELIVERY RULES PRIORITY: Product description delivery terms always override general FAQs. If a product description offers free delivery (e.g. ඩිලිවරි ෆ්‍රී) or package delivery rates, always use those terms for delivery inquiries, order summaries, and total calculation.
 
 PRODUCT IMAGES:
-- When a customer explicitly asks to see photos or images of a product, include all its image URLs in separate <IMAGE_URL>url</IMAGE_URL> tags at the END of your response. Never write image URLs in your conversational text.
-- Do NOT attach image tags during package selection, customer details collection, or order confirmation.
+- When introducing a product or when the customer asks to see photos, you MUST include ALL of its image URLs from the catalog below (every single image, never omit or truncate any). Place each URL in <IMAGE_URL>url</IMAGE_URL> tags at the END of your reply. Never write raw URLs in conversational text.
+- Do NOT re-attach image tags on follow-up questions, during package/size/colour selection, details collection, or order confirmation.
 - Only use image URLs from the product catalog below. Never make up image URLs.
 
 PRODUCT VIDEOS:
@@ -437,7 +438,11 @@ CRITICAL SECURITY RULE:
             const { data: orderResult, error: orderError } = await supabase
               .from("orders")
               .insert({
-                customer_name: orderData.customer_name || orderData.customer || "Customer",
+                customer_name: (() => {
+                  const raw = orderData.customer_name || orderData.customer;
+                  if (typeof raw === "object" && raw !== null) return raw.name || raw.customer_name || "Customer";
+                  return String(raw || "Customer").trim();
+                })(),
                 customer_phone: cleanPhone,
                 whatsapp_phone: phoneNumber,
                 district: orderData.district || orderData.city || null,
@@ -560,7 +565,14 @@ CRITICAL SECURITY RULE:
 
     // Extract image URLs if present
     const imageUrlMatches = Array.from(responseText.matchAll(/<IMAGE_URL>([\s\S]*?)<\/IMAGE_URL>/g));
-    const imageUrls = imageUrlMatches.map(m => m[1].trim());
+    let imageUrls = imageUrlMatches.map(m => m[1].trim());
+    if (imageUrls.length > 0) {
+      // Find matching product and guarantee all of its catalog images are returned
+      const matchedProduct = products.find(p => p.images && Array.isArray(p.images) && p.images.some((img: string) => imageUrls.includes(img)));
+      if (matchedProduct && Array.isArray(matchedProduct.images) && matchedProduct.images.length > 0) {
+        imageUrls = matchedProduct.images;
+      }
+    }
     const imageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
     // Extract video URL if present
     const videoUrlMatch = responseText.match(/<VIDEO_URL>([\s\S]*?)<\/VIDEO_URL>/);
