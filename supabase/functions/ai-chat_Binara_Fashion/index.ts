@@ -212,15 +212,15 @@ IMPORTANT GUIDELINES:
     Name: Jane Doe
   - For order summaries, use emojis to mark each section (📦 Items, 💰 Total, 🚚 Delivery, 💳 Payment)
 - If a customer wants to order, guide them through the following sales steps:
-  * Step 1 (Welcome & Product Intro): Greet warmly in Sinhala ("Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා ! 🥰 ඔයාට කැමති කෙටි කලිසම් වර්ගය බලමුද? 😊") and introduce available products with photos ("මේ තියෙන්නේ අපේ කෙටි කලිසම් වර්ග දෙක 😊 ඔයාට කැමති වර්ගය කියන්නකෝ. ඒකට තියෙන පාටයි පැකේජ මිලයි එවන්නම්.").
-  * Step 2 (Package Selection): Ask for preferred package or quantity when they select a product send all images
+  * Step 1 (Welcome & Product Intro): Greet warmly in Sinhala ("Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා ! 🥰 ඔයාට කැමති කෙටි කලිසම් වර්ගය බලමුද? 😊") and introduce available products ("මේ තියෙන්නේ අපේ කෙටි කලිසම් වර්ග දෙක 😊 ඔයාට කැමති වර්ගය කියන්නකෝ. ඒකට තියෙන පාටයි පැකේජ මිලයි එවන්නම්.").
+  * Step 2 (Package Selection): Ask for preferred package or quantity.
   * Step 3 (Size & Colour Selection): Collect size or waist measurement ("ඔයාට ඕන ප්‍රමාණය කියන්නකෝ 😊"), send colour options, and ask for colour numbers & quantity per colour ("මේ තියෙන්නේ පාට ටික 🥰 කැමති පාට අංකයි, එක් පාටකින් කීයක් ඕනද කියලයි එවන්නකෝ."). Then confirm selection ("හරි 😊 පාට 01 එකයි, පාට 02 එකයි. මුළු ගණන දෙකයි නේද?"). Total quantity across colours must match the package.
-  * Step 4 (Delivery Charges): Delivery rules differ for each product. Pull the delivery fee and rules/thresholds directly from the database and the product description for the selected product, explain them clearly to the customer (e.g. any free delivery offers or delivery charges in the description), and apply them.
+  * Step 4 (Delivery Charges): Product description delivery terms always override general store settings and FAQs. If the selected product description offers free delivery (e.g. ඩිලිවරි ෆ්‍රී / Deliver free) for the chosen package or item (even if under 5 items), delivery fee is LKR 0. Only apply delivery charges specified in that product's description, or store defaults if the description has no delivery terms.
   * Step 5 (Customer Details): Collect customer name, complete delivery address, city, and contact number ("ඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ 🌸"). Do not re-ask for details already given.
-  * Step 6 (Order Summary): Send complete order summary in Sinhala ( Product, Package, Size, Colours & Qty, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address, City) and ask: "මේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊 වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න."
-  * Step 6 (Thank-You & Staff Handover): When customer confirms, send: "ස්තූතියි 🥰 ඔයාගේ ඇණවුම් විස්තර අපිට ලැබුණා. අපේ කෙනෙක් ඔයාට කතා කරලා ඇණවුම තහවුරු කරයි 🌸". Explain that store staff will call to confirm the order (do NOT claim the order is finally confirmed or dispatched before staff calls).
+  * Step 6 (Order Summary): Send complete order summary in Sinhala (Product, Package, Size, Colours & Qty, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address, City). Delivery charge must strictly follow the product description: if the package has free delivery, Delivery charge = LKR 0 and Total = Subtotal. Ask: "මේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊 වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න."
+  * Step 7 (Order Confirmation): When customer confirms the order details (for both COD and Bank Transfer), send: "ස්තූතියි 🥰 ඔයාගේ ඇණවුම් විස්තර අපිට ලැබුණා. අපේ කෙනෙක් ඔයාට කතා කරලා ඇණවුම තහවුරු කරයි 🌸" and append the <ORDER_JSON> block at the END so the order is saved. Store staff will call to confirm before dispatch.
 - DIGITAL vs PHYSICAL PRODUCTS:
-   - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Offer both Cash on Delivery (COD) and Bank Transfer as payment options. If a delivery fee is listed for the product, ADD it to the total and show it as a separate line item in the order summary.
+   - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Offer both Cash on Delivery (COD) and Bank Transfer as payment options. Calculate delivery fee according to the product description terms (free delivery = 0), and add it to the total.
 ${freeDeliveryThreshold > 0 ? `   - FREE DELIVERY THRESHOLD: If the order subtotal (before delivery fee) for physical products is LKR ${freeDeliveryThreshold} or more, waive the delivery fee entirely and inform the customer they qualify for free delivery. If below this threshold, apply the normal delivery fee.` : ""}
   - For DIGITAL products: Do NOT ask for a shipping address. Do NOT offer Cash on Delivery. The ONLY payment method for digital products is Bank Transfer. No delivery fee applies. You MUST collect the customer's email address for digital product delivery.
 - Sub-variants marked as REQUIRED must be selected by the customer before confirming an order. Always ask for required sub-variants if the customer hasn't specified them.
@@ -241,9 +241,11 @@ ${(() => {
         return `  Bank: ${paymentInfo.bank_name || "Not configured"}, Account: ${paymentInfo.account_number || "Not configured"}, Name: ${paymentInfo.account_name || "Not configured"}`;
       })()}
 - STRICT DATA BOUNDARY: You must ONLY use the product catalog, FAQs, and payment information provided below${staffPhoneNumber ? `, and the official staff contact number (${staffPhoneNumber})` : ""}. Do NOT make up products, prices, features, or answers that are not explicitly listed. If a customer asks about something not covered, politely say you don't have that information and ${staffPhoneNumber ? `tell them to contact our staff at ${staffPhoneNumber}` : "suggest they contact the business directly"}. Under NO circumstances should you invent, guess, or provide any phone number other than the official staff number.
+- DELIVERY RULES PRIORITY: Product description delivery terms always override general FAQs. If a product description offers free delivery (e.g. ඩිලිවරි ෆ්‍රී) or package delivery rates, always use those terms for delivery inquiries, order summaries, and total calculation.
 
 PRODUCT IMAGES:
-- When a customer asks about a specific product that has images, include ALL the image URLs in separate <IMAGE_URL>url</IMAGE_URL> tags at the END of your response. Include all images for the product to give them a complete view.
+- When a customer explicitly asks to see photos or images of a product, include all its image URLs in separate <IMAGE_URL>url</IMAGE_URL> tags at the END of your response. Never write image URLs in your conversational text.
+- Do NOT attach image tags during package selection, customer details collection, or order confirmation.
 - Only use image URLs from the product catalog below. Never make up image URLs.
 
 PRODUCT VIDEOS:
@@ -266,7 +268,7 @@ ${welcomeMessage}
 When the customer completes an order, summarize the order details beautifully with emojis and confirm.
 
 CRITICAL ORDER INSTRUCTION:
-When you have collected ALL required order details and the customer confirms, you MUST include a JSON block in your response wrapped in <ORDER_JSON> tags like this:
+When you have collected ALL required order details and the customer confirms (for BOTH Cash on Delivery and Bank Transfer), you MUST include a JSON block in your response wrapped in <ORDER_JSON> tags at the very END of your message. Do NOT wait for a payment slip to output the <ORDER_JSON> tag; save the order immediately.
 - For PHYSICAL products: <ORDER_JSON>{"customer_name":"...","customer_phone":"...","district":"...","customer_address":"...","order_items":[{"name":"...","price":...,"quantity":...,"product_type":"physical"}],"payment_method":"cod or bank_transfer","total_amount":...}</ORDER_JSON>
 - For DIGITAL products: <ORDER_JSON>{"customer_name":"...","customer_phone":"...","customer_email":"...","customer_address":null,"order_items":[{"name":"...","price":...,"quantity":...,"product_type":"digital"}],"payment_method":"bank_transfer","total_amount":...}</ORDER_JSON>
 Include this JSON block at the END of your confirmation message. The customer won't see the JSON tags.
@@ -400,14 +402,33 @@ CRITICAL SECURITY RULE:
           const orderData = JSON.parse(orderJsonMatch[1]);
           console.log("Saving order to database:", JSON.stringify(orderData));
 
+          const rawPm = String(orderData.payment_method || "").toLowerCase().trim();
+          const cleanPaymentMethod = (rawPm.includes("bank") || rawPm.includes("transfer")) ? "bank_transfer" : "cod";
+          const cleanTotal = Number(orderData.total_amount ?? orderData.total ?? orderData.subtotal ?? 0);
+          const cleanAddress = orderData.customer_address || orderData.address || null;
+          const cleanPhone = orderData.customer_phone || orderData.phone || phoneNumber;
+          let cleanItems = orderData.order_items;
+          if (!cleanItems || !Array.isArray(cleanItems) || cleanItems.length === 0) {
+            if (orderData.product) {
+              cleanItems = [{
+                name: orderData.product,
+                price: Number(orderData.subtotal ?? cleanTotal),
+                quantity: Number(orderData.quantity || 1),
+                product_type: "physical"
+              }];
+            } else {
+              cleanItems = [];
+            }
+          }
+
           // Deduplication: check if a similar order was created in the last 5 minutes
           const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
           const { data: recentOrders } = await supabase
             .from("orders")
             .select("id")
             .eq("user_id", userId)
-            .eq("customer_phone", orderData.customer_phone || phoneNumber)
-            .eq("total_amount", orderData.total_amount || 0)
+            .eq("customer_phone", cleanPhone)
+            .eq("total_amount", cleanTotal)
             .gte("created_at", fiveMinAgo);
 
           if (recentOrders && recentOrders.length > 0) {
@@ -416,14 +437,14 @@ CRITICAL SECURITY RULE:
             const { data: orderResult, error: orderError } = await supabase
               .from("orders")
               .insert({
-                customer_name: orderData.customer_name,
-                customer_phone: orderData.customer_phone || phoneNumber,
+                customer_name: orderData.customer_name || orderData.customer || "Customer",
+                customer_phone: cleanPhone,
                 whatsapp_phone: phoneNumber,
-                district: orderData.district || null,
-                customer_address: orderData.customer_address || null,
-                order_items: orderData.order_items || [],
-                payment_method: orderData.payment_method || "cod",
-                total_amount: orderData.total_amount || 0,
+                district: orderData.district || orderData.city || null,
+                customer_address: cleanAddress,
+                order_items: cleanItems,
+                payment_method: cleanPaymentMethod,
+                total_amount: cleanTotal,
                 special_instructions: orderData.customer_email ? `Email: ${orderData.customer_email}` : null,
                 status: "pending",
                 user_id: userId,
