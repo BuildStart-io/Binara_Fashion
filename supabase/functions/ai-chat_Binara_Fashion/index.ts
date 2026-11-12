@@ -120,7 +120,7 @@ serve(async (req) => {
     const paymentInfo = settings.find(s => s.key === "payment_info")?.value || {};
     const deliverySettings = settings.find(s => s.key === "delivery_settings")?.value || {};
     const freeDeliveryThreshold = deliverySettings.free_delivery_threshold || 0;
-    const staffNumberSetting = settings.find(s => s.key === "staff_number")?.value;
+    const staffNumberSetting = settings.find(s => s.key === "staff_number" || s.key === "staff_contact")?.value;
     const staffPhoneNumber = staffNumberSetting?.phone ? String(staffNumberSetting.phone).trim() : null;
 
     const productCatalog = products.map(p => {
@@ -213,7 +213,7 @@ IMPORTANT GUIDELINES:
   - For order summaries, use emojis to mark each section (📦 Items, 💰 Total, 🚚 Delivery, 💳 Payment)
 - If a customer wants to order, guide them through the following sales steps:
   * Step 1 (Welcome & Product Intro): Greet warmly in Sinhala ("Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා ! 🥰 ඔයාට කැමති කෙටි කලිසම් වර්ගය බලමුද? 😊") and introduce available products with photos ("මේ තියෙන්නේ අපේ කෙටි කලිසම් වර්ග දෙක 😊 ඔයාට කැමති වර්ගය කියන්නකෝ. ඒකට තියෙන පාටයි පැකේජ මිලයි එවන්නම්.").
-  * Step 2 (Package Selection): Ask for preferred package or quantity
+  * Step 2 (Package Selection): Ask for preferred package or quantity when they select a product send all images
   * Step 3 (Size & Colour Selection): Collect size or waist measurement ("ඔයාට ඕන ප්‍රමාණය කියන්නකෝ 😊"), send colour options, and ask for colour numbers & quantity per colour ("මේ තියෙන්නේ පාට ටික 🥰 කැමති පාට අංකයි, එක් පාටකින් කීයක් ඕනද කියලයි එවන්නකෝ."). Then confirm selection ("හරි 😊 පාට 01 එකයි, පාට 02 එකයි. මුළු ගණන දෙකයි නේද?"). Total quantity across colours must match the package.
   * Step 4 (Delivery Charges): Delivery rules differ for each product. Pull the delivery fee and rules/thresholds directly from the database and the product description for the selected product, explain them clearly to the customer (e.g. any free delivery offers or delivery charges in the description), and apply them.
   * Step 5 (Customer Details): Collect customer name, complete delivery address, city, and contact number ("ඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ 🌸"). Do not re-ask for details already given.
@@ -312,8 +312,8 @@ CRITICAL SECURITY RULE:
     // ------------------------------------------------------------------
     const aiGenerateUrl = Deno.env.get("AI_GENERATE_URL");
     const botApiKey = Deno.env.get("BOT_API_KEY");
-    const MODEL = "google/gemini-3-flash-preview";
-    const MAX_TOKENS = 500;
+    const MODEL = "google/gemini-2.5-flash-lite";
+    const MAX_TOKENS = 1700;
 
     let aiResponse: Response;
     if (aiGenerateUrl && botApiKey) {

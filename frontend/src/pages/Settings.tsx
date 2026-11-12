@@ -176,6 +176,7 @@ export default function Settings() {
             setNotificationPhone((setting.value as any)?.phone || "");
             break;
           case "staff_number":
+          case "staff_contact":
             setStaffPhone((setting.value as any)?.phone || "");
             break;
           case "delivery_settings":
