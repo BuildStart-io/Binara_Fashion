@@ -509,8 +509,7 @@ async function sendWhatsApp(
 
   if (!res.ok) {
     const errText = await res.text();
-    console.error("Send WhatsApp error:", errText);
-    throw new Error(`Send WhatsApp failed: ${errText.substring(0, 200)}`);
+    console.error("Send WhatsApp error (session might be unlinked):", errText);
   } else {
     console.log("Reply sent successfully");
   }
