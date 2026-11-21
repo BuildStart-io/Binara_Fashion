@@ -246,6 +246,17 @@ async function processMessage(
 
   if (!autoResponsesEnabled) {
     console.log(`[${corrId}] Auto responses disabled, skipping AI processing`);
+    // Static welcome fallback only when AI auto-responses are turned off
+    const { count: convoCount } = await supabase
+      .from("conversations")
+      .select("id", { count: "exact", head: true })
+      .eq("phone_number", phoneNumber)
+      .eq("user_id", userId);
+
+    const isFirstMessage = (convoCount || 0) <= 1;
+    if (isFirstMessage) {
+      await handleWelcomeMessage(supabase, supabaseUrl, supabaseServiceKey, userId, phoneNumber, messageText, sessionApiKey, corrId, timings, mark);
+    }
     return;
   }
 
@@ -263,19 +274,9 @@ async function processMessage(
     return;
   }
 
-  // 4. Check if first message (for welcome message flow)
-  const { count: convoCount } = await supabase
-    .from("conversations")
-    .select("id", { count: "exact", head: true })
-    .eq("phone_number", phoneNumber)
-    .eq("user_id", userId);
-
-  const isFirstMessage = (convoCount || 0) <= 1;
-
-  if (isFirstMessage) {
-    const sent = await handleWelcomeMessage(supabase, supabaseUrl, supabaseServiceKey, userId, phoneNumber, messageText, sessionApiKey, corrId, timings, mark);
-    if (sent) return;
-  }
+  // 4. When AI auto-responses are enabled, static welcome message interception is skipped
+  // so ai-chat can dynamically handle the first turn (answering specific questions, language matching, etc.)
+  // without sending duplicate static greetings.
 
   // 5. Get conversation history (excluding the current inbound message to prevent duplication)
   mark("history_start");

@@ -217,7 +217,7 @@ IMPORTANT GUIDELINES:
   * Step 4 (Pricing & Delivery Charges): Catalog prices are package prices (e.g. 4 for 2650, 5 for 2700). For quantities below a package (e.g. 1 or 2 shorts), NEVER charge the full package price for 1 item; calculate unit price by dividing the package price by its item count (e.g. 2650 ÷ 4 = ~660 each; 2700 ÷ 5 = 540 each), multiply by quantity, and add LKR 450 delivery fee for under 5 items. For full packages, use the package price with free delivery (LKR 0). Product description terms always override general store settings.
   * Step 5 (Customer Details): Collect customer name, complete delivery address, city, and contact number ("ඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ 🌸"). Do not re-ask for details already given.
   * Step 6 (Order Summary): Send complete order summary in Sinhala (Product, Package, Size, Colours & Qty, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address, City). Delivery charge must strictly follow the product description: if the package has free delivery, Delivery charge = LKR 0 and Total = Subtotal. Ask: "මේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊 වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න."
-  * Step 7 (Order Confirmation): When customer confirms the order details (for both COD and Bank Transfer), send thank you with the complete confirmed order summary (e.g. "ස්තූතියි! 🥰 මෙන්න ඔබගේ ඇණවුම් සාරාංශය:" followed by Product, Quantity, Colours, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address), and append the <ORDER_JSON> block at the END so the order is saved.
+  * Step 7 (Order Confirmation): When customer confirms the order details (for both COD and Bank Transfer), ONLY send confirmation and <ORDER_JSON> if the customer actually provided their name and delivery address in the chat history. NEVER invent or hallucinate a customer name or address; if details are missing, ask for their name, address, and phone number first. Send thank you with the complete confirmed order summary (e.g. "ස්තූතියි! 🥰 මෙන්න ඔබගේ ඇණවුම් සාරාංශය:" followed by Product, Quantity, Colours, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address), and append the <ORDER_JSON> block at the END so the order is saved.
 - DIGITAL vs PHYSICAL PRODUCTS:
    - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Offer both Cash on Delivery (COD) and Bank Transfer as payment options. Calculate delivery fee according to the product description terms (free delivery = 0), and add it to the total.
 ${freeDeliveryThreshold > 0 ? `   - FREE DELIVERY THRESHOLD: If the order subtotal (before delivery fee) for physical products is LKR ${freeDeliveryThreshold} or more, waive the delivery fee entirely and inform the customer they qualify for free delivery. If below this threshold, apply the normal delivery fee.` : ""}
@@ -400,6 +400,14 @@ CRITICAL SECURITY RULE:
 
     // Check if the AI response contains order JSON
     let orderCreated = false;
+    let hallucinatedOrderDetected = false;
+    const customerInboundText = [
+      ...((conversationHistory as ConversationMessage[]) || [])
+        .filter((m) => m.direction === "inbound")
+        .map((m) => m.message || ""),
+      trimmedMessage,
+    ].join(" ").toLowerCase();
+
     const orderJsonMatches = [...responseText.matchAll(/<ORDER_JSON>([\s\S]*?)<\/ORDER_JSON>/g)];
     for (const orderJsonMatch of orderJsonMatches) {
       if (ordersLimitReached) {
@@ -425,6 +433,38 @@ CRITICAL SECURITY RULE:
               }];
             } else {
               cleanItems = [];
+            }
+          }
+
+          // Guard against hallucinated orders: address must be present and grounded in chat history for physical products
+          const hasPhysicalItems = cleanItems.some((it: any) => (it.product_type || "physical") === "physical") || cleanItems.length === 0;
+          if (hasPhysicalItems) {
+            let isAddressGrounded = false;
+            if (cleanAddress && typeof cleanAddress === "string" && cleanAddress.trim().length >= 4) {
+              const normAddress = cleanAddress.toLowerCase().trim();
+              if (customerInboundText.includes(normAddress)) {
+                isAddressGrounded = true;
+              } else {
+                const addressTokens = (normAddress.match(/[\p{L}\p{N}]{3,}/gu) || [])
+                  .filter((token: string) => !["road", "street", "house", "near", "post", "office", "no", "lane", "sri", "lanka"].includes(token));
+                if (addressTokens.length > 0) {
+                  const matchingTokens = addressTokens.filter((token: string) => customerInboundText.includes(token));
+                  if (matchingTokens.length > 0) {
+                    isAddressGrounded = true;
+                  }
+                } else {
+                  const allTokens = normAddress.match(/[\p{L}\p{N}]{3,}/gu) || [];
+                  if (allTokens.some((token: string) => customerInboundText.includes(token))) {
+                    isAddressGrounded = true;
+                  }
+                }
+              }
+            }
+
+            if (!isAddressGrounded) {
+              console.warn(`[SECURITY] Hallucinated order detected! Address "${cleanAddress}" was not provided by customer in chat.`);
+              hallucinatedOrderDetected = true;
+              continue; // Drop insertion
             }
           }
 
@@ -736,6 +776,14 @@ CRITICAL SECURITY RULE:
     cleanResponse = cleanResponse.replace(/\[FAQ_ID:[^\]]*\]/g, "");
     // Clean up leftover whitespace
     cleanResponse = cleanResponse.replace(/\n{3,}/g, "\n\n").trim();
+
+    // If order details were hallucinated without customer providing address, intercept false confirmation
+    if (hallucinatedOrderDetected) {
+      const isEnglish = !/[\u0D80-\u0DFF]/.test(customerInboundText || trimmedMessage);
+      cleanResponse = isEnglish
+        ? "To complete your order, please provide your name, delivery address, and phone number. 🌸"
+        : "ඇණවුම සම්පූර්ණ කිරීම සඳහා කරුණාකර ඔබගේ නම, භාණ්ඩ ලැබිය යුතු සම්පූර්ණ ලිපිනය සහ දුරකථන අංකය අපට එවන්නකෝ. 🌸";
+    }
 
     // Log AI usage independently of conversations
     await supabase.from("ai_usage_logs").insert({
