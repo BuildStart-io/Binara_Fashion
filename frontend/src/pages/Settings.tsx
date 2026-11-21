@@ -372,6 +372,9 @@ export default function Settings() {
       }
 
       await fetchSessions();
+      if (newSession?.id) {
+        initializeAndFetchQr(newSession.id, "needs-qr");
+      }
     } catch (error: any) {
       console.error("Error creating session:", error);
       toast({ title: "Error creating session", description: error.message, variant: "destructive" });

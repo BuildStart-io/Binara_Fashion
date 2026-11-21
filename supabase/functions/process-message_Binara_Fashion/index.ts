@@ -48,7 +48,7 @@ serve(async (req) => {
     // Claim one pending message, enforcing per-user ordering:
     // Only pick from users who don't have another message currently processing.
     // We use a two-step approach since Supabase JS doesn't support FOR UPDATE SKIP LOCKED.
-    
+
     // Find users currently processing
     const { data: busyUsers } = await supabase
       .from("message_queue")
@@ -160,7 +160,7 @@ async function processMessage(
 
   // Check if this is a media message — if so, store it but do NOT reply
   const mediaTypes = ["image", "video", "document", "sticker", "vcard", "location"];
-  let isMediaMessage = mediaTypes.includes(messageType) || 
+  let isMediaMessage = mediaTypes.includes(messageType) ||
     (!messageText && messageType !== "text" && !isVoice) ||
     (body?.data?.messages?.messageBody === undefined && body?.data?.messages?.message?.conversation === undefined && !isVoice && !messageText);
 
@@ -199,7 +199,7 @@ async function processMessage(
           message: "🎤 [Voice Note: Transcription failed]"
         }).eq('id', inboundMsg.id);
       }
-      
+
       const apologyText = "I couldn't hear that clearly. Could you please resend it or type it out for me?";
       await supabase.from("conversations").insert({
         phone_number: phoneNumber,
@@ -209,7 +209,7 @@ async function processMessage(
         user_id: userId,
       });
       await sendWhatsApp(supabaseUrl, supabaseServiceKey, phoneNumber, apologyText, null, sessionApiKey);
-      return; 
+      return;
     }
   }
 
@@ -282,7 +282,7 @@ async function processMessage(
   mark("history_start");
   let historyQuery = supabase
     .from("conversations")
-    .select("message, direction, created_at")
+    .select("message, direction, message_type, metadata, created_at")
     .eq("phone_number", phoneNumber)
     .eq("user_id", userId);
 
@@ -367,7 +367,7 @@ async function processMessage(
     message: replyMessage,
     direction: "outbound",
     message_type: replyImageUrls.length > 0 ? "image" : "text",
-    metadata: { correlationId: corrId, ...(faqMedia.length > 0 ? { faqMedia } : {}) },
+    metadata: { correlationId: corrId, imageUrls: replyImageUrls, ...(faqMedia.length > 0 ? { faqMedia } : {}) },
     user_id: userId,
   });
   mark("store_outbound_end");

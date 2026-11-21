@@ -417,8 +417,34 @@ export default function Orders() {
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <h4 className="font-medium text-sm text-muted-foreground">Total Amount</h4>
-                    <p className="text-2xl font-bold">LKR {selectedOrder.total_amount.toFixed(2)}</p>
+                    {(() => {
+                      const items = Array.isArray(selectedOrder.order_items) ? selectedOrder.order_items : [];
+                      const itemsSubtotal = items.reduce((sum: number, it: any) => {
+                        const price = Number(it.price || 0);
+                        const qty = Number(it.quantity || 1);
+                        const isUnit = (price * qty === selectedOrder.total_amount || (price * qty + 450 === selectedOrder.total_amount));
+                        return sum + (isUnit ? price * qty : price);
+                      }, 0);
+                      const deliveryFee = Math.max(0, Number(selectedOrder.total_amount) - itemsSubtotal);
+                      return (
+                        <div className="space-y-1">
+                          {deliveryFee > 0 && (
+                            <>
+                              <div className="flex justify-between text-xs text-muted-foreground">
+                                <span>Items Subtotal:</span>
+                                <span>LKR {itemsSubtotal.toFixed(2)}</span>
+                              </div>
+                              <div className="flex justify-between text-xs text-muted-foreground">
+                                <span>Delivery Fee:</span>
+                                <span>LKR {deliveryFee.toFixed(2)}</span>
+                              </div>
+                            </>
+                          )}
+                          <h4 className="font-medium text-sm text-muted-foreground">Total Amount</h4>
+                          <p className="text-2xl font-bold">LKR {selectedOrder.total_amount.toFixed(2)}</p>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 

@@ -1,0 +1,379 @@
+[
+  {
+    "id": 1,
+    "title": "Persona 1: Facebook Ad Clicker",
+    "passed": true,
+    "notes": [
+      "PASS: Exactly 1 order created in DB. Details: Tharindu Perera|0770000001|No 18 Temple Road, Negombo|2700.00|cod|pending"
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Can you tell me more about your ad?",
+        "bot": "Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා ! 🥰\n\nඅපගේ ජනප්‍රිය කෙටි කලිසම් (Shorts) සඳහා විශේෂ දීමනා කිහිපයක් තිබෙනවා:\n\n🔹 Single Jersey Cotton Shorts (උස අඟල් 20)\n🔹 පොප්කෝන් Shorts (උස අඟල් 18)\n🔹 පොප්කෝන් Shorts (උස අඟල් 16)\n🔹 Kyela Brand Single Jersey Cotton Shorts\n🔹 Rib Jacquard Shorts\n\nඔයාට කැමතිම වර්ගය සහ විස්තර බලන්න මට කියන්නකෝ. මම ඒ පිළිබඳ වැඩිදුර විස්තර එවන්නම්! 😊",
+        "images": []
+      },
+      {
+        "turn": 2,
+        "user": "Rib Jacquard eken 5k ganna one. Ina 32. Pata 1, 2, 3, 4, 5.",
+        "bot": "නියමයි! Rib Jacquard Shorts (උස අඟල් 16) 5ක් ඇණවුම් කිරීමට තෝරා ගැනීම ගැන ස්තූතියි. 😊\n\nඔබේ ඇණවුම:\n🩳 වර්ගය: Rib Jacquard Shorts\n📏 ඉණ: 32 (Free Size)\n🎨 පාට: 1, 2, 3, 4, 5 (එක් පාටකින් එක බැගින්)\n💰 මිල: LKR 2700\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n\nදැන් ඇණවුම තහවුරු කිරීමට ඔබේ නම, සම්පූර්ණ ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ. 🌸\n\nඑසේම, ගෙවීම සඳහා Cash on Delivery (නිවසටම ලැබුණු පසු ගෙවීම) හෝ බැංකු ගිණුමකට මුදල් තැන්පත් කිරීම යන ක්‍රම දෙකෙන් කැමති එකක් පවසන්න. 😊",
+        "images": [
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/ccbedbad-ece2-4ab5-9ba6-887a23dd6720.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/b29ddb39-9ea3-470c-b5fb-8e19501477a5.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1cc73f45-fbca-47f6-aacb-7ba027969be1.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/ebf53300-1270-429d-8414-b5b1ebe64070.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/8cb2304a-43b1-4662-8592-1a6916ea1aee.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/6a62db0f-5dc1-4124-b07b-c96be5e9f984.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/c99ea9d2-db56-4755-b07b-2c7a0779b18d.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/223c5354-f085-4e60-9316-0d0d9ae8e9a2.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1e8c0112-e09c-4c3b-bfe4-7bba3405edd8.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/4af72778-a586-4add-bd01-6c51fd22ba49.jpeg"
+        ]
+      },
+      {
+        "turn": 3,
+        "user": "Tharindu Perera, No 18 Temple Road, Negombo. 0770000001. Cash on delivery.",
+        "bot": "ඔබේ ඇණවුම තහවුරු කිරීමට ස්තූතියි! 😊\n\n📦 ඇණවුම් සාරාංශය:\n🩳 භාණ්ඩය: Rib Jacquard Shorts (5ක්)\n📏 ඉණ: 32 (Free Size)\n🎨 පාට: 1, 2, 3, 4, 5\n💰 උප එකතුව: LKR 2700\n🚚 බෙදාහැරීමේ ගාස්තුව: LKR 0\n💳 මුළු මුදල: LKR 2700\n🏦 ගෙවීමේ ක්‍රමය: Cash on Delivery\n\n👤 නම: Tharindu Perera\n📞 දුරකථන: 0770000001\n🏠 ලිපිනය: No 18 Temple Road, Negombo\n\nමේ විස්තර හරිද කියලා බලලා කියන්නකෝ. අපේ කෙනෙක් ඉක්මනින්ම ඔබව සම්බන්ධ කරගෙන ඇණවුම තහවුරු කරයි. 🌸",
+        "images": []
+      },
+      {
+        "turn": 4,
+        "user": "Ow okkoma hari, order eka confirm karanna.",
+        "bot": "ස්තූතියි! ඔබේ ඇණවුම සාර්ථකව තහවුරු කර ගත්තා. අපගේ කණ්ඩායම දින 2-3ක් ඇතුළත ඔබේ ඇණවුම ඔබ වෙත එවීමට කටයුතු කරනු ඇත. 🚚🌸",
+        "images": []
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Persona 2: Single Short Inquirer (Unit Pricing & Delivery)",
+    "passed": true,
+    "notes": [
+      "PASS: Correctly created 0 orders (No false/hallucinated confirmation).",
+      "PASS: Unit pricing / delivery fee accurately calculated for 1 item."
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Mata Rib Jacquard eken 1 short ekak witharak ganna puluwanda? Ganana keeyada?",
+        "bot": "ඔව්, එක කලිසමක් වුණත් ලබාගන්න පුළුවන් 😊\n\nRib Jacquard ශෝර්ට් එකක මිල රු. 540ක් වෙනවා (රු. 2700 පැකේජ මිල / 5). \n\nඇණවුම ශෝර්ට් 5කට අඩු නිසා, ඩිලිවරි ගාස්තුව රු. 450ක් එකතු වෙනවා. මුළු එකතුව රු. 990යි.\n\nඔයාට මේක ගන්න ඕන නම් කියන්න, අපි පාට සහ සයිස් තෝරගමු. 🌸",
+        "images": []
+      },
+      {
+        "turn": 2,
+        "user": "Delivery ekath ekka mulu mudala keeyada wenne?",
+        "bot": "ඔයාගේ ඇණවුමේ මුළු මුදල රු. 990යි. 💸\n\nඒකේ විස්තර මෙහෙමයි:\n🔹 ශෝර්ට් එකේ මිල: රු. 540\n🔹 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💰 මුළු එකතුව: රු. 990\n\nඔයා කැමති නම් අපි පාට තෝරගෙන ඇණවුම කරමුද? 🌸",
+        "images": []
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Persona 3: Plus-Size Customer (Waist 45 Inches)",
+    "passed": true,
+    "notes": [
+      "PASS: Exactly 1 order created in DB. Details: Chaminda|0770000003|102/B Kandy Road, Kiribathgoda|2650.00|cod|pending",
+      "PASS: Smartly handled 45\" waist recommendation."
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Mata ina 45 inches walata hariyana shorts thiyenawada?",
+        "bot": "අපේ කලිසම් වර්ග බොහොමයක ඉණ ප්‍රමාණය 42 දක්වා වැඩිම අගය ලෙස සඳහන් වෙනවා.\n\nකෙසේ වෙතත්, අපේ පොප්කෝන් ශෝර්ට් (උස අගල් 16) සඳහා ඉණ මිනුම 28 සිට 44 දක්වා පවතිනවා. මෙය ඔබට ගැළපෙනු ඇතැයි සිතනවා. 😊\n\nඔබට අපේ කලිසම් වර්ග ගැන වැඩි විස්තර හෝ පින්තූර බැලීමට අවශ්‍යද?",
+        "images": []
+      },
+      {
+        "turn": 2,
+        "user": "Single Jersey eken 4 pack eka danna, ina 45. Pata 1 eken 2k, pata 2 eken 2k.",
+        "bot": "Single Jersey කලිසම් පැකේජය තෝරා ගැනීම ගැන ස්තූතියි! 😊\n\nඅපේ Single Jersey කලිසම් වල ඉණ ප්‍රමාණය උපරිම 42 දක්වා සකස් කරගත හැකි බැවින්, 45 කට එය තරමක් තද විය හැකි බව කරුණාවෙන් සලකන්න. \n\nඔබට මෙය ඇණවුම් කිරීමට අවශ්‍ය නම්, කරුණාකර පහත විස්තර ලබා දෙන්න:\n🌸 නම\n🌸 බෙදාහැරීමේ ලිපිනය\n🌸 නගරය\n🌸 දුරකථන අංකය\n\nමේවා ලැබුණු පසු අපේ කණ්ඩායම ඇණවුම තහවුරු කරනු ඇත.",
+        "images": [
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/262a67f3-9615-4a04-91fe-dcb2c668d763.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/32976877-dd44-49fa-8001-411360660a65.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/ac37bdca-e337-48b6-bc99-9454e59f67c2.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/aa27f2e3-c232-4ccf-9ee4-a4347c32c80f.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/99bfbdb2-54c5-4306-9277-0ab41fc1d26e.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/95f70df1-f6cb-4457-b52e-a6a665093de3.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/90d9da33-6d7d-4707-9f18-7108fbcd797a.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1d988c27-9247-44ec-b1c5-aa6be5d2b84e.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/20ac621c-ab46-4864-b250-8f535e6ef0e9.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/a14a5bba-862b-498c-81d9-73992d487b3c.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1ff1297d-4001-48d2-883b-0124efc19cca.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/338efa9e-3185-403a-92db-0abf51dc98e5.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/0389248a-5130-453b-9c60-f512c3bf37f2.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/4c63cce7-d6d0-4fce-87ec-0d669c8079ff.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1818ab15-23e3-4f56-9bf2-646572e05745.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/a56a8bfe-e106-4b28-9929-2d517e195c12.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/47d3a6d2-c27a-4f8b-a9ea-23bf63b38119.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/0000d99a-7fdd-411b-8b68-a5b9f3093c4f.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/61ff4194-d910-41a3-a227-5e0a96c99294.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/518f4a34-2b3e-4b8c-bc50-93f5626922ba.jpeg"
+        ]
+      },
+      {
+        "turn": 3,
+        "user": "Chaminda, 102/B Kandy Road, Kiribathgoda. 0770000003. Cash on delivery.",
+        "bot": "ඔබේ ඇණවුම තහවුරු කිරීමට පෙර කරුණාකර මෙම විස්තර පරීක්ෂා කරන්න:\n\n📦 ඇණවුම: Single Jersey Cotton Short (පැකේජය: 04)\n📏 ඉණ: 26 - 42 (ඉණ 45 ට තරමක් තද විය හැකි බව සලකන්න)\n🎨 පාට: පාට 1 (2ක්) සහ පාට 2 (2ක්)\n💰 මුළු එකතුව: LKR 2650\n🚚 බෙදාහැරීමේ ගාස්තු: LKR 0 (Free Delivery)\n💵 මුළු ගෙවීම: LKR 2650\n💳 ගෙවීමේ ක්‍රමය: Cash on Delivery\n\n👤 නම: Chaminda\n📞 අංකය: 0770000003\n🏠 ලිපිනය: 102/B Kandy Road, Kiribathgoda\n\nමේ විස්තර හරිද කියලා බලලා කියන්නකෝ. වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න. 😊",
+        "images": []
+      },
+      {
+        "turn": 4,
+        "user": "Ow confirm karanna.",
+        "bot": "ස්තූතියි! ඔබේ ඇණවුම සාර්ථකව තහවුරු කළා. 😊\n\nඔබගේ ඇණවුම ඉදිරි දින 2-3 ඇතුළත ඔබේ ලිපිනයට ලැබෙනු ඇත. අපගේ සේවාව තෝරා ගැනීම ගැන ස්තූතියි! 🌸",
+        "images": []
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Persona 4: Delivery Timeline Inquirer",
+    "passed": true,
+    "notes": [
+      "PASS: Correctly created 0 orders (No false/hallucinated confirmation).",
+      "PASS: Answered delivery timeline directly."
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Delivery dawas keeyak yanawada Colombo walata?",
+        "bot": "🌸 කොළඹ ප්‍රදේශයට ඇණවුම ලැබෙන්න දින 2-3ක් වැනි කාලයක් ගතවෙනවා.\n\nඔයා මොන වගේ කලිසම් වර්ගයක්ද හොයන්නේ? අපේ තිබෙන කලිසම් වර්ග ගැන විස්තර එවන්නද? 😊",
+        "images": []
+      },
+      {
+        "turn": 2,
+        "user": "Wenas district walatath e ganama dawas yanawada?",
+        "bot": "ඔව්, ලංකාවේ ඕනෑම ප්‍රදේශයකට ඇණවුමක් ලැබෙන්න සාමාන්‍යයෙන් දින 2-3ක කාලයක් ගතවෙනවා 🚚✨\n\nඔයාට අවශ්‍ය කලිසම් වර්ගය හෝ පැකේජය ගැන දැනගන්න කැමතිද? 😊",
+        "images": []
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Persona 5: Photo Re-request Mid-deciding",
+    "passed": true,
+    "notes": [
+      "PASS: Exactly 1 order created in DB. Details: Kavindi Hansani|0770000005|45 Flower Road, Colombo 07|2600.00|cod|pending",
+      "PASS: Successfully resolved photos on explicit re-request."
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Popcorn 18 inch shorts ganna puluwanda?",
+        "bot": "ඔව්, අනිවාර්යයෙන්ම පුළුවන්! 🥰\n\nමෙම පොප්කෝන් ශෝර්ට්ස් (අඟල් 18) පැකේජය රු. 2600ක් වෙනවා. ඔබට කැමති පාට 4ක් තෝරගන්න පුළුවන්. \n\nමෙම ශෝර්ට්ස් වල විස්තර:\n🌿 පොප්කෝන් පුල් කොට්න් මැටීරියල්\n🌿 ඉණ 26 සිට 40 දක්වා ෆ්‍රී සයිස්\n🌿 උස අඟල් 18\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ පාට තෝරාගන්න කැමතිද?",
+        "images": []
+      },
+      {
+        "turn": 2,
+        "user": "Ane mata pata thiyena photos tika ayeth ewanna puluwanda bala ganna?",
+        "bot": "නිසැකවම, මෙන්න ඔබට බලාගත හැකි පොප්කෝන් ශෝර්ට්ස් (අඟල් 18) වල පින්තූර සහ පාට විස්තර. 🥰\n\nකැමති පාට අංක සහ ඔබට අවශ්‍ය ප්‍රමාණය අපට එවන්න.",
+        "images": [
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/128f610d-1749-475a-9d94-fd3669bed772.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/15efcfce-d943-4ec1-b9cc-ee6c4a63dc51.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/aba5044b-7800-4a04-9255-d9ca2a7e62d7.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/50a9c071-6259-450d-a3bc-ec22ce6c21d1.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/65dd4879-f188-446f-8453-233b2b1369b1.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/66c2141f-61e7-4555-9a65-95913099b3a6.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/b093932c-d34a-4c89-9044-4f225ae00936.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1d0b4b3f-c904-43a1-9a0c-cb8ab83640b4.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/b1969839-6653-4dab-9da5-4bd3bef960e9.jpg"
+        ]
+      },
+      {
+        "turn": 3,
+        "user": "4 pack eka gannawa, ina 30. Pata 1, 2, 3, 4.",
+        "bot": "නියමයි! ඔයා තෝරාගත්ත පොප්කෝන් ශෝර්ට්ස් (අඟල් 18) ඇණවුම සටහන් කරගන්නම්. \n\nදැන් ඔබේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ. 🌸\n\nඑවිට මම සම්පූර්ණ ඇණවුමේ සාරාංශය ඔබට එවන්නම්. 😊",
+        "images": [
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/128f610d-1749-475a-9d94-fd3669bed772.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/15efcfce-d943-4ec1-b9cc-ee6c4a63dc51.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/aba5044b-7800-4a04-9255-d9ca2a7e62d7.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/50a9c071-6259-450d-a3bc-ec22ce6c21d1.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/65dd4879-f188-446f-8453-233b2b1369b1.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/66c2141f-61e7-4555-9a65-95913099b3a6.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/b093932c-d34a-4c89-9044-4f225ae00936.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1d0b4b3f-c904-43a1-9a0c-cb8ab83640b4.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/b1969839-6653-4dab-9da5-4bd3bef960e9.jpg"
+        ]
+      },
+      {
+        "turn": 4,
+        "user": "Kavindi Hansani, 45 Flower Road, Colombo 07. 0770000005. Cash on delivery.",
+        "bot": "ඔබේ ඇණවුම තහවුරු කිරීමට පෙර කරුණාකර මෙම විස්තර පරීක්ෂා කරන්න:\n\n📦 ඇණවුම: පොප්කෝන් ශෝර්ට් (අඟල් 18)\n🔢 ප්‍රමාණය: 4\n🎨 පාට: 1, 2, 3, 4\n📏 ඉණ: 30\n💰 මුළු මුදල: රු. 2600\n🚚 බෙදාහැරීමේ ගාස්තු: රු. 0 (Free Delivery)\n💳 ගෙවීමේ ක්‍රමය: Cash on Delivery\n\n👤 නම: Kavindi Hansani\n📞 දුරකථන: 0770000005\n🏠 ලිපිනය: 45 Flower Road, Colombo 07\n\nමේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊 වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න.",
+        "images": []
+      },
+      {
+        "turn": 5,
+        "user": "Ow details okkoma hari confirm karanna.",
+        "bot": "ඔබගේ ඇණවුම සාර්ථකව තහවුරු කළා! 🥰\n\nඔබේ ඇණවුම දින 2-3ක් ඇතුලත ඔබ වෙත එවීමට කටයුතු කරන්නම්. අප සමඟ එකතු වීම ගැන ස්තූතියි! 🌸",
+        "images": []
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Persona 6: Conv #42 Bug Reproduction (Voice Note Query / Zero Address)",
+    "passed": true,
+    "notes": [
+      "PASS: Correctly created 0 orders (No false/hallucinated confirmation).",
+      "PASS: Zero hallucination on voice query."
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Hello, can you help me with this? I am having trouble with it. Could you please check if the details are correct? Thank you.",
+        "bot": "Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා! 🥰\n\nඔයාගේ ඇණවුමේ තොරතුරු පරීක්ෂා කරලා දෙන්න මට පුළුවන්. කරුණාකරලා ඔයාගේ ඇණවුමේ විස්තර (කලිසම් වර්ගය, ප්‍රමාණය, පාට, ලිපිනය සහ නම) මෙතැනට එවන්නකෝ. මම ඒ ටික පරීක්ෂා කරලා ඔයාට ඉක්මනින්ම උදව් කරන්නම්. 😊",
+        "images": []
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Persona 7: Premature Confirmation without Address",
+    "passed": true,
+    "notes": [
+      "PASS: Correctly created 0 orders (No false/hallucinated confirmation).",
+      "PASS: Prompted for missing customer address/name before confirming."
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Rib shorts 5k ona",
+        "bot": "එලකිරි! Rib Jacquard Shorts 05ක් සඳහා ඇණවුම භාරගන්නවා. 🌸\n\nමේ කලිසම් 5ක පැකේජයේ මිල රු. 2700ක් වෙනවා. 🚚 බෙදාහැරීම නොමිලේ! \n\nදැන් ඔයාගේ ප්‍රමාණය සහ කැමති පාට මොනවද කියලා කියන්නකෝ? \nඑමෙන්ම ඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්න. 😊",
+        "images": []
+      },
+      {
+        "turn": 2,
+        "user": "Pata 1, 2, 3, 4, 5. Ina 34.",
+        "bot": "පැහැදිලියි! Rib Jacquard Shorts 05ක් (ඉන ප්‍රමාණය 34) ඇණවුම සටහන් කරගත්තා. 📝\n\nදැන් ඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ. 🌸\n\nඑවිට මම සම්පූර්ණ ඇණවුම් සාරාංශය සහ ගෙවීම් විස්තර එවන්නම්. 😊",
+        "images": [
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/ccbedbad-ece2-4ab5-9ba6-887a23dd6720.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/b29ddb39-9ea3-470c-b5fb-8e19501477a5.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1cc73f45-fbca-47f6-aacb-7ba027969be1.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/ebf53300-1270-429d-8414-b5b1ebe64070.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/8cb2304a-43b1-4662-8592-1a6916ea1aee.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/6a62db0f-5dc1-4124-b07b-c96be5e9f984.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/c99ea9d2-db56-4755-b07b-2c7a0779b18d.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/223c5354-f085-4e60-9316-0d0d9ae8e9a2.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1e8c0112-e09c-4c3b-bfe4-7bba3405edd8.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/4af72778-a586-4add-bd01-6c51fd22ba49.jpeg"
+        ]
+      },
+      {
+        "turn": 3,
+        "user": "Ow ehenam order eka confirm karanna.",
+        "bot": "ඔයාගේ ඇණවුම තහවුරු කිරීමට මට තවමත් ඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය අවශ්‍යයි. 🌸\n\nකරුණාකර එම විස්තර එවන්න, එවිට මම ඔබට සම්පූර්ණ ඇණවුම් සාරාංශය සහ ගෙවීම් විස්තර ලබා දෙන්නම්. 😊",
+        "images": []
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Persona 8: Full COD Order Flow (5 Rib Jacquard Shorts)",
+    "passed": true,
+    "notes": [
+      "PASS: Exactly 1 order created in DB. Details: Kasun Perera|0770000008|No 45, Galle Road, Panadura|2700.00|cod|pending"
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Rib shorts 5 pack eka ganna ona",
+        "bot": "සුබ පැතුම්! ඔබ Rib Jacquard Shorts පැකේජයක් තෝරාගත්තා. ✌️\n\nමෙම පැකේජයේ මිල රු. 2700ක් වන අතර, ඔබට ඩිලිවරි නොමිලේ (LKR 0).\n\nදැන් ඔබේ කැමති ප්‍රමාණය සහ අවශ්‍ය වර්ණ තෝරාගන්න අපට උදව් කරන්න.\n\nඔයාගේ ඉණ ප්‍රමාණය (inches) කියන්න පුළුවන්ද? ඒ වගේම අපේ කලිසම් වල පින්තූර ටික බලන්න පහතින් බලන්න. 😊",
+        "images": []
+      },
+      {
+        "turn": 2,
+        "user": "Ina 34, pata 1, 2, 3, 4, 5.",
+        "bot": "නියමයි! ඔබ Rib Jacquard Shorts පැකේජයක් තෝරාගෙන තිබෙනවා. ✌️\n\n📦 ඇණවුම් විස්තර:\n- වර්ගය: Rib Jacquard Shorts\n- ප්‍රමාණය: ඉණ 34 (Free size)\n- පාට: 1, 2, 3, 4, 5 (සෑම වර්ණයකින්ම එක බැගින්, එකතුව 5)\n\n💰 මුළු එකතුව: LKR 2700\n🚚 බෙදාහැරීම: නොමිලේ (LKR 0)\n\nඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ 🌸 අපේ කෙනෙක් ඉක්මනින්ම ඔයාට කතා කරලා ඕඩර් එක තහවුරු කරයි!",
+        "images": [
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/ccbedbad-ece2-4ab5-9ba6-887a23dd6720.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/b29ddb39-9ea3-470c-b5fb-8e19501477a5.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1cc73f45-fbca-47f6-aacb-7ba027969be1.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/ebf53300-1270-429d-8414-b5b1ebe64070.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/8cb2304a-43b1-4662-8592-1a6916ea1aee.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/6a62db0f-5dc1-4124-b07b-c96be5e9f984.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/c99ea9d2-db56-4755-b07b-2c7a0779b18d.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/223c5354-f085-4e60-9316-0d0d9ae8e9a2.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1e8c0112-e09c-4c3b-bfe4-7bba3405edd8.jpeg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/4af72778-a586-4add-bd01-6c51fd22ba49.jpeg"
+        ]
+      },
+      {
+        "turn": 3,
+        "user": "Kasun Perera, No 45 Galle Road, Panadura. Phone 0770000008. Cash on delivery.",
+        "bot": "ස්තූතියි කසුන්! ඔබගේ ඇණවුම අප ලබාගත්තා. 🙏\n\n📦 ඇණවුම් සාරාංශය:\n- නිෂ්පාදනය: Rib Jacquard Shorts\n- ප්‍රමාණය: ඉණ 34 (Free size)\n- වර්ණ: 1, 2, 3, 4, 5 (සෑම එකකින්ම එක බැගින්)\n- උප එකතුව: LKR 2700\n- බෙදාහැරීම: LKR 0 (Free Delivery)\n- ගෙවීමේ ක්‍රමය: Cash on Delivery (COD)\n\n👤 පාරිභෝගික විස්තර:\n- නම: Kasun Perera\n- දුරකථන: 0770000008\n- ලිපිනය: No 45, Galle Road, Panadura\n\nමේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊 වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න. දින 2-3 ඇතුලත ඔබගේ ඇණවුම ලැබෙනු ඇත.",
+        "images": []
+      },
+      {
+        "turn": 4,
+        "user": "Ow mama confirm karanawa, danna.",
+        "bot": "ස්තූතියි කසුන්! ඔබගේ ඇණවුම සාර්ථකව තහවුරු වුණා. ඔබට ඉක්මනින්ම ඔබේ ඇණවුම ලැබෙනු ඇත. 😊",
+        "images": []
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Persona 9: Full Bank Transfer Order Flow",
+    "passed": true,
+    "notes": [
+      "PASS: Exactly 1 order created in DB. Details: Anura Senanayake|0770000009|No 15 Peradeniya Road, Kandy|2600.00|bank_transfer|pending"
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Popcorn 18 inch 4 pack eka keeyada? Bank transfer puluwanda?",
+        "bot": "පොප්කෝන් 18 අඟල් කලිසම් පැකේජය (කලිසම් 4) රු. 2600ක් වෙනවා. මේ සඳහා බෙදාහැරීම නොමිලේ (Free Delivery) ලබාගත හැකියි. 🚚\n\nඔව්, ඔබට බැංකු හරහා මුදල් ගෙවන්න පුළුවන්. 🏦\n\nඅපගේ ගෙවීම් විස්තර පහත දැක්වේ:\n\n🏦 BOC\nAccount: 87654321\nName: Binara Fashion\n\n🏦 Sampath Bank\nAccount: 123456789\nName: Binara Fashion\n\nඔබ ඇණවුම තහවුරු කිරීමට කැමති නම්, කැමති පාට අංක සහ ඔබේ විස්තර (නම, ලිපිනය, දුරකථන අංකය) එවන්න. 😊",
+        "images": []
+      },
+      {
+        "turn": 2,
+        "user": "Ina 36, pata 1, 2, 3, 4. Bank details ewanna.",
+        "bot": "පොප්කෝන් 18 අඟල් කලිසම් පැකේජය (කලිසම් 4) සඳහා ඔබේ ඇණවුම තහවුරු කිරීමට මම සූදානම්. 🌸\n\nඔබ තෝරාගත් පාට: 1, 2, 3, 4 (එක් වර්ණයකින් එක බැගින්).\n\nදැන් ඇණවුම තහවුරු කිරීමට ඔබේ සම්පූර්ණ විස්තර එවන්න:\n🔹 නම:\n🔹 ලිපිනය:\n🔹 නගරය:\n🔹 දුරකථන අංකය:\n\nවිස්තර ලැබුණු පසු මම ඔබට ඇණවුම් සාරාංශයක් එවන්නම්. 😊",
+        "images": [
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/128f610d-1749-475a-9d94-fd3669bed772.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/15efcfce-d943-4ec1-b9cc-ee6c4a63dc51.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/aba5044b-7800-4a04-9255-d9ca2a7e62d7.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/50a9c071-6259-450d-a3bc-ec22ce6c21d1.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/65dd4879-f188-446f-8453-233b2b1369b1.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/66c2141f-61e7-4555-9a65-95913099b3a6.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/b093932c-d34a-4c89-9044-4f225ae00936.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/1d0b4b3f-c904-43a1-9a0c-cb8ab83640b4.jpg",
+          "https://supabase.buildstart.io/storage/v1/object/public/biz-9fed10e6-72a8-43b4-afc1-ad4055c2371e/products/b1969839-6653-4dab-9da5-4bd3bef960e9.jpg"
+        ]
+      },
+      {
+        "turn": 3,
+        "user": "Anura Senanayake, No 15 Peradeniya Road, Kandy. 0770000009. Bank transfer karannam.",
+        "bot": "ඔබගේ ඇණවුම තහවුරු කිරීම සඳහා විස්තර ලැබුණා. ස්තූතියි! 🌸\n\n📦 ඇණවුම් සාරාංශය:\n🔹 භාණ්ඩය: පොප්කෝන් 18 අඟල් ශෝර්ට්\n🔹 ප්‍රමාණය: ඉණ 36 (Free size)\n🔹 වර්ණ: 1, 2, 3, 4 (එක බැගින්)\n💰 උප එකතුව: LKR 2600\n🚚 බෙදාහැරීමේ ගාස්තු: LKR 0\n💳 මුළු එකතුව: LKR 2600\n🏦 ගෙවීම් ක්‍රමය: බැංකු හුවමාරුව\n\n👤 නම: අනුර සේනානායක\n📞 දුරකථන අංකය: 0770000009\n🏠 ලිපිනය: අංක 15, පේරාදෙණිය පාර, මහනුවර\n\nමේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊. වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් දැනුම් දෙන්න.",
+        "images": []
+      },
+      {
+        "turn": 4,
+        "user": "Ow mama transfer karannam, order eka confirm karanna.",
+        "bot": "To complete your order, please provide your name, delivery address, and phone number. 🌸",
+        "images": []
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Persona 10: Non-Catalog Item Inquiry (Denim / Long Pants)",
+    "passed": true,
+    "notes": [
+      "PASS: Correctly created 0 orders (No false/hallucinated confirmation).",
+      "PASS: Maintained catalog boundary politely."
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Oyala gawa denim kalisam hari diga kalisam thiyenawada?",
+        "bot": "සමාවෙන්න, අපේ ළඟ දැනට තියෙන්නේ කෙටි කලිසම් (Shorts) වර්ග පමණයි. වෙනත් ඇඳුම් වර්ග අපේ ළඟ තවම නැහැ. 😊\n\nඔයාට කැමති නම් අපේ කෙටි කලිසම් වර්ග ටික බලන්න පුළුවන්. ඒ ගැන විස්තර ඕනෙද?",
+        "images": []
+      },
+      {
+        "turn": 2,
+        "user": "T-shirts hari shirts hari thiyenawada?",
+        "bot": "සමාවෙන්න, දැනට අපේ ළඟ තියෙන්නේ උසස් තත්ත්වයේ කෙටි කලිසම් (Shorts) වර්ග පමණයි. වෙනත් ඇඳුම් වර්ග හෝ ටී-ෂර්ට් අප සතුව නැහැ. 😊\n\nඅපගේ කෙටි කලිසම් වර්ග ගැන වැඩි විස්තර දැනගැනීමට අවශ්‍ය නම් කරුණාකර අපව දැනුවත් කරන්න. වෙනත් කරුණු සඳහා අපගේ කාර්ය මණ්ඩලය අමතන්න: 0761122620",
+        "images": []
+      }
+    ]
+  }
+]

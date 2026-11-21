@@ -258,9 +258,26 @@ serve(async (req) => {
       }
 
       case "initialize": {
-        const statusRes = await wahaFetch(`/api/sessions/${sessionName}`);
+        let statusRes = await wahaFetch(`/api/sessions/${sessionName}`);
         if (statusRes.status === 404) {
-          return new Response(JSON.stringify({ error: "Session not found. Delete it and create a new session." }), { status: 404, headers: jsonHeaders });
+          const sessionConfig = {
+            noweb: { store: { enabled: true, fullSync: true } },
+            webhooks: [{
+              url: webhookUrl,
+              events: ["message", "session.status"],
+              retries: { policy: "linear", delaySeconds: 2, attempts: 3 },
+            }],
+          };
+          await wahaFetch(`/api/sessions`, {
+            method: "POST",
+            timeoutMs: 45_000,
+            body: JSON.stringify({ name: sessionName, start: true, config: sessionConfig }),
+          }).catch(() => null);
+          await upsertMapping();
+          statusRes = await wahaFetch(`/api/sessions/${sessionName}`);
+          if (statusRes.status === 404) {
+            return new Response(JSON.stringify({ error: "Session not found. Delete it and create a new session." }), { status: 404, headers: jsonHeaders });
+          }
         }
         const statusData = await safeReadJson(statusRes);
         if (["STOPPED", "FAILED"].includes(statusData?.status)) {
@@ -277,10 +294,29 @@ serve(async (req) => {
         let qrImage: string | null = null;
         let qrCode: string | null = null;
         let status = "STARTING";
-        for (let i = 0; i < 12; i++) {
-          const sres = await wahaFetch(`/api/sessions/${sessionName}`);
+        const sessionConfig = {
+          noweb: { store: { enabled: true, fullSync: true } },
+          webhooks: [{
+            url: webhookUrl,
+            events: ["message", "session.status"],
+            retries: { policy: "linear", delaySeconds: 2, attempts: 3 },
+          }],
+        };
+
+        for (let i = 0; i < 15; i++) {
+          let sres = await wahaFetch(`/api/sessions/${sessionName}`);
           if (sres.status === 404) {
-            return new Response(JSON.stringify({ error: "Session not found. Delete it and create a new session." }), { status: 404, headers: jsonHeaders });
+            console.log(`Session ${sessionName} not found in WAHA, auto-creating...`);
+            await wahaFetch(`/api/sessions`, {
+              method: "POST",
+              timeoutMs: 45_000,
+              body: JSON.stringify({ name: sessionName, start: true, config: sessionConfig }),
+            }).catch(() => null);
+            await upsertMapping();
+            sres = await wahaFetch(`/api/sessions/${sessionName}`);
+            if (sres.status === 404) {
+              return new Response(JSON.stringify({ error: "Session not found. Delete it and create a new session." }), { status: 404, headers: jsonHeaders });
+            }
           }
           const sdata = await safeReadJson(sres);
           status = sdata?.status || status;

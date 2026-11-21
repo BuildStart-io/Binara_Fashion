@@ -10,6 +10,8 @@ interface ConversationMessage {
   message: string;
   direction: string;
   created_at: string;
+  message_type?: string;
+  metadata?: any;
 }
 
 serve(async (req) => {
@@ -120,6 +122,9 @@ serve(async (req) => {
     const paymentInfo = settings.find(s => s.key === "payment_info")?.value || {};
     const deliverySettings = settings.find(s => s.key === "delivery_settings")?.value || {};
     const freeDeliveryThreshold = deliverySettings.free_delivery_threshold || 0;
+    const freeDeliveryItemThreshold = deliverySettings.free_delivery_item_threshold ?? 5;
+    const standardDeliveryFee = deliverySettings.delivery_fee ?? 450;
+    const deliveryPolicyDesc = deliverySettings.description || "අයිතම 5ක් හෝ ඊට වැඩි නම් නොමිලේ (Free Delivery 🚚). 5ට අඩු නම් Delivery ගාස්තුව රු. 450යි.";
     const staffNumberSetting = settings.find(s => s.key === "staff_number" || s.key === "staff_contact")?.value;
     const staffPhoneNumber = staffNumberSetting?.phone ? String(staffNumberSetting.phone).trim() : null;
 
@@ -175,7 +180,11 @@ serve(async (req) => {
     const trackedFaqIds = faqs.filter(f => f.is_tracked).map(f => f.id);
 
     const conversationContext = (conversationHistory as ConversationMessage[])
-      .map(msg => `${msg.direction === "inbound" ? "Customer" : "Assistant"}: ${msg.message}`)
+      .map(msg => {
+        const hasImages = msg.message_type === "image" || (msg.metadata?.imageUrls && Array.isArray(msg.metadata.imageUrls) && msg.metadata.imageUrls.length > 0);
+        const imgTag = hasImages ? " 📷 [Product Photos Sent]" : "";
+        return `${msg.direction === "inbound" ? "Customer" : "Assistant"}: ${msg.message}${imgTag}`;
+      })
       .join("\n");
 
     const systemPrompt = `You are an intelligent WhatsApp chatbot assistant for a business. You help customers with:
@@ -195,31 +204,35 @@ IMPORTANT GUIDELINES:
   - Use emojis as bullet points and section separators (🔹, ✅, 📦, 💳, 🏦, 💰, 📧, 🚚, etc.)
   - When listing multiple items (like payment accounts), separate each with a clear emoji prefix and line breaks
   - Use line breaks generously to keep messages readable
-  - Example payment listing format:
-    🏦 Bank Name
-    Account: 1234567
-    Name: John Doe
-
-    💳 Digital Wallet
-    Account: wallet@email.com
-    Name: Jane Doe
   - For order summaries, use emojis to mark each section (📦 Items, 💰 Total, 🚚 Delivery, 💳 Payment)
+- PRODUCT CONTEXT STICKINESS:
+  - Once a customer selects or discusses a specific clothing item (e.g. Rib Jacquard, Popcorn 18", Popcorn 16", Kyela, or SingleJersey 20"), STAY on that selected product for all subsequent steps (package selection, quantities, colors, pricing, address, order confirmation).
+  - NEVER switch to a different product or mix up products unless the customer explicitly asks to change products.
 - NUMBER-BASED SELECTION & QUANTITIES:
-  - When the assistant presents a numbered list of products (e.g. 1 to 5) and the customer replies with an index number (e.g. "1", "2", "3", "4", "5", "01", etc.), immediately map that number to the corresponding product from the list. Never reject valid numbers or accuse the customer of sending invalid digits (e.g. never say "44" when the user sent "4").
-  - When a customer lists multiple color numbers (e.g. "11, 10, 4, 1, 2" or "1/2/8/9"), each number represents ONE item of that color unless explicitly stated otherwise. Do not double the quantity.
+  - When the assistant presents a numbered list of products and the customer replies with an index number, immediately map that number to the corresponding product from the list. Never reject valid numbers or accuse the customer of sending invalid digits.
+  - When a customer lists multiple color numbers, each number represents ONE item of that color unless explicitly stated otherwise. Do not double the quantity.
 - If a customer wants to order, guide them through the following sales steps:
   * Step 1 (Welcome & First Response):
-    - If the customer asks a specific question (e.g. delivery time, waist size, long pants) or asks about a specific product (e.g. Kyela, Popcorn, Rib Jacquard), directly answer their question or introduce that specific product first. Do not dump the entire product catalog if they asked something specific.
-    - If the customer asks about an ad ("Can you tell me more about your ad?"), warmly introduce our best-selling shorts offers.
+    - If the customer asks a specific question about product features, sizes, delivery time, or a specific item, directly answer their question or introduce that specific product first. Do not dump the entire product catalog if they asked something specific.
+    - If the customer asks about an advertisement, warmly introduce our best-selling shorts offers.
     - If it is a generic greeting ("Hi", "Hello", "විස්තර එවන්න"), greet warmly in Sinhala ("Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා ! 🥰") and introduce the available products.
   * Step 2 (Package Selection): Ask for preferred package or quantity. Never say that the vendor will not take 1-item orders. If a customer wants 1 item or any quantity, accept the order and proceed to size, colour, and details collection.
-  * Step 3 (Size & Colour Selection): Collect size or waist measurement ("ඔයාට ඕන ප්‍රමාණය කියන්නකෝ 😊"), send colour options, and ask for colour numbers & quantity per colour ("මේ තියෙන්නේ පාට ටික 🥰 කැමති පාට අංකයි, එක් පාටකින් කීයක් ඕනද කියලයි එවන්නකෝ."). Then confirm selection ("හරි 😊 පාට 01 එකයි, පාට 02 එකයි. මුළු ගණන දෙකයි නේද?"). Total quantity across colours must match the customer's requested quantity.
-  * Step 4 (Pricing & Delivery Charges): Catalog prices are package prices (e.g. 4 for 2650, 5 for 2700). For quantities below a package (e.g. 1 or 2 shorts), NEVER charge the full package price for 1 item; calculate unit price by dividing the package price by its item count (e.g. 2650 ÷ 4 = ~660 each; 2700 ÷ 5 = 540 each), multiply by quantity, and add LKR 450 delivery fee for under 5 items. For full packages, use the package price with free delivery (LKR 0). Product description terms always override general store settings.
+  * Step 3 (Size & Colour Selection): Collect size or waist measurement, and ask for their preferred colour numbers from the photos already shown (e.g. "කැමති පාට අංක ටික කියන්නකෝ 😊"). Do not re-send photos here since they were already sent when introducing the product. Once the customer gives their colour numbers, confirm their chosen colors and total quantity. Total quantity across colours must match the customer's requested quantity.
+  * Step 4 (Pricing & Delivery Charges):
+    - Catalog prices and variations define package prices. When a product has package variations (such as 4 Pack, 5 Pack, 10 Pack), use the exact price specified in its variations for that package.
+    - For custom quantities (quantities that do not match an exact catalog package): calculate unit price by dividing the package price by its pack size, then multiply by the requested quantity. For example, for Popcorn 16" (5-pack is 2600 LKR -> 520 LKR per short): 7 shorts = 7 x 520 = 3640 LKR.
+    - DELIVERY CHARGE RULES (CRITICAL):
+      * ANY order with total quantity of 5 OR MORE items (5, 6, 7, 8, 9, 10, ...), or ANY standard catalog package (e.g. 4-pack, 5-pack, 10-pack), receives 100% FREE DELIVERY (LKR 0). NEVER charge delivery for 5 or more items!
+      * Delivery charge of LKR ${standardDeliveryFee} applies ONLY and EXCLUSIVELY when the total order quantity is STRICTLY LESS THAN 5 items (i.e. 1, 2, 3, or 4 items) AND the product is not a 4-pack catalog package.
+      * If quantity >= 5 (e.g. 5, 6, 7, 8, 10 shorts): Delivery charge = LKR 0 (FREE DELIVERY / නොමිලේ). Total = Subtotal.
   * Step 5 (Customer Details): Collect customer name, complete delivery address, city, and contact number ("ඔයාගේ නම, ලිපිනය, නගරය සහ දුරකථන අංකය එවන්නකෝ 🌸"). Do not re-ask for details already given.
-  * Step 6 (Order Summary): Send complete order summary in Sinhala (Product, Package, Size, Colours & Qty, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address, City). Delivery charge must strictly follow the product description: if the package has free delivery, Delivery charge = LKR 0 and Total = Subtotal. Ask: "මේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊 වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න."
-  * Step 7 (Order Confirmation): When customer confirms the order details (for both COD and Bank Transfer), ONLY send confirmation and <ORDER_JSON> if the customer actually provided their name and delivery address in the chat history. NEVER invent or hallucinate a customer name or address; if details are missing, ask for their name, address, and phone number first. Send thank you with the complete confirmed order summary (e.g. "ස්තූතියි! 🥰 මෙන්න ඔබගේ ඇණවුම් සාරාංශය:" followed by Product, Quantity, Colours, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address), and append the <ORDER_JSON> block at the END so the order is saved.
+  * Step 6 (Order Summary): Send complete order summary in Sinhala (Product, Package/Quantity, Size, Colours & Qty, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address, City).
+    - If total quantity is 5 or more items (or any catalog package): Delivery charge = LKR 0 (නොමිලේ / Free Delivery) and Total = Subtotal! NEVER add delivery fee for 5 or more items.
+    - If total quantity is strictly under 5 items: Delivery charge = LKR ${standardDeliveryFee} and Total = Subtotal + ${standardDeliveryFee}.
+    - Ask: "මේ විස්තර හරිද කියලා බලලා කියන්නකෝ 😊 වෙනස් කරන්න ඕන දෙයක් තියෙනවා නම් කියන්න."
+  * Step 7 (Order Confirmation): When customer confirms the order details, ONLY send confirmation and <ORDER_JSON> if the customer actually provided their name and delivery address in the chat history. NEVER invent or hallucinate a customer name or address; if details are missing, ask for their name, address, and phone number first. Send thank you with the complete confirmed order summary (Product, Quantity, Colours, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address), and append the <ORDER_JSON> block at the END so the order is saved. In <ORDER_JSON>, total_amount must match the confirmed total (free delivery for 5 or more items).
 - DIGITAL vs PHYSICAL PRODUCTS:
-   - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Offer both Cash on Delivery (COD) and Bank Transfer as payment options. Calculate delivery fee according to the product description terms (free delivery = 0), and add it to the total.
+   - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Calculate delivery fee according to the rules above (free delivery = 0 for 5+ items or packages), and add it to the total.
 ${freeDeliveryThreshold > 0 ? `   - FREE DELIVERY THRESHOLD: If the order subtotal (before delivery fee) for physical products is LKR ${freeDeliveryThreshold} or more, waive the delivery fee entirely and inform the customer they qualify for free delivery. If below this threshold, apply the normal delivery fee.` : ""}
   - For DIGITAL products: Do NOT ask for a shipping address. Do NOT offer Cash on Delivery. The ONLY payment method for digital products is Bank Transfer. No delivery fee applies. You MUST collect the customer's email address for digital product delivery.
 - Sub-variants marked as REQUIRED must be selected by the customer before confirming an order. Always ask for required sub-variants if the customer hasn't specified them.
@@ -241,14 +254,22 @@ ${(() => {
       })()}
 - STRICT DATA BOUNDARY: You must ONLY use the product catalog, FAQs, and payment information provided below${staffPhoneNumber ? `, and the official staff contact number (${staffPhoneNumber})` : ""}. Do NOT make up products, prices, features, or answers that are not explicitly listed. If a customer asks about something not covered, politely say you don't have that information and ${staffPhoneNumber ? `tell them to contact our staff at ${staffPhoneNumber}` : "suggest they contact the business directly"}. Under NO circumstances should you invent, guess, or provide any phone number other than the official staff number.
 - LANGUAGE: Always reply in the customer's language (Sinhala or English). Never use or mix other Indic scripts (e.g. Malayalam, Tamil, Hindi).
-- DELIVERY RULES PRIORITY: Product description delivery terms always override general FAQs. If a product description offers free delivery (e.g. ඩිලිවරි ෆ්‍රී) or package delivery rates, always use those terms for delivery inquiries, order summaries, and total calculation.
+- STORE DELIVERY POLICY:
+  * Policy: ${deliveryPolicyDesc}
+  * Orders with 5 or more items (>= 5): ALWAYS FREE DELIVERY (LKR 0).
+  * Orders with less than 5 items (< 5): Delivery fee LKR ${standardDeliveryFee}.
+  * Full catalog packages: ALWAYS FREE DELIVERY (LKR 0).
+  * Product description delivery terms always override general store settings. If a product description offers free delivery (e.g. ඩිලිවරි ෆ්‍රී), always use those terms.
 
 CLOTHING PRODUCT PHOTOS & VIDEOS (UUID-BASED):
-- When introducing or describing a product, or when the customer asks to see photos/colors/designs, append its product ID at the very END of your message in:
-  <PRODUCT_MEDIA>product_id</PRODUCT_MEDIA>
-- If the customer asks for photos again (e.g. "photos?", "pics", "පාටවල් පෙන්නන්න", "images ewanna", "pata"), append <PRODUCT_MEDIA>product_id</PRODUCT_MEDIA> for the active product being discussed.
-- Do NOT emit <PRODUCT_MEDIA> during package/size/colour selection (unless photos are explicitly requested again), customer details collection (name, phone, address), or order confirmation.
-- Never write image URLs yourself. Only output the product ID inside <PRODUCT_MEDIA> tags.
+- You decide when to send product photos using the <PRODUCT_MEDIA>product_id</PRODUCT_MEDIA> tag at the very END of your message.
+- WHEN TO SEND:
+  * When a customer selects, inquires about, or asks for a specific product (whether they type the product name like "popcorn 18", "popkorn", "rib jacquard", or type its numbered position like "1", "2", "3", "4", "5", "අංක 3", "3 weni eka"), warmly introduce that product and append <PRODUCT_MEDIA>product_id</PRODUCT_MEDIA> at the END so photos are sent.
+  * If the customer explicitly asks to see photos ("photos ewanna", "send pics", "mata pata balanna ona", etc.), append <PRODUCT_MEDIA>product_id</PRODUCT_MEDIA> for the active product.
+- WHEN NOT TO SEND:
+  * Generic greetings: On initial greetings ("Hi", "Hello", "Can I learn more about your business?") where the customer has NOT selected a specific product yet, warmly welcome them and list the products. Do NOT emit <PRODUCT_MEDIA>.
+  * Subsequent ordering steps: If product photos are already marked as sent in the conversation history (📷 [Product Photos Sent]) or were already provided, NEVER emit <PRODUCT_MEDIA> again when discussing quantities, package selection, selecting color numbers, collecting address/phone details, or sending order summaries/confirmations, unless the customer explicitly asks to see photos again.
+- Always use the exact product UUID from the PRODUCT CATALOG below inside <PRODUCT_MEDIA>...</PRODUCT_MEDIA>. Never write image URLs yourself.
 
 PRODUCT VIDEOS:
 - When a customer asks about a specific product that has a video, include the video URL in a <VIDEO_URL>url</VIDEO_URL> tag at the END of your response. Only include one video per message.
@@ -270,7 +291,7 @@ ${welcomeMessage}
 When the customer completes an order, summarize the order details beautifully with emojis and confirm.
 
 CRITICAL ORDER INSTRUCTION:
-When you have collected ALL required order details and the customer confirms (for BOTH Cash on Delivery and Bank Transfer), you MUST include a JSON block in your response wrapped in <ORDER_JSON> tags at the very END of your message. Do NOT wait for a payment slip to output the <ORDER_JSON> tag; save the order immediately.
+When you have collected ALL required order details and the customer confirms, you MUST include a JSON block in your response wrapped in <ORDER_JSON> tags at the very END of your message. Do NOT wait for a payment slip to output the <ORDER_JSON> tag; save the order immediately.
 - For PHYSICAL products: <ORDER_JSON>{"customer_name":"...","customer_phone":"...","district":"...","customer_address":"...","order_items":[{"name":"...","price":...,"quantity":...,"product_type":"physical"}],"payment_method":"cod or bank_transfer","total_amount":...}</ORDER_JSON>
 - For DIGITAL products: <ORDER_JSON>{"customer_name":"...","customer_phone":"...","customer_email":"...","customer_address":null,"order_items":[{"name":"...","price":...,"quantity":...,"product_type":"digital"}],"payment_method":"bank_transfer","total_amount":...}</ORDER_JSON>
 Include this JSON block at the END of your confirmation message. The customer won't see the JSON tags.
@@ -303,9 +324,13 @@ CRITICAL SECURITY RULE:
     }
 
     for (const msg of sanitizedHistory) {
+      const hasImages = msg.message_type === "image" || (msg.metadata?.imageUrls && Array.isArray(msg.metadata.imageUrls) && msg.metadata.imageUrls.length > 0);
+      const content = (msg.direction === "outbound" && hasImages)
+        ? `${msg.message}\n📷 [Product Photos Sent]`
+        : msg.message;
       messages.push({
         role: msg.direction === "inbound" ? "user" : "assistant",
-        content: msg.message,
+        content,
       });
     }
 
@@ -445,7 +470,7 @@ CRITICAL SECURITY RULE:
               if (customerInboundText.includes(normAddress)) {
                 isAddressGrounded = true;
               } else {
-                const addressTokens = (normAddress.match(/[\p{L}\p{N}]{3,}/gu) || [])
+                const addressTokens = (normAddress.match(/[\p{L}\p{M}\p{N}]{3,}/gu) || [])
                   .filter((token: string) => !["road", "street", "house", "near", "post", "office", "no", "lane", "sri", "lanka"].includes(token));
                 if (addressTokens.length > 0) {
                   const matchingTokens = addressTokens.filter((token: string) => customerInboundText.includes(token));
@@ -453,7 +478,7 @@ CRITICAL SECURITY RULE:
                     isAddressGrounded = true;
                   }
                 } else {
-                  const allTokens = normAddress.match(/[\p{L}\p{N}]{3,}/gu) || [];
+                  const allTokens = normAddress.match(/[\p{L}\p{M}\p{N}]{3,}/gu) || [];
                   if (allTokens.some((token: string) => customerInboundText.includes(token))) {
                     isAddressGrounded = true;
                   }
@@ -610,117 +635,31 @@ CRITICAL SECURITY RULE:
     }
 
     // ------------------------------------------------------------------
-    // DUAL-TRIGGER IMAGE RESOLUTION LOGIC (Tailored for Clothing Store)
+    // AI-DRIVEN PRODUCT MEDIA RESOLUTION
+    // The AI model has full authority to decide when to introduce products
+    // and show photos by appending <PRODUCT_MEDIA>product_id</PRODUCT_MEDIA>.
+    // All string-based blocking heuristics and word-guessing regexes are removed.
     // ------------------------------------------------------------------
-    const matchedProducts: any[] = [];
-    const mediaProductIds: string[] = [];
+    let imageUrls: string[] = [];
+    let videoUrl: string | null = null;
 
-    // Trigger 1A: Explicit <PRODUCT_MEDIA> tags emitted by AI
     const productMediaMatches = Array.from(responseText.matchAll(/<PRODUCT_MEDIA>([\s\S]*?)<\/PRODUCT_MEDIA>/gi));
     for (const m of productMediaMatches) {
       const tokens = m[1].split(/[\s,]+/);
       for (const tok of tokens) {
         const cleaned = tok.trim();
-        if (cleaned && !mediaProductIds.includes(cleaned)) {
-          mediaProductIds.push(cleaned);
-        }
-      }
-    }
-
-    for (const pid of mediaProductIds) {
-      const prod = productById.get(pid);
-      if (prod && !matchedProducts.some(p => p.id === prod.id)) {
-        matchedProducts.push(prod);
-      }
-    }
-
-    // Helper to find matching products from message or response text
-    const findProductsInText = (text: string) => {
-      const found: any[] = [];
-      const lower = text.toLowerCase();
-      for (const p of products) {
-        const pNameLower = p.name.toLowerCase();
-        let isMatch = lower.includes(pNameLower);
-        if (!isMatch) {
-          // Check distinctive clothing keywords per product
-          if ((pNameLower.includes("rib") || pNameLower.includes("රිබ්")) && (lower.includes("rib") || lower.includes("jacquard") || lower.includes("රිබ්") || lower.includes("ජැකුවර්ඩ්"))) {
-            isMatch = true;
-          } else if ((pNameLower.includes("popcorn") || pNameLower.includes("පොප්කෝන්") || pNameLower.includes("පොප්කොන්")) && (lower.includes("popcorn") || lower.includes("pop corn") || lower.includes("පොප්කෝන්") || lower.includes("පොප්කොන්"))) {
-            if (pNameLower.includes("18") && (lower.includes("18") || (!lower.includes("16") && !found.some(x => x.name.includes("18"))))) {
-              isMatch = true;
-            } else if (pNameLower.includes("16") && (lower.includes("16") || (!lower.includes("18") && !found.some(x => x.name.includes("16"))))) {
-              isMatch = true;
-            } else if (!lower.includes("16") && !lower.includes("18")) {
-              isMatch = true;
-            }
-          } else if (pNameLower.includes("kyela") && lower.includes("kyela")) {
-            isMatch = true;
-          } else if ((pNameLower.includes("singlejersey") || pNameLower.includes("single jersey")) && (lower.includes("single jersey") || lower.includes("singlejersey") || (lower.includes("cotton") && !lower.includes("kyela")))) {
-            isMatch = true;
-          }
-        }
-        if (isMatch && !found.some(fp => fp.id === p.id)) {
-          found.push(p);
-        }
-      }
-      return found;
-    };
-
-    // Trigger 1B: Fallback keyword matching in AI response or customer message if tag was omitted
-    if (matchedProducts.length === 0) {
-      const inResp = findProductsInText(responseText);
-      for (const p of inResp) {
-        if (!matchedProducts.some(mp => mp.id === p.id)) matchedProducts.push(p);
-      }
-    }
-    if (matchedProducts.length === 0) {
-      const inUser = findProductsInText(trimmedMessage);
-      for (const p of inUser) {
-        if (!matchedProducts.some(mp => mp.id === p.id)) matchedProducts.push(p);
-      }
-    }
-
-    // Trigger 2: Customer Asks for Images Again (Explicit Photo Intent)
-    // Detect photo request keywords across Sinhala, Singlish, and English
-    const explicitPhotoIntent = /\b(images?|photos?|pics?|pictures?|දෙන්න|ෆොටෝ|පින්තූර|පාට|පාටවල්|බලන්න|එවන්න|pata|pennanna|ewanna|designs?|design|shades?)\b/i.test(trimmedMessage);
-
-    // If customer explicitly asks for photos again, but no product was detected in current turn:
-    // Backtrack into conversation history to locate the actively discussed clothing item!
-    if (explicitPhotoIntent && matchedProducts.length === 0 && Array.isArray(conversationHistory)) {
-      for (let i = conversationHistory.length - 1; i >= 0; i--) {
-        const histMsg = String(conversationHistory[i].message || "");
-        const found = findProductsInText(histMsg);
-        if (found.length > 0) {
-          for (const p of found) {
-            if (!matchedProducts.some(mp => mp.id === p.id)) matchedProducts.push(p);
-          }
-          break; // Use the most recent actively discussed product
-        }
-      }
-    }
-
-    // Guardrail: Detect if customer is in Checkout / Address Collection / Order Confirmation
-    const isCheckoutOrConfirm = orderCreated ||
-      /\b(confirm|confirmed|done|ok|yes|cod|cash\s*on\s*delivery|bank\s*transfer)\b/i.test(trimmedMessage) ||
-      (/(?:(?:\+?94|0)\s*)?7(?:[\s.-]*\d){8}\b/.test(trimmedMessage) && /\b(?:rd|st|street|road|mawatha|colombo|kandy|galle|jaffna|ampara|kurunegala|no\.?|house)\b/i.test(trimmedMessage));
-
-    let imageUrls: string[] = [];
-    let videoUrl: string | null = null;
-
-    // Send images IF:
-    // 1. A product was identified AND it is NOT a checkout turn, OR
-    // 2. The customer explicitly asked for photos / images (even on checkout turn)
-    if (!isCheckoutOrConfirm || explicitPhotoIntent) {
-      for (const prod of matchedProducts) {
-        if (prod.images && Array.isArray(prod.images)) {
-          for (const img of prod.images) {
-            if (typeof img === "string" && img.trim() && !imageUrls.includes(img.trim())) {
-              imageUrls.push(img.trim());
+        const prod = productById.get(cleaned);
+        if (prod) {
+          if (Array.isArray(prod.images)) {
+            for (const img of prod.images) {
+              if (typeof img === "string" && img.trim() && !imageUrls.includes(img.trim())) {
+                imageUrls.push(img.trim());
+              }
             }
           }
-        }
-        if (!videoUrl && prod.video_url && typeof prod.video_url === "string" && prod.video_url.trim()) {
-          videoUrl = prod.video_url.trim();
+          if (!videoUrl && prod.video_url && typeof prod.video_url === "string" && prod.video_url.trim()) {
+            videoUrl = prod.video_url.trim();
+          }
         }
       }
     }
@@ -731,7 +670,6 @@ CRITICAL SECURITY RULE:
       const u = m[1].trim();
       if (u && !imageUrls.includes(u)) imageUrls.push(u);
     }
-
     const imageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
 
     // Extract video URL if present via tag

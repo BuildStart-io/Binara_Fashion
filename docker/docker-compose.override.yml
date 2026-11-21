@@ -21,3 +21,18 @@ services:
       FIREBASE_SERVICE_ACCOUNT_JSON: ${FIREBASE_SERVICE_ACCOUNT_JSON:-}
       WEBHOOK_URL_OVERRIDE: ${WEBHOOK_URL_OVERRIDE:-http://api-gw:8000/functions/v1/webhook-wsender_Binara_Fashion}
       DB_SCHEMA: ${DB_SCHEMA:-Binara_fashion}
+
+  waha:
+    container_name: waha
+    image: devlikeapro/waha:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      WHATSAPP_API_KEY: ${WAHA_API_KEY:-buildstart_waha_api_secr3t_123}
+      WHATSAPP_DEFAULT_ENGINE: "NOWEB"
+    volumes:
+      - waha-sessions:/app/.sessions
+
+volumes:
+  waha-sessions:
