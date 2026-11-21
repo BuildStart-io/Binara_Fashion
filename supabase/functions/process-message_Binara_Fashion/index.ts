@@ -277,13 +277,19 @@ async function processMessage(
     if (sent) return;
   }
 
-  // 5. Get conversation history
+  // 5. Get conversation history (excluding the current inbound message to prevent duplication)
   mark("history_start");
-  const { data: conversationHistory } = await supabase
+  let historyQuery = supabase
     .from("conversations")
     .select("message, direction, created_at")
     .eq("phone_number", phoneNumber)
-    .eq("user_id", userId)
+    .eq("user_id", userId);
+
+  if (inboundMsg?.id) {
+    historyQuery = historyQuery.neq("id", inboundMsg.id);
+  }
+
+  const { data: conversationHistory } = await historyQuery
     .order("created_at", { ascending: false })
     .limit(10);
   mark("history_end");
