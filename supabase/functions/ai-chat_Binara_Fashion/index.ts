@@ -142,6 +142,9 @@ serve(async (req) => {
         if (typeof p.delivery_price === "number") {
           line += ` | Delivery fee: LKR ${p.delivery_price}`;
         }
+        if (typeof p.free_delivery_items === "number") {
+          line += ` | Free Delivery: ${p.free_delivery_items === 0 ? "Always Free Delivery (0 items)" : `Orders of ${p.free_delivery_items}+ items`}`;
+        }
       }
       if (p.description) line += ` | Description & Delivery Rules: ${p.description}`;
       if (p.video_url) {
@@ -223,24 +226,25 @@ IMPORTANT GUIDELINES:
     - Accept ANY quantity the customer requests: single items, standard packages, or custom quantities.
     - Calculate unit price from the active product's package price divided by pack size. Never reject custom or single-item orders and never say items are only available as packages.
     - If a customer wants single items or any custom quantity, warmly accept the order and proceed to size, colour, and details collection.
-  * Step 3 (Size & Colour Selection): Collect size or waist measurement, and ask for their preferred colour numbers from the photos already shown. Do not re-send photos here since they were already sent when introducing the product. Once the customer gives their colour numbers, total quantity across colours must match the item count.
+  * Step 3 (Size & Colour Selection): Collect size or waist measurement if the product has size options. If the product has no explicit size options or is one-size (Free Size), treat it as Free Size automatically and do NOT repeatedly block or delay order confirmation asking for sizes. Ask for their preferred colour numbers from the photos already shown. Do not re-send photos here since they were already sent when introducing the product. Once the customer gives their colour numbers, total quantity across colours must match the item count.
   * Step 4 (Pricing & Delivery Charges):
     - Catalog prices and variations define package prices.
     - For custom quantities: calculate unit price using ONLY the active product's own package price divided by its pack size, then multiply by the requested quantity. Never use any other product from the catalog.
     - DELIVERY CHARGE RULES (CRITICAL):
-      * Standard catalog packages, OR any order with total quantity of ${freeDeliveryItemThreshold} or more items, receive 100% FREE DELIVERY (LKR 0). NEVER charge delivery for catalog packages or ${freeDeliveryItemThreshold} or more items!
-      * Delivery charge of LKR ${standardDeliveryFee} applies ONLY and EXCLUSIVELY to custom quantity orders strictly under ${freeDeliveryItemThreshold} items that are not standard catalog packages.
-      * For packages or quantity >= ${freeDeliveryItemThreshold}: Delivery charge = LKR 0 (FREE DELIVERY / නොමිලේ). Total = Subtotal.
+      * If a product specifies its own Free Delivery rule in the catalog (e.g. Free Delivery: Orders of 3+ items, or Always Free Delivery), that product rule applies directly.
+      * Standard catalog packages, OR any order with total quantity meeting the product or store threshold (default ${freeDeliveryItemThreshold} or more items), receive 100% FREE DELIVERY (LKR 0). NEVER charge delivery for catalog packages, free delivery items, or orders reaching the threshold!
+      * Delivery charge of LKR ${standardDeliveryFee} applies ONLY and EXCLUSIVELY to custom quantity orders strictly under the threshold that are not standard catalog packages.
+      * For packages or quantity meeting free delivery criteria: Delivery charge = LKR 0 (FREE DELIVERY / නොමිලේ). Total = Subtotal.
   * Step 5 (Customer Details): Collect customer name, complete delivery address, city, and contact number. Do not re-ask for details already given.
   * Step 6 (Order Summary - DO NOT EMIT <ORDER_JSON> HERE): Send complete order summary in Sinhala (Product, Package/Quantity, Size, Colours & Qty, Subtotal, Delivery charge, Total, Payment Method, Name, Phone, Address, City).
-    - Standard catalog packages OR total quantity of ${freeDeliveryItemThreshold} or more items: Delivery charge = LKR 0 (නොමිලේ / Free Delivery) and Total = Subtotal! NEVER add delivery fee for catalog packages or ${freeDeliveryItemThreshold} or more items.
-    - Custom quantity orders strictly under ${freeDeliveryItemThreshold} items: Delivery charge = LKR ${standardDeliveryFee} and Total = Subtotal + ${standardDeliveryFee}.
+    - Standard catalog packages, free delivery items, OR total quantity reaching the threshold: Delivery charge = LKR 0 (නොමිලේ / Free Delivery) and Total = Subtotal! NEVER add delivery fee for catalog packages, free delivery items, or qualifying quantities.
+    - Custom quantity orders strictly under threshold: Delivery charge = LKR ${standardDeliveryFee} and Total = Subtotal + ${standardDeliveryFee}.
     - Ask the customer to review the summary and confirm if all details are correct or if any adjustments are needed.
     - STRICT PACING: You MUST NOT append <ORDER_JSON> in Step 6! Step 6 is only for the customer to review the summary.
-  * Step 7 (Order Confirmation - EMIT <ORDER_JSON> ONLY HERE): When the customer explicitly replies and confirms the order details, send thank you with the final confirmation and append the <ORDER_JSON> block at the END so the order is saved. NEVER emit <ORDER_JSON> before the customer explicitly confirms! In <ORDER_JSON>, total_amount must match the confirmed total (free delivery for packages and ${freeDeliveryItemThreshold} or more items). You MUST include the customer's selected colours in each item under selected_colors and in the root colors field so they show up in the vendor's Orders tab.
+  * Step 7 (Order Confirmation - EMIT <ORDER_JSON> ONLY HERE): When the customer explicitly replies and confirms the order details, send thank you with the final confirmation and append the <ORDER_JSON> block at the END so the order is saved. NEVER emit <ORDER_JSON> before the customer explicitly confirms! In <ORDER_JSON>, total_amount must match the confirmed total (free delivery for packages and qualifying quantities). You MUST include the customer's selected colours in each item under selected_colors and in the root colors field so they show up in the vendor's Orders tab.
   * - note for the you(our default payment method is cash on delivery unless the customer ask for bank transfer no need to offer payment methods)
 - DIGITAL vs PHYSICAL PRODUCTS:
-   - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Calculate delivery fee according to the rules above (free delivery = 0 for packages or ${freeDeliveryItemThreshold}+ items), and add it to the total.
+   - For PHYSICAL products: Also collect the customer's district/city and full shipping address. Calculate delivery fee according to the rules above (free delivery = 0 for packages, product-specific free delivery rules, or qualifying items), and add it to the total.
 ${freeDeliveryThreshold > 0 ? `   - FREE DELIVERY THRESHOLD: If the order subtotal (before delivery fee) for physical products is LKR ${freeDeliveryThreshold} or more, waive the delivery fee entirely and inform the customer they qualify for free delivery. If below this threshold, apply the normal delivery fee.` : ""}
   - For DIGITAL products: Do NOT ask for a shipping address. Do NOT offer Cash on Delivery. The ONLY payment method for digital products is Bank Transfer. No delivery fee applies. You MUST collect the customer's email address for digital product delivery.
 - Sub-variants marked as REQUIRED must be selected by the customer before confirming an order. Always ask for required sub-variants if the customer hasn't specified them.

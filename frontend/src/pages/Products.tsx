@@ -26,6 +26,7 @@ interface Product {
   description: string | null;
   price: number;
   delivery_price: number;
+  free_delivery_items?: number | null;
   product_type: string;
   variations: unknown;
   images: string[];
@@ -51,6 +52,7 @@ export default function Products() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [deliveryPrice, setDeliveryPrice] = useState("");
+  const [freeDeliveryItems, setFreeDeliveryItems] = useState("");
   const [productType, setProductType] = useState("physical");
   const [variations, setVariations] = useState<Variation[]>([]);
   const [images, setImages] = useState<string[]>([]);
@@ -86,6 +88,7 @@ export default function Products() {
     setDescription("");
     setPrice("");
     setDeliveryPrice("");
+    setFreeDeliveryItems("");
     setProductType("physical");
     setVariations([]);
     setImages([]);
@@ -100,6 +103,7 @@ export default function Products() {
     setDescription(product.description || "");
     setPrice(product.price.toString());
     setDeliveryPrice(product.delivery_price?.toString() || "0");
+    setFreeDeliveryItems(product.free_delivery_items !== undefined && product.free_delivery_items !== null ? product.free_delivery_items.toString() : "");
     setProductType(product.product_type);
     setVariations(Array.isArray(product.variations) ? (product.variations as Variation[]) : []);
     setImages(Array.isArray(product.images) ? product.images : []);
@@ -118,6 +122,7 @@ export default function Products() {
         description: description || null,
         price: parseFloat(price),
         delivery_price: productType === "physical" ? parseFloat(deliveryPrice || "0") : 0,
+        free_delivery_items: productType === "physical" && freeDeliveryItems.trim() !== "" ? parseInt(freeDeliveryItems) : null,
         product_type: productType,
         variations: variations as unknown as import("@/integrations/supabase/types").Json,
         images,
@@ -242,17 +247,32 @@ export default function Products() {
                 </div>
 
                 {productType === "physical" && (
-                  <div className="space-y-2">
-                    <Label htmlFor="delivery-price">Delivery Price</Label>
-                    <Input
-                      id="delivery-price"
-                      type="number"
-                      step="0.01"
-                      value={deliveryPrice}
-                      onChange={(e) => setDeliveryPrice(e.target.value)}
-                      placeholder="0.00"
-                    />
-                    <p className="text-xs text-muted-foreground">Delivery fee added to physical product orders</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="delivery-price">Delivery Price (LKR)</Label>
+                      <Input
+                        id="delivery-price"
+                        type="number"
+                        step="0.01"
+                        value={deliveryPrice}
+                        onChange={(e) => setDeliveryPrice(e.target.value)}
+                        placeholder="0.00"
+                      />
+                      <p className="text-xs text-muted-foreground">Delivery fee added to physical product orders</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="free-delivery-items">Free Delivery Min Items</Label>
+                      <Input
+                        id="free-delivery-items"
+                        type="number"
+                        min="0"
+                        step="1"
+                        value={freeDeliveryItems}
+                        onChange={(e) => setFreeDeliveryItems(e.target.value)}
+                        placeholder="e.g. 3 (blank = store default)"
+                      />
+                      <p className="text-xs text-muted-foreground">Item count for Free Delivery (0 = always free)</p>
+                    </div>
                   </div>
                 )}
 
@@ -358,6 +378,9 @@ export default function Products() {
                           {product.product_type === "physical" && product.delivery_price > 0 && (
                             <p className="text-xs text-muted-foreground">+LKR {product.delivery_price.toFixed(2)} delivery</p>
                           )}
+                          {product.product_type === "physical" && typeof product.free_delivery_items === "number" && (
+                            <p className="text-xs text-blue-600">Free delivery on {product.free_delivery_items === 0 ? "all orders" : `${product.free_delivery_items}+ items`}</p>
+                          )}
                         </div>
                         <div className="flex gap-1">
                           <Button variant="ghost" size="icon" onClick={() => openEditDialog(product)}>
@@ -379,6 +402,7 @@ export default function Products() {
                         <TableHead>Name</TableHead>
                         <TableHead>Type</TableHead>
                         <TableHead>Price</TableHead>
+                        <TableHead>Free Delivery</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
@@ -392,6 +416,23 @@ export default function Products() {
                             LKR {product.price.toFixed(2)}
                             {product.product_type === "physical" && product.delivery_price > 0 && (
                               <span className="block text-xs text-muted-foreground">+LKR {product.delivery_price.toFixed(2)} delivery</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {product.product_type === "physical" ? (
+                              product.free_delivery_items === 0 ? (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                  Always Free
+                                </span>
+                              ) : typeof product.free_delivery_items === "number" ? (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                  {product.free_delivery_items}+ items
+                                </span>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">Store default</span>
+                              )
+                            ) : (
+                              <span className="text-xs text-muted-foreground">N/A</span>
                             )}
                           </TableCell>
                           <TableCell>
