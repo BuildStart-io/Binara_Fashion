@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, ShoppingCart, Loader2, Phone, MapPin, CreditCard, Package, MessageSquare, Trash2, Download } from "lucide-react";
+import { Eye, ShoppingCart, Loader2, Phone, MapPin, CreditCard, Package, MessageSquare, Trash2, Download, Palette } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import LimitWarningBanner from "@/components/LimitWarningBanner";
@@ -28,6 +28,41 @@ interface Order {
   total_amount: number;
   created_at: string;
 }
+
+const getItemColor = (item: any): string | null => {
+  if (!item) return null;
+  if (item.selected_colors && typeof item.selected_colors === "string" && item.selected_colors.trim()) return item.selected_colors.trim();
+  if (item.colors && typeof item.colors === "string" && item.colors.trim()) return item.colors.trim();
+  if (item.color && typeof item.color === "string" && item.color.trim()) return item.color.trim();
+  if (item.colour && typeof item.colour === "string" && item.colour.trim()) return item.colour.trim();
+  if (Array.isArray(item.selected_colors)) return item.selected_colors.join(", ");
+  if (Array.isArray(item.colors)) return item.colors.join(", ");
+  if (item.variations && typeof item.variations === "object") {
+    const found = Object.entries(item.variations).find(([k]) =>
+      /colou?r|පාට/i.test(k)
+    );
+    if (found && found[1]) return String(found[1]);
+  }
+  return null;
+};
+
+const getItemSize = (item: any): string | null => {
+  if (!item) return null;
+  if (item.size && typeof item.size === "string" && item.size.trim()) return item.size.trim();
+  if (item.variations && typeof item.variations === "object") {
+    const found = Object.entries(item.variations).find(([k]) =>
+      /size|සයිස්|ඉන/i.test(k)
+    );
+    if (found && found[1]) return String(found[1]);
+  }
+  return null;
+};
+
+const getOrderColorsFallback = (order: Order): string | null => {
+  if (!order.special_instructions) return null;
+  const match = order.special_instructions.match(/(?:Colou?rs?|Selected Colou?rs?|පාට(?:\s*අංක)?)\s*:\s*([^|;\n]+)/i);
+  return match ? match[1].trim() : null;
+};
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -124,11 +159,18 @@ export default function Orders() {
       return;
     }
 
-    const headers = ["Order ID", "Customer Name", "Phone", "District", "Address", "Items", "Payment Method", "Status", "Total (LKR)", "Special Instructions", "Date"];
+    const headers = ["Order ID", "Customer Name", "Phone", "District", "Address", "Items & Colours", "Payment Method", "Status", "Total (LKR)", "Special Instructions", "Date"];
     const rows = orders.map((o) => {
+      const fallbackColor = getOrderColorsFallback(o);
       const items = Array.isArray(o.order_items)
-        ? (o.order_items as any[]).map((i: any) => `${i.name} x${i.quantity}`).join("; ")
-        : "";
+        ? (o.order_items as any[]).map((i: any) => {
+            const color = getItemColor(i) || fallbackColor;
+            const colorStr = color ? ` [Colours: ${color}]` : "";
+            const size = getItemSize(i);
+            const sizeStr = size ? ` [Size: ${size}]` : "";
+            return `${i.name}${colorStr}${sizeStr} x${i.quantity}`;
+          }).join("; ")
+        : fallbackColor ? `[Colours: ${fallbackColor}]` : "";
       return [
         o.id.slice(0, 8),
         o.customer_name,
@@ -228,44 +270,85 @@ export default function Orders() {
               <>
                 {/* Mobile: Card layout */}
                 <div className="space-y-3 md:hidden">
-                  {orders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="font-medium">{order.customer_name}</p>
-                          <p className="text-xs text-muted-foreground">{order.customer_phone}</p>
+                  {orders.map((order) => {
+                    const fallbackColor = getOrderColorsFallback(order);
+                    return (
+                      <div key={order.id} className="border rounded-lg p-4 space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="font-medium">{order.customer_name}</p>
+                            <p className="text-xs text-muted-foreground">{order.customer_phone}</p>
+                          </div>
+                          <Badge className={statusColors[order.status]}>{order.status}</Badge>
                         </div>
-                        <Badge className={statusColors[order.status]}>{order.status}</Badge>
+
+                        {/* Mobile Items & Colours */}
+                        {Array.isArray(order.order_items) && order.order_items.length > 0 ? (
+                          <div className="bg-muted/40 p-2.5 rounded-md space-y-1.5 text-sm">
+                            {order.order_items.map((item: any, idx: number) => {
+                              const color = getItemColor(item) || fallbackColor;
+                              const size = getItemSize(item);
+                              return (
+                                <div key={idx} className="space-y-0.5">
+                                  <div className="font-medium text-xs sm:text-sm">
+                                    {item.quantity ? `${item.quantity}x ` : ""}{item.name}
+                                  </div>
+                                  {color && (
+                                    <div className="flex items-center gap-1 text-xs">
+                                      <Palette className="h-3 w-3 shrink-0 text-pink-500" />
+                                      <span className="bg-pink-50 dark:bg-pink-950/40 text-pink-700 dark:text-pink-300 px-1.5 py-0.5 rounded border border-pink-200 dark:border-pink-800 font-medium">
+                                        Colours: {color}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {size && (
+                                    <div className="text-xs text-muted-foreground">
+                                      Size: {size}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : fallbackColor && (
+                          <div className="flex items-center gap-1 text-xs">
+                            <Palette className="h-3 w-3 shrink-0 text-pink-500" />
+                            <span className="bg-pink-50 dark:bg-pink-950/40 text-pink-700 dark:text-pink-300 px-1.5 py-0.5 rounded border border-pink-200 dark:border-pink-800 font-medium">
+                              Colours: {fallbackColor}
+                            </span>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium">LKR {order.total_amount.toFixed(2)}</span>
+                          <span className="text-muted-foreground">{format(new Date(order.created_at), "MMM d, yyyy")}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button variant="outline" size="sm" className="flex-1" onClick={() => setSelectedOrder(order)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Order</AlertDialogTitle>
+                                <AlertDialogDescription>This will permanently delete this order. This action cannot be undone.</AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => deleteOrder(order.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium">LKR {order.total_amount.toFixed(2)}</span>
-                        <span className="text-muted-foreground">{format(new Date(order.created_at), "MMM d, yyyy")}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="flex-1" onClick={() => setSelectedOrder(order)}>
-                          <Eye className="mr-2 h-4 w-4" />
-                          View Details
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Order</AlertDialogTitle>
-                              <AlertDialogDescription>This will permanently delete this order. This action cannot be undone.</AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => deleteOrder(order.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
                 {/* Desktop: Table layout */}
                 <div className="hidden md:block">
@@ -274,6 +357,7 @@ export default function Orders() {
                       <TableRow>
                         <TableHead>Customer</TableHead>
                         <TableHead>Phone</TableHead>
+                        <TableHead className="min-w-[200px]">Items & Colours</TableHead>
                         <TableHead>Total</TableHead>
                         <TableHead>Payment</TableHead>
                         <TableHead>Status</TableHead>
@@ -282,62 +366,104 @@ export default function Orders() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {orders.map((order) => (
-                        <TableRow key={order.id}>
-                          <TableCell className="font-medium">{order.customer_name}</TableCell>
-                          <TableCell>{order.customer_phone}</TableCell>
-                          <TableCell>LKR {order.total_amount.toFixed(2)}</TableCell>
-                          <TableCell className="capitalize">
-                            {order.payment_method === "cod" ? "Cash on Delivery" : "Bank Transfer"}
-                          </TableCell>
-                          <TableCell>
-                            <Select
-                              value={order.status}
-                              onValueChange={(value) => updateOrderStatus(order.id, value)}
-                            >
-                              <SelectTrigger className="w-[130px]">
-                                <Badge className={statusColors[order.status]}>
-                                  {order.status}
-                                </Badge>
-                              </SelectTrigger>
-                              <SelectContent>
-                                {statusOptions.map((status) => (
-                                  <SelectItem key={status.value} value={status.value}>
-                                    {status.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                          <TableCell>
-                            {format(new Date(order.created_at), "MMM d, yyyy")}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                              <Button variant="ghost" size="icon" onClick={() => setSelectedOrder(order)}>
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>Delete Order</AlertDialogTitle>
-                                    <AlertDialogDescription>This will permanently delete this order. This action cannot be undone.</AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => deleteOrder(order.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {orders.map((order) => {
+                        const fallbackColor = getOrderColorsFallback(order);
+                        return (
+                          <TableRow key={order.id}>
+                            <TableCell className="font-medium">{order.customer_name}</TableCell>
+                            <TableCell>{order.customer_phone}</TableCell>
+                            <TableCell className="max-w-[280px]">
+                              {Array.isArray(order.order_items) && order.order_items.length > 0 ? (
+                                <div className="space-y-1.5">
+                                  {order.order_items.map((item: any, idx: number) => {
+                                    const color = getItemColor(item) || fallbackColor;
+                                    const size = getItemSize(item);
+                                    return (
+                                      <div key={idx} className="text-sm">
+                                        <div className="font-medium text-foreground">
+                                          {item.quantity ? `${item.quantity}x ` : ""}{item.name}
+                                        </div>
+                                        {color && (
+                                          <div className="flex items-center gap-1 text-xs font-medium mt-0.5">
+                                            <Palette className="h-3 w-3 shrink-0 text-pink-500" />
+                                            <span className="bg-pink-50 dark:bg-pink-950/40 text-pink-700 dark:text-pink-300 px-1.5 py-0.5 rounded border border-pink-200 dark:border-pink-800">
+                                              Colours: {color}
+                                            </span>
+                                          </div>
+                                        )}
+                                        {size && (
+                                          <div className="text-xs text-muted-foreground">
+                                            Size: {size}
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              ) : fallbackColor ? (
+                                <div className="flex items-center gap-1 text-xs font-medium">
+                                  <Palette className="h-3 w-3 shrink-0 text-pink-500" />
+                                  <span className="bg-pink-50 dark:bg-pink-950/40 text-pink-700 dark:text-pink-300 px-1.5 py-0.5 rounded border border-pink-200 dark:border-pink-800">
+                                    Colours: {fallbackColor}
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell>LKR {order.total_amount.toFixed(2)}</TableCell>
+                            <TableCell className="capitalize">
+                              {order.payment_method === "cod" ? "Cash on Delivery" : "Bank Transfer"}
+                            </TableCell>
+                            <TableCell>
+                              <Select
+                                value={order.status}
+                                onValueChange={(value) => updateOrderStatus(order.id, value)}
+                              >
+                                <SelectTrigger className="w-[130px]">
+                                  <Badge className={statusColors[order.status]}>
+                                    {order.status}
+                                  </Badge>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {statusOptions.map((status) => (
+                                    <SelectItem key={status.value} value={status.value}>
+                                      {status.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                            <TableCell>
+                              {format(new Date(order.created_at), "MMM d, yyyy")}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex items-center justify-end gap-1">
+                                <Button variant="ghost" size="icon" onClick={() => setSelectedOrder(order)}>
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Delete Order</AlertDialogTitle>
+                                      <AlertDialogDescription>This will permanently delete this order. This action cannot be undone.</AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => deleteOrder(order.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </div>
@@ -387,22 +513,65 @@ export default function Orders() {
                     <Package className="h-3 w-3" /> Order Items
                   </h4>
                   <div className="border rounded-lg divide-y">
-                    {(Array.isArray(selectedOrder.order_items) ? selectedOrder.order_items : []).map((item: any, index: number) => (
-                      <div key={index} className="p-3 flex justify-between">
-                        <div>
-                          <p className="font-medium">{item.name}</p>
-                          {item.variations && (
-                            <p className="text-sm text-muted-foreground">
-                              {Object.entries(item.variations).map(([key, value]) => `${key}: ${value}`).join(", ")}
-                            </p>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium">LKR {item.price}</p>
-                          <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
-                        </div>
-                      </div>
-                    ))}
+                    {(() => {
+                      const fallbackColor = getOrderColorsFallback(selectedOrder);
+                      const items = Array.isArray(selectedOrder.order_items) ? selectedOrder.order_items : [];
+                      if (items.length === 0 && fallbackColor) {
+                        return (
+                          <div className="p-3">
+                            <div className="flex items-center gap-1.5 text-sm font-medium">
+                              <Palette className="h-4 w-4 text-pink-500 shrink-0" />
+                              <span className="bg-pink-50 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300 px-2.5 py-1 rounded-md border border-pink-200 dark:border-pink-800">
+                                Selected Colours: {fallbackColor}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return items.map((item: any, index: number) => {
+                        const color = getItemColor(item) || fallbackColor;
+                        const size = getItemSize(item);
+                        const otherVariations = item.variations && typeof item.variations === "object"
+                          ? Object.entries(item.variations).filter(([k]) => !/colou?r|පාට|size|සයිස්|ඉන/i.test(k))
+                          : [];
+
+                        return (
+                          <div key={index} className="p-3 flex justify-between gap-4">
+                            <div className="space-y-1.5">
+                              <p className="font-medium">{item.name}</p>
+                              
+                              {/* Selected Colours */}
+                              {color && (
+                                <div className="flex items-center gap-1.5 text-xs font-medium">
+                                  <Palette className="h-3.5 w-3.5 text-pink-500 shrink-0" />
+                                  <span className="bg-pink-50 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300 px-2 py-0.5 rounded-md border border-pink-200 dark:border-pink-800">
+                                    Selected Colours: {color}
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Size */}
+                              {size && (
+                                <p className="text-xs text-muted-foreground">
+                                  Size: {size}
+                                </p>
+                              )}
+
+                              {/* Other variations */}
+                              {otherVariations.length > 0 && (
+                                <p className="text-xs text-muted-foreground">
+                                  {otherVariations.map(([key, value]) => `${key}: ${value}`).join(", ")}
+                                </p>
+                              )}
+                            </div>
+                            <div className="text-right shrink-0">
+                              <p className="font-medium">LKR {item.price}</p>
+                              <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
                   </div>
                 </div>
 

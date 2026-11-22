@@ -1,0 +1,1092 @@
+[
+  {
+    "scenario": {
+      "id": 1,
+      "name": "Customer 1 - Popcorn 16 inch (1 short)",
+      "phone": "94770000011",
+      "productNumber": "1",
+      "productName": "පොප්කොන් ශෝර්ට් උස අගල් 16",
+      "quantity": 1,
+      "isPackage": false,
+      "expectedSubtotal": 520,
+      "expectedDelivery": 450,
+      "expectedTotal": 970,
+      "colors": "3",
+      "customerInfo": "Kasun Perera, No 12, Galle Road, Kalutara, 0770000011",
+      "customerName": "Kasun Perera",
+      "customerAddress": "No 12, Galle Road, Kalutara",
+      "turns": [
+        {
+          "msg": "Hi",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "1",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "මට 1ක් ඕනෙ",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට අංක 3",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Kasun Perera, No 12, Galle Road, Kalutara, 0770000011",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "විස්තර හරි confirm කරන්න",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hi",
+        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා. 🥰\n\nඔබට අවශ්‍ය කෙටි කලිසම් වර්ගය තෝරා ගැනීමට පහත ලැයිස්තුව බලන්න:\n\n🔹 පොප්කොන් ශෝර්ට් (උස අඟල් 16)\n🔹 SingleJersey Cotton (උස අඟල් 20)\n🔹 පොප්කෝන් ශෝර්ට් (උස අඟල් 18)\n🔹 Rib Jacquard Shorts\n🔹 Kyela Brand Single Jersey Cotton Shorts\n\nඔබට කැමති වර්ගයක් ගැන විස්තර හෝ පින්තූර අවශ්‍යද? 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "1",
+        "botReply": "එය පොප්කොන් ශෝර්ට් (උස අඟල් 16) වර්ගයයි. ඉතාම ජනප්‍රිය සහ සුවපහසු නිමාවක් සහිතයි. 😊\n\n🔥 මිල ගණන්:\n🔹 ශෝර්ට් 05ක්: රු. 2600 (නොමිලේ බෙදාහැරීම)\n🔹 ශෝර්ට් 10ක්: රු. 4600 (නොමිලේ බෙදාහැරීම)\n\nමෙම කලිසම් වලට ඔබට කැමති වර්ණ 5ක් තෝරාගත හැක. ඔබට අවශ්‍ය ප්‍රමාණය සහ වර්ණ ගැන තව විස්තර අවශ්‍යද?",
+        "hasImages": true,
+        "imageCount": 12,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "මට 1ක් ඕනෙ",
+        "botReply": "අනිවාර්යයෙන්ම, ඔබට කැමති පොප්කොන් ශෝර්ට් (උස අඟල් 16) එකක් පමණක් වුවද ඇණවුම් කළ හැක. 😊\n\nඑම කලිසමක මිල රු. 520 ක් වේ (රු. 2600 / 5).\n\nඅපගේ බෙදාහැරීමේ රීතියට අනුව, කලිසම් 5කට අඩු ඇණවුම් සඳහා බෙදාහැරීමේ ගාස්තුව රු. 450ක් අය කෙරේ. 🚚\n\nඔබට තෝරා ගැනීමට අවශ්‍ය වර්ණ අංක (පින්තූරයේ ඇති) සහ ඔබේ ඉණ ප්‍රමාණය (අඟල් 28 - 44 දක්වා) සඳහන් කරන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 3",
+        "botReply": "හරි, පොප්කොන් ශෝර්ට් (උස අඟල් 16) වර්ගයෙන් පාට අංක 3 තෝරාගත්තා. ✅\n\nඔබගේ ඇණවුම තහවුරු කිරීමට කරුණාකර පහත තොරතුරු එවන්න:\n\n👤 නම\n📞 දුරකථන අංකය\n🏠 බෙදාහැරීමේ ලිපිනය\n📍 නගරය\n\nමෙම තොරතුරු එවීමෙන් පසු මම ඇණවුම් සාරාංශය ඔබ වෙත එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Kasun Perera, No 12, Galle Road, Kalutara, 0770000011",
+        "botReply": "ස්තූතියි කසුන් මහත්මයා, ඔබගේ ඇණවුම් සාරාංශය පහත දැක්වේ:\n\n📦 අයිතමය: පොප්කොන් ශෝර්ට් (උස අඟල් 16)\n🎨 වර්ණය: අංක 3\n📏 ප්‍රමාණය: ෆ්‍රී සයිස් (ඉණ 28 - 44)\n💰 අයිතම මිල: රු. 520\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💳 සම්පූර්ණ මුදල: රු. 970\n\n👤 නම: Kasun Perera\n📞 අංකය: 0770000011\n🏠 ලිපිනය: No 12, Galle Road, Kalutara\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න, එවිට අපගේ කාර්ය මණ්ඩලය ඔබව සම්බන්ධ කර ගනු ඇත. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "විස්තර හරි confirm කරන්න",
+        "botReply": "ස්තූතියි කසුන් මහත්මයා, ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී. අපගේ කාර්ය මණ්ඩලය ඉක්මනින්ම ඔබව සම්බන්ධ කර ගනු ඇත. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  },
+  {
+    "scenario": {
+      "id": 2,
+      "name": "Customer 2 - Rib Jacquard (2 shorts)",
+      "phone": "94770000012",
+      "productNumber": "4",
+      "productName": "Rib Jacquard Shorts",
+      "quantity": 2,
+      "isPackage": false,
+      "expectedSubtotal": 1080,
+      "expectedDelivery": 450,
+      "expectedTotal": 1530,
+      "colors": "1, 2",
+      "customerInfo": "Nimal Silva, 45 Temple Road, Kandy, 0770000012",
+      "customerName": "Nimal Silva",
+      "customerAddress": "45 Temple Road, Kandy",
+      "turns": [
+        {
+          "msg": "Hello",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "4",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "කලිසම් 2ක් ගන්න පුළුවන්ද",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට 1 සහ 2",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "නම Nimal Silva, ලිපිනය 45 Temple Road, Kandy, Phone 0770000012",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "හරි ඇණවුම දාන්න",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hello",
+        "botReply": "Hello! Welcome to Binara Fashion. How can I help you today? 😊\n\nWe have a variety of comfortable shorts available. Would you like to see our collection?",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "4",
+        "botReply": "ඔබ තෝරාගත්තේ Rib Jacquard Shorts වර්ගයයි. ✌️\n\nමෙම කලිසම් උස අඟල් 16ක් සහ ඉණ ප්‍රමාණය 26 සිට 42 දක්වා ඕනෑම කෙනෙකුට ගැළපෙනවා. 🩳\n\nඔබට අවශ්‍ය පැකේජය (05ක පැකේජය - රු. 2700 හෝ 10ක පැකේජය - රු. 5100) සහ අවශ්‍ය ප්‍රමාණය පවසන්න.",
+        "hasImages": true,
+        "imageCount": 10,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "කලිසම් 2ක් ගන්න පුළුවන්ද",
+        "botReply": "ඔව්, අනිවාර්යයෙන්ම පුළුවන්. ඔබට අවශ්‍ය ඕනෑම ප්‍රමාණයක් තෝරාගන්න පුළුවන්. 😊\n\nRib Jacquard Shorts එකක මිල රු. 540ක් වේ (එකක මිල). ඒ අනුව කලිසම් 2කේ මිල රු. 1080කි.\n\n🚚 කලිසම් 5කට අඩු නිසා බෙදාහැරීමේ ගාස්තුව රු. 450ක් එකතු වේ.\n\nඔබ කැමති වර්ණ අංක ටික එවන්න, අපි ඇණවුම තහවුරු කරගමු.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට 1 සහ 2",
+        "botReply": "හොඳයි, ඔබ තෝරාගත් වර්ණ අංක 1 සහ 2 මම සටහන් කරගත්තා. ✅\n\nදැන් ඇණවුම සම්පූර්ණ කිරීමට කරුණාකර පහත විස්තර එවන්න:\n\n👤 සම්පූර්ණ නම:\n📞 දුරකථන අංකය:\n📍 බෙදාහැරීමේ ලිපිනය:\n🏙️ නගරය:",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "නම Nimal Silva, ලිපිනය 45 Temple Road, Kandy, Phone 0770000012",
+        "botReply": "ඔබේ ඇණවුමේ සාරාංශය මෙන්න:\n\n📦 භාණ්ඩය: Rib Jacquard Shorts (2ක්)\n🎨 තෝරාගත් වර්ණ: 1 සහ 2\n👤 නම: Nimal Silva\n📞 අංකය: 0770000012\n📍 ලිපිනය: 45 Temple Road, Kandy\n\n💰 භාණ්ඩ මිල: රු. 1080\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💵 මුළු මුදල: රු. 1530\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න, එවිට අපට ඇණවුම අනුමත කර එවන්න පුළුවන්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "හරි ඇණවුම දාන්න",
+        "botReply": "ස්තුතියි! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කර ඇත. 😊\n\nදින 2-3ක් ඇතුළත ඔබගේ ඇණවුම ලැබෙනු ඇත. අපගේ සේවය තෝරා ගැනීම ගැන ස්තුතියි! 🚚✨",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  },
+  {
+    "scenario": {
+      "id": 3,
+      "name": "Customer 3 - SingleJersey Cotton 20 inch (3 shorts)",
+      "phone": "94770000013",
+      "productNumber": "2",
+      "productName": "SingleJersey Cotton උස අගල් 20",
+      "quantity": 3,
+      "isPackage": false,
+      "expectedSubtotal": 1987.5,
+      "expectedDelivery": 450,
+      "expectedTotal": 2437.5,
+      "colors": "1, 3, 4",
+      "customerInfo": "Dilani Fernando, 89 Main Street, Negombo, 0770000013",
+      "customerName": "Dilani Fernando",
+      "customerAddress": "89 Main Street, Negombo",
+      "turns": [
+        {
+          "msg": "විස්තර එවන්න",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "2",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "මට කලිසම් 3ක් ඕන",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට අංක 1, 3, 4",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Dilani Fernando, 89 Main Street, Negombo, 0770000013",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "ඔව් විස්තර නිවැරදියි",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "විස්තර එවන්න",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා! 😊 අප සතුව පවතින උසස් තත්වයේ කෙටි කලිසම් වර්ග කිහිපයක් පහත දැක්වේ:\n\n1. පොප්කොන් ශෝර්ට් (උස අඟල් 16) - රු. 2600 (පැකේජය)\n2. SingleJersey Cotton (උස අඟල් 20) - රු. 2650 (පැකේජය)\n3. පොප්කෝන් ශෝර්ට් (උස අඟල් 18) - රු. 2600 (පැකේජය)\n4. Rib Jacquard Shorts (උස අඟල් 16) - රු. 2700 (පැකේජය)\n5. Kyela Brand Cotton Shorts (උස අඟල් 16) - රු. 2500 (පැකේජය)\n\nඔබට වැඩිදුර විස්තර හෝ පින්තූර අවශ්‍ය නම්, ඉහත අංකයකින් එකක් තෝරා පවසන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "2",
+        "botReply": "එය විශිෂ්ට තේරීමක්! 🩳 SingleJersey Cotton Shorts පිළිබඳ විස්තර:\n\n🔹 මිල: රු. 2650 (පැකේජය)\n🔹 උස: අඟල් 20\n🔹 ඉණ: 26 සිට 42 දක්වා (Free Size)\n🔹 රෙදි: Single Jersey Cotton\n🔹 බෙදාහැරීම: නොමිලේ (Free Delivery)\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ පාට තෝරා ගැනීමට උපකාරයක් අවශ්‍යද?",
+        "hasImages": true,
+        "imageCount": 8,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "මට කලිසම් 3ක් ඕන",
+        "botReply": "නිසැකවම! SingleJersey Cotton Shorts කලිසම් 3ක් සඳහා ඔබට ඇණවුම් කළ හැකියි. \n\nකලිසම් 3ක් සඳහා වන මිල ගණනය කිරීම පහත පරිදි වේ:\n🔹 ඒකක මිල: රු. 662.50 (රු. 2650 / 4ක්)\n🔹 කලිසම් 3ක මිල: රු. 1987.50\n🔹 බෙදාහැරීමේ ගාස්තුව: රු. 450 (කලිසම් 5ට අඩු බැවින්)\n💰 මුළු එකතුව: රු. 2437.50\n\nකරුණාකර ඔබ කැමති පාට අංක සහ ඔබේ ඉණ ප්‍රමාණය පවසන්න. ඉන්පසු ඔබේ නම, ලිපිනය සහ දුරකථන අංකය ලබා දෙන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 1, 3, 4",
+        "botReply": "හරි, ඔබේ ඇණවුම සටහන් කර ගත්තා.\n\n📦 භාණ්ඩය: SingleJersey Cotton Shorts (කලිසම් 3)\n🎨 තෝරාගත් පාට: අංක 1, 3, 4\n📏 ඉණ ප්‍රමාණය: (කරුණාකර මෙය සඳහන් කරන්න)\n💰 මුළු මුදල: රු. 2437.50 (ඩිලිවරි ගාස්තුව සමඟ)\n\nදැන් ඔබේ නම, සම්පූර්ණ ලිපිනය සහ දුරකථන අංකය එවන්න. එවිට අපට ඇණවුම තහවුරු කිරීමට හැකියි.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Dilani Fernando, 89 Main Street, Negombo, 0770000013",
+        "botReply": "ස්තුතියි දිලානි මහත්මියනි! ඔබේ ඇණවුම් විස්තර සාරාංශය පහත දැක්වේ:\n\n📦 භාණ්ඩය: SingleJersey Cotton Shorts (කලිසම් 3)\n🎨 තෝරාගත් පාට: 1, 3, 4\n📏 ඉණ ප්‍රමාණය: ෆ්‍රී සයිස් (26-42)\n👤 නම: Dilani Fernando\n📍 ලිපිනය: 89 Main Street, Negombo\n📞 දුරකථන අංකය: 0770000013\n💰 මුළු එකතුව: රු. 2437.50 (ඩිලිවරි ගාස්තුව ඇතුළත්ව)\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්නේ නම් කරුණාකර පවසන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "ඔව් විස්තර නිවැරදියි",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කළා. ස්තූතියි! 🌸\n\nඅපගේ ගෙවීම් විස්තර පහත පරිදි වේ:\n🏦 බැංකුව: [බැංකු නම]\n💳 ගිණුම් අංකය: [ගිණුම් අංකය]\n👤 නම: [ගිණුම් හිමියාගේ නම]\n\nගෙවීම සිදුකළ පසු රිසිට්පතේ පින්තූරයක් මෙතැනට එවන්න. දින 2-3ක් ඇතුළත ඔබේ භාණ්ඩය ලැබෙනු ඇත.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  },
+  {
+    "scenario": {
+      "id": 4,
+      "name": "Customer 4 - Popcorn 18 inch (4 Pack Package)",
+      "phone": "94770000014",
+      "productNumber": "3",
+      "productName": "පොප්කෝන්  ශෝර්ට් උස අගල්  18",
+      "quantity": 4,
+      "isPackage": true,
+      "expectedSubtotal": 2600,
+      "expectedDelivery": 0,
+      "expectedTotal": 2600,
+      "colors": "1, 4, 5, 8",
+      "customerInfo": "Chamari Wickramasinghe, 22 Flower Road, Colombo 07, 0770000014",
+      "customerName": "Chamari Wickramasinghe",
+      "customerAddress": "22 Flower Road, Colombo 07",
+      "turns": [
+        {
+          "msg": "Hi",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පොප්කෝන්  ශෝර්ට් උස අගල්  18",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "4 Pack එක ඕනේ",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට අංක 1, 4, 5, 8",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Chamari Wickramasinghe, 22 Flower Road, Colombo 07, 0770000014",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "හරි confirm කරන්න",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hi",
+        "botReply": "Hello! Welcome to Binara Fashion. 😊\n\nWe have a variety of comfortable shorts available. Could you please let me know which type you are interested in?\n\n1. Popcorn Shorts (16 inch height)\n2. Single Jersey Cotton Shorts (20 inch height)\n3. Popcorn Shorts (18 inch height)\n4. Rib Jacquard Shorts (16 inch height)\n5. Kyela Brand Single Jersey Cotton Shorts (16 inch height)\n\nLet me know your choice, and I will share the details and photos with you! 👗✨",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "පොප්කෝන්  ශෝර්ට් උස අගල්  18",
+        "botReply": "පොප්කෝන් ශෝර්ට් (උස අඟල් 18) තෝරා ගැනීම ගැන ස්තූතියි! මේවා ඉතාමත් පහසු සහ පිරිසිදු කොට්න් මැටීරියල් එකකින් නිමවා ඇත.\n\n🚚 Delivery - නොමිලේ\n🔥 පැකේජය: ශෝර්ට් 04ම රු. 2600 යි.\n🌿 ඉණ මිනුම: අඟල් 26 සිට 40 දක්වා (Free Size).\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ කැමති වර්ණ අංක ටික එවන්න. මම ඔබගේ ඇණවුම තහවුරු කිරීමට උදව් කරන්නම්. 😊",
+        "hasImages": true,
+        "imageCount": 9,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "4 Pack එක ඕනේ",
+        "botReply": "හරි, පොප්කෝන් ශෝර්ට් පැකේජය (04 ක්) තෝරාගැනීම ගැන ස්තූතියි! 😊\n\nදැන් අපට පහත විස්තර ටික ලබා දෙන්න:\n🔹 ඔබට අවශ්‍ය වර්ණ අංක 4 ක් තෝරා ගන්න (පින්තූරවල ඇති අංක අනුව).\n🔹 ඔබගේ සම්පූර්ණ නම:\n🔹 දුරකථන අංකය:\n🔹 බෙදාහැරිය යුතු ලිපිනය:\n🔹 නගරය:\n\nමෙම විස්තර ලැබුණු පසු මම ඇණවුම් සාරාංශය එවන්නම්. 📦✨",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 1, 4, 5, 8",
+        "botReply": "නියමයි! ඔබ තෝරාගත් වර්ණ අංක 1, 4, 5 සහ 8 අපි සටහන් කරගත්තා. ✅\n\nඇණවුම තහවුරු කිරීම සඳහා කරුණාකර ඔබගේ පහත විස්තර ලබා දෙන්න:\n\n🔹 සම්පූර්ණ නම:\n🔹 දුරකථන අංකය:\n🔹 බෙදාහැරිය යුතු ලිපිනය:\n🔹 නගරය:",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Chamari Wickramasinghe, 22 Flower Road, Colombo 07, 0770000014",
+        "botReply": "ඔබ ලබා දුන් විස්තර වලට ස්තූතියි. ඔබගේ ඇණවුමේ සාරාංශය පහත පරිදි වේ:\n\n📦 අයිතමය: පොප්කෝන් ශෝර්ට් (උස අඟල් 18) - පැකේජය (4 Pack)\n🎨 තෝරාගත් වර්ණ: 1, 4, 5, 8\n💰 උප එකතුව: රු. 2600\n🚚 බෙදාහැරීමේ ගාස්තුව: නොමිලේ (Free Delivery)\n💰 එකතුව: රු. 2600\n\n👤 නම: Chamari Wickramasinghe\n📞 දුරකථන අංකය: 0770000014\n🏠 ලිපිනය: 22 Flower Road, Colombo 07\n\nකරුණාකර මෙම විස්තර සියල්ල නිවැරදි දැයි පරීක්ෂා කර බලන්න. කිසියම් වෙනසක් කිරීමට අවශ්‍ය නම් හෝ සියල්ල නිවැරදි නම් අපට දැනුම් දෙන්න. 🌸",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "හරි confirm කරන්න",
+        "botReply": "ඔබගේ ඇණවුම සාර්ථකව තහවුරු විය! 🌸\n\nChamari Wickramasinghe මහත්මියනි, ඔබගේ ඇණවුම ලැබුණි. දින 2-3ක් ඇතුළත එය ඔබ වෙත ලැබීමට කටයුතු කරන්නෙමු. ස්තූතියි! 😊🙏",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  },
+  {
+    "scenario": {
+      "id": 5,
+      "name": "Customer 5 - SingleJersey Cotton 20 inch (4 Pack Package)",
+      "phone": "94770000015",
+      "productNumber": "2",
+      "productName": "SingleJersey Cotton උස අගල් 20",
+      "quantity": 4,
+      "isPackage": true,
+      "expectedSubtotal": 2650,
+      "expectedDelivery": 0,
+      "expectedTotal": 2650,
+      "colors": "2, 3, 5, 6",
+      "customerInfo": "Ruwan Jayawardena, 105 Hospital Road, Matara, 0770000015",
+      "customerName": "Ruwan Jayawardena",
+      "customerAddress": "105 Hospital Road, Matara",
+      "turns": [
+        {
+          "msg": "Hello",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "SingleJersey Cotton උස අගල් 20",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "4 pack එක එවන්න",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට අංක 2, 3, 5, 6",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Ruwan Jayawardena, 105 Hospital Road, Matara, 0770000015",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "ඔව් විස්තර හරි",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hello",
+        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා. 🥰\n\nඅප සතුව ඇති උසස් තත්ත්වයේ කෙටි කලිසම් (Shorts) වර්ග කිහිපයක් පහතින් දැක්වේ:\n\n🔹 පොප්කොන් ශෝර්ට් (උස අඟල් 16)\n🔹 SingleJersey Cotton (උස අඟල් 20)\n🔹 පොප්කොන් ශෝර්ට් (උස අඟල් 18)\n🔹 Rib Jacquard Shorts (උස අඟල් 16)\n🔹 Kyela Brand Single Jersey Cotton Shorts (උස අඟල් 16)\n\nඔබට වැඩිදුර තොරතුරු හෝ පින්තූර අවශ්‍ය විශේෂ කලිසම් වර්ගයක් තිබේද? 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "SingleJersey Cotton උස අගල් 20",
+        "botReply": "එම කලිසම් වර්ගය ඉතාමත් ජනප්‍රියයි! 🩳\n\nමෙන්න ඒ පිළිබඳ තොරතුරු:\n\n🔥 SingleJersey Cotton (උස අඟල් 20)\n✅ ගැහැනු පිරිමි දෙපාර්ශවයටම සුදුසුයි\n✅ ඉණ 26 සිට 42 දක්වා ෆ්‍රී සයිස්\n✅ පැකේජ් මිල: 04ක් රු. 2650ක් / 10ක් රු. 6200ක්\n🚚 ලංකාවේ ඕනෑම තැනකට නොමිලේ බෙදාහැරීම\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ කලිසම් පැකේජය ගැන සඳහන් කරන්න. මම ඇණවුම භාරගන්නම්. 😊",
+        "hasImages": true,
+        "imageCount": 8,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "4 pack එක එවන්න",
+        "botReply": "නියමයි! SingleJersey Cotton ශෝර්ට් 4 පැකේජය මම සටහන් කරගන්නම්. \n\nකරුණාකර පහත තොරතුරු ලබා දෙන්න:\n\n🔹 ඔබට අවශ්‍ය පාට අංක සහ එක් එක් පාටින් අවශ්‍ය ගණන (කලිසම් 4ක් සඳහා)\n🔹 ඔබගේ නම\n🔹 දුරකථන අංකය\n🔹 බෙදාහැරීමේ ලිපිනය සහ නගරය\n\nමේ විස්තර එවූ පසු මම ඇණවුම් සාරාංශය ඔබට එවන්නම්.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 2, 3, 5, 6",
+        "botReply": "ස්තූතියි! ඔබ තෝරාගත් පාට අංක (2, 3, 5, 6) මම සටහන් කරගත්තා. 🎨\n\nදැන් ඇණවුම තහවුරු කිරීමට පහත තොරතුරු ටික එවන්න:\n\n🔹 ඔබගේ නම\n🔹 දුරකථන අංකය\n🔹 බෙදාහැරීමේ ලිපිනය සහ නගරය\n\nමේ විස්තර ලැබුණු පසු මම සම්පූර්ණ ඇණවුම් සාරාංශය ඔබට එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Ruwan Jayawardena, 105 Hospital Road, Matara, 0770000015",
+        "botReply": "ස්තූතියි රුවන් මහතාණෙනි! ඔබගේ ඇණවුම සටහන් කර ගත්තා. මෙයයි ඔබගේ ඇණවුම් සාරාංශය:\n\n📦 භාණ්ඩය: SingleJersey Cotton Short (උස අඟල් 20)\n🔢 ප්‍රමාණය: 4 පැකේජය\n🎨 තෝරාගත් පාට: 2, 3, 5, 6 (එක් පාටකින් එක බැගින්)\n💰 උප එකතුව: රු. 2650\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💵 මුළු එකතුව: රු. 2650\n💳 ගෙවීමේ ක්‍රමය: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීමේ ක්‍රමය (COD)\n\n📋 නම: රුවන් ජයවර්ධන\n📱 දුරකථන: 0770000015\n🏠 ලිපිනය: 105 Hospital Road, Matara\n\nමෙම විස්තර නිවැරදි දැයි කරුණාකර පරීක්ෂා කර තහවුරු කරන්න. කිසියම් වෙනසක් කිරීමට අවශ්‍යද? 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "ඔව් විස්තර හරි",
+        "botReply": "ඔබගේ ඇණවුම තහවුරු කිරීම ගැන ස්තූතියි රුවන් මහතාණෙනි! 🥰\n\nඔබගේ ඇණවුම සාර්ථකව සටහන් කර ගත්තෙමු. දින 2-3ක් ඇතුළත ඔබට භාණ්ඩ ලැබෙනු ඇත. අපව තෝරාගැනීම ගැන ස්තූතියි!",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  },
+  {
+    "scenario": {
+      "id": 6,
+      "name": "Customer 6 - Rib Jacquard (5 Pack Package)",
+      "phone": "94770000016",
+      "productNumber": "4",
+      "productName": "Rib Jacquard Shorts",
+      "quantity": 5,
+      "isPackage": true,
+      "expectedSubtotal": 2700,
+      "expectedDelivery": 0,
+      "expectedTotal": 2700,
+      "colors": "1, 2, 3, 4, 5",
+      "customerInfo": "Thilina Bandara, 14 Lake Road, Kurunegala, 0770000016",
+      "customerName": "Thilina Bandara",
+      "customerAddress": "14 Lake Road, Kurunegala",
+      "turns": [
+        {
+          "msg": "Hi",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Rib Jacquard Shorts",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "5 pack එක ගන්නවා",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට අංක 1, 2, 3, 4, 5",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Thilina Bandara, 14 Lake Road, Kurunegala, 0770000016",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "විස්තර හරි confirm කරන්න",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hi",
+        "botReply": "Hello! Welcome to Binara Fashion. 😊\n\nWe have a variety of comfortable shorts available for you. Would you like to see our collection? 🩳✨",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Rib Jacquard Shorts",
+        "botReply": "Rib Jacquard Shorts ඉතාමත් ජනප්‍රිය සහ පහසු රෙදිපිළි වර්ගයකින් නිමවා ඇත. 🩳✨\n\nමේවායේ විස්තර:\n✌️ Unisex (ගැහැනු/පිරිමි දෙපිරිසටම)\n📏 ඉන: 26 - 42 (Free size)\n📏 උස: අඟල් 16\n💰 මිල: පැකේජය අනුව (5ක් 2700ක් හෝ 10ක් 5100ක්)\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ පාට තෝරා ගැනීමට කැමතිද?",
+        "hasImages": true,
+        "imageCount": 10,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "5 pack එක ගන්නවා",
+        "botReply": "නියමයි! Rib Jacquard Shorts පැකේජ 5 තෝරාගැනීම ගැන ස්තූතියි. 📦✨\n\nපහත විස්තර ටික ලබා දෙන්න:\n1️⃣ කැමති පාට අංක (පින්තූරයේ ඇති පරිදි)\n2️⃣ ඔබේ සම්පූර්ණ නම\n3️⃣ දුරකථන අංකය\n4️⃣ ලිපිනය සහ නගරය\n\nමේවා එවන්න, මම ඔබේ ඇණවුම සකස් කරන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 1, 2, 3, 4, 5",
+        "botReply": "ස්තූතියි! ඔබ තෝරාගත් පාට අංක 1, 2, 3, 4 සහ 5 මම සටහන් කරගත්තා. ✅\n\nදැන් ඇණවුම තහවුරු කිරීමට ඔබේ පහත විස්තර ලබා දෙන්න:\n👤 නම\n📞 දුරකථන අංකය\n🏠 ලිපිනය සහ නගරය\n\nමෙම විස්තර එවූ පසු මම ඇණවුමේ සම්පූර්ණ සාරාංශය එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Thilina Bandara, 14 Lake Road, Kurunegala, 0770000016",
+        "botReply": "ඔබේ විස්තර ලැබුණා. ස්තූතියි! මෙන්න ඔබේ ඇණවුම් සාරාංශය:\n\n📦 භාණ්ඩය: Rib Jacquard Shorts (5 Pack)\n🎨 තෝරාගත් පාට: 1, 2, 3, 4, 5\n💰 උප එකතුව: රු. 2700\n🚚 බෙදාහැරීමේ ගාස්තු: රු. 0 (නොමිලේ)\n💵 මුළු එකතුව: රු. 2700\n\n👤 නම: Thilina Bandara\n📞 දුරකථන අංකය: 0770000016\n🏠 ලිපිනය: 14 Lake Road, Kurunegala\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න, එවිට මම ඇණවුම අවසන් කරමි. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "විස්තර හරි confirm කරන්න",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කිරීම ගැන ස්තූතියි! ඔබේ ඇණවුම සාර්ථකව සකස් කළා. 📦✨\n\nඅපගේ කණ්ඩායම ඉක්මනින්ම ඔබව සම්බන්ධ කරගෙන භාණ්ඩ බෙදාහැරීම සිදුකරනු ඇත. අපව තෝරාගැනීමට ස්තූතියි! 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  },
+  {
+    "scenario": {
+      "id": 7,
+      "name": "Customer 7 - Kyela Single Jersey (5 Pack Package)",
+      "phone": "94770000017",
+      "productNumber": "5",
+      "productName": "Kyela Brand Single Jersey Cotton Shorts",
+      "quantity": 5,
+      "isPackage": true,
+      "expectedSubtotal": 2500,
+      "expectedDelivery": 0,
+      "expectedTotal": 2500,
+      "colors": "1, 3, 5, 7, 9",
+      "customerInfo": "Anura Kumara, 78 Station Road, Anuradhapura, 0770000017",
+      "customerName": "Anura Kumara",
+      "customerAddress": "78 Station Road, Anuradhapura",
+      "turns": [
+        {
+          "msg": "Can I learn more about your products?",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Kyela Brand Single Jersey Cotton Shorts",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "5 Pack එක ඕනේ",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට 1, 3, 5, 7, 9",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Anura Kumara, 78 Station Road, Anuradhapura, 0770000017",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Confirm කරන්න",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Can I learn more about your products?",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා! 🥰\n\nඅප සතුව උසස් තත්ත්වයේ කෙටි කලිසම් (Shorts) වර්ග කිහිපයක් තිබෙනවා. පහත දැක්වෙන්නේ අපගේ නිෂ්පාදන ලැයිස්තුවයි:\n\n1. පොප්කොන් ශෝර්ට් (උස අඟල් 16)\n2. SingleJersey Cotton උස අඟල් 20\n3. පොප්කෝන් ශෝර්ට් (උස අඟල් 18)\n4. Rib Jacquard Shorts\n5. Kyela Brand Single Jersey Cotton Shorts\n\nඔබට වැඩි විස්තර හෝ පින්තූර අවශ්‍ය නම් කරුණාකර අංකයක් හෝ නමක් තෝරා පවසන්න. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Kyela Brand Single Jersey Cotton Shorts",
+        "botReply": "Kyela Brand Single Jersey Cotton Shorts ඉතාම ජනප්‍රිය සහ පහසු රෙදි වර්ගයකින් නිර්මාණය කර ඇති කලිසම් වර්ගයකි. 💁‍♀️\n\nඑහි විශේෂාංග මෙන්න:\n✨ ඉණ ප්‍රමාණය: 26 සිට 42 දක්වා (Free Size)\n✨ උස: අඟල් 16\n✨ Unisex: ගැහැණු/පිරිමි දෙපාර්ශවයටම සුදුසුයි\n✨ මිල ගණන්: \n🔹 කලිසම් 05ක්: රු. 2500/=\n🔹 කලිසම් 10ක්: රු. 4500/=\n\n🚚 ඔබට මෙම පැකේජ සඳහා බෙදාහැරීම නොමිලේ (Free Delivery) ලබාගත හැක.\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ කැමති පාට මොනවාද? 😊",
+        "hasImages": true,
+        "imageCount": 12,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "5 Pack එක ඕනේ",
+        "botReply": "නියමයි! Kyela Brand Single Jersey Cotton Shorts 5 Pack එක තෝරා ගැනීමට ස්තූතියි. ❤️\n\nදැන් ඔබට කැමති පාට අංක 05ක් තෝරා ගැනීමට පුළුවනි. කරුණාකර ඔබ කැමති පාට අංක අපට එවන්න. 🎨\n\nඑමෙන්ම ඔබේ ඇණවුම තහවුරු කිරීමට පහත විස්තර ටික ලබා දෙන්න:\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 බෙදාහැරීමේ ලිපිනය:\n📍 නගරය:",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට 1, 3, 5, 7, 9",
+        "botReply": "අපූරුයි! ඔබ තෝරාගත් පාට අංක (1, 3, 5, 7, 9) මම සටහන් කර ගත්තා. ✅\n\nඔබගේ ඇණවුම සම්පූර්ණ කිරීම සඳහා කරුණාකර පහත විස්තර ටික ලබා දෙන්න:\n👤 ඔබගේ නම:\n📞 දුරකථන අංකය:\n🏠 බෙදාහැරීමේ ලිපිනය:\n📍 නගරය:",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Anura Kumara, 78 Station Road, Anuradhapura, 0770000017",
+        "botReply": "ස්තූතියි අනුර මහත්මයා, ඔබ ලබාදුන් විස්තර අනුව ඇණවුම් සාරාංශය පහත දැක්වේ:\n\n📦 අයිතමය: Kyela Brand Single Jersey Cotton Shorts\n🔢 ප්‍රමාණය: 05 Pack\n🎨 තෝරාගත් පාට: 1, 3, 5, 7, 9\n💰 උප එකතුව: රු. 2500/=\n🚚 බෙදාහැරීමේ ගාස්තු: නොමිලේ (Free Delivery)\n💵 මුළු මුදල: රු. 2500/=\n💳 ගෙවීම් ක්‍රමය: බෑන්ක් ට්‍රාන්ස්ෆර් (Bank Transfer)\n\n👤 නම: Anura Kumara\n📞 දුරකථන අංකය: 0770000017\n🏠 ලිපිනය: 78 Station Road, Anuradhapura\n\nසියලුම විස්තර නිවැරදිද? කරුණාකර පරීක්ෂා කර තහවුරු කරන්න. 🙏",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "Confirm කරන්න",
+        "botReply": "ස්තූතියි අනුර මහත්මයා! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරගත්තා. 📦✨\n\nඅපගේ බැංකු ගිණුම් විස්තර පහත දැක්වේ. කරුණාකර මුදල් තැන්පත් කර රිසිට්පත මෙහි එවන්න:\n\n🏦 බැංකුව: [Bank Name]\n💳 ගිණුම් අංකය: [Account Number]\n👤 නම: [Account Holder Name]\n\nඔබගේ ඇණවුම දින 2-3ක් ඇතුළත ඔබ වෙත ලැබෙනු ඇත. අපව තෝරාගැනීමට ස්තූතියි! 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  },
+  {
+    "scenario": {
+      "id": 8,
+      "name": "Customer 8 - Popcorn 16 inch (7 shorts custom quantity)",
+      "phone": "94770000018",
+      "productNumber": "1",
+      "productName": "පොප්කොන් ශෝර්ට් උස අගල් 16",
+      "quantity": 7,
+      "isPackage": false,
+      "expectedSubtotal": 3640,
+      "expectedDelivery": 0,
+      "expectedTotal": 3640,
+      "colors": "1, 2, 3, 4, 5, 6, 7",
+      "customerInfo": "Mahesh Senanayake, 33 Hill Street, Nuwara Eliya, 0770000018",
+      "customerName": "Mahesh Senanayake",
+      "customerAddress": "33 Hill Street, Nuwara Eliya",
+      "turns": [
+        {
+          "msg": "Hi",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පොප්කොන් ශෝර්ට් උස අගල් 16",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "මට කලිසම් 7ක් ඕනෙ, ගාණ කීයද?",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට අංක 1, 2, 3, 4, 5, 6, 7",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Mahesh Senanayake, 33 Hill Street, Nuwara Eliya, 0770000018",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "ඔව් විස්තර හරි confirm කරන්න",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hi",
+        "botReply": "Hello! Welcome to Binara Fashion. 😊\n\nWe have a collection of comfortable shorts available. Could you please let me know which of these you are interested in so I can provide more details and photos?\n\n1. Popcorn Shorts (16 inch height)\n2. Single Jersey Cotton Shorts (20 inch height)\n3. Popcorn Shorts (18 inch height)\n4. Rib Jacquard Shorts\n5. Kyela Brand Single Jersey Cotton Shorts\n\nLet me know your choice! 🛍️",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "පොප්කොන් ශෝර්ට් උස අගල් 16",
+        "botReply": "ස්තූතියි! පොප්කොන් ශෝර්ට් (අඟල් 16) පිළිබඳ විස්තර මෙන්න:\n\n🔹 මිල: ශෝර්ට් 05ක් = රු. 2600 / ශෝර්ට් 10ක් = රු. 4600\n🔹 ඉණ ප්‍රමාණය: 28 සිට 44 දක්වා (Free Size)\n🔹 රෙදි වර්ගය: පොප්කෝන් ෆුල් කොට්න්\n\nඔබට අවශ්‍ය ප්‍රමාණය (කලිසම් ගණන) පවසන්න. ඉන්පසු මම ඔබට තෝරාගත හැකි පාට සහ ප්‍රමාණ විස්තර එවන්නම්. 📦",
+        "hasImages": true,
+        "imageCount": 12,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "මට කලිසම් 7ක් ඕනෙ, ගාණ කීයද?",
+        "botReply": "රු. 2600 ක පැකේජය කලිසම් 5ක් සඳහා වන අතර, 1ක මිල රු. 520ක් ලෙස ගණනය කෙරේ. \n\nඒ අනුව කලිසම් 7 සඳහා මුළු මිල රු. 3640ක් වේ. 💰\n\nදැන් අපිට ඔබේ පාට තෝරාගැනීම සහ ප්‍රමාණය තහවුරු කරගමු. ඔබට අවශ්‍ය පාට අංක සහ ඔබේ ඉණ මිනුම පවසන්න. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 1, 2, 3, 4, 5, 6, 7",
+        "botReply": "නියමයි! ඔබ තෝරාගත් පාට අංක 1, 2, 3, 4, 5, 6, සහ 7 මම සටහන් කර ගත්තා. ✅\n\nදැන් ඇණවුම තහවුරු කිරීමට ඔබේ පහත විස්තර ටික ලබා දෙන්න:\n\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 බෙදාහැරීමේ ලිපිනය:\n📍 නගරය:\n\nඔබ කලිසම් 7ක් ලබා ගන්නා නිසා ඔබට බෙදාහැරීම නොමිලේ (Free Delivery) හිමිවේ. 🚚✨",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Mahesh Senanayake, 33 Hill Street, Nuwara Eliya, 0770000018",
+        "botReply": "ස්තූතියි මහේෂ් මහතාණනි! ඔබගේ ඇණවුමේ සාරාංශය පහත පරිදි වේ:\n\n📦 අයිතමය: පොප්කොන් ශෝර්ට් (අඟල් 16)\n🔢 ප්‍රමාණය: 07\n🎨 පාට අංක: 1, 2, 3, 4, 5, 6, 7\n💰 උප එකතුව: රු. 3640\n🚚 බෙදාහැරීමේ ගාස්තුව: නොමිලේ (Free Delivery)\n💵 මුළු එකතුව: රු. 3640\n\n👤 නම: Mahesh Senanayake\n📞 දුරකථන අංකය: 0770000018\n🏠 ලිපිනය: 33 Hill Street, Nuwara Eliya\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්නේ නම් කරුණාකර 'ඔව්' ලෙස පවසන්න. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "ඔව් විස්තර හරි confirm කරන්න",
+        "botReply": "ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී. ස්තූතියි! 😊\n\nදින 2-3ක් ඇතුලත ඔබගේ ඇණවුම ඔබ වෙත ලැබෙනු ඇත. ඔබට තවත් සහයක් අවශ්‍ය නම් අපගේ නිල කාර්ය මණ්ඩල අංකය 0761122620 මගින් සම්බන්ධ කර ගත හැක. 🚚✨",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  },
+  {
+    "scenario": {
+      "id": 9,
+      "name": "Customer 9 - Rib Jacquard (10 Pack Package)",
+      "phone": "94770000019",
+      "productNumber": "4",
+      "productName": "Rib Jacquard Shorts",
+      "quantity": 10,
+      "isPackage": true,
+      "expectedSubtotal": 5100,
+      "expectedDelivery": 0,
+      "expectedTotal": 5100,
+      "colors": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+      "customerInfo": "Priyantha Dissanayake, 56 Beach Road, Hikkaduwa, 0770000019",
+      "customerName": "Priyantha Dissanayake",
+      "customerAddress": "56 Beach Road, Hikkaduwa",
+      "turns": [
+        {
+          "msg": "විස්තර එවන්න",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Rib Jacquard Shorts",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "10 pack එකක් ගන්නවා",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට 1 සිට 10 දක්වා සියලුම පාට වලින් 1 බැගින්",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Priyantha Dissanayake, 56 Beach Road, Hikkaduwa, 0770000019",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "හරි confirm කරන්න",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "විස්තර එවන්න",
+        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා. 😊\n\nඅප සතුව පවතින කෙටි කලිසම් (Shorts) වර්ග කිහිපයක් පහත දැක්වේ:\n\n🔹 පොප්කොන් ශෝර්ට් (උස අඟල් 16) - රු. 2600 (පැකේජය)\n🔹 SingleJersey Cotton (උස අඟල් 20) - රු. 2650 (පැකේජය)\n🔹 පොප්කෝන් ශෝර්ට් (උස අඟල් 18) - රු. 2600 (පැකේජය)\n🔹 Rib Jacquard Shorts - රු. 2700 (පැකේජය)\n🔹 Kyela Brand Single Jersey Cotton - රු. 2500 (පැකේජය)\n\nඔබට වැඩිදුර විස්තර හෝ පින්තූර බැලීමට අවශ්‍ය විශේෂිත වර්ගයක් තිබේද? 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Rib Jacquard Shorts",
+        "botReply": "මෙන්න Rib Jacquard Shorts පිළිබඳ විස්තර:\n\n✌️ Unisex short\n💰 මිල: 5ක් 2700යි / 10ක් 5100යි\n🩳 රිබ් ජැකුවර්ඩ් මැටීරියල්\n🩳 උස අඟල් 16\n🩳 ඉන 26 සිට 42 දක්වා (ෆ්‍රී සයිස්)\n🚚 5ක් හෝ වැඩි නම් Delivery නොමිලේ! 5ට අඩු නම් Delivery ගාස්තුව රු. 450ක් අය කෙරේ.\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ පාට තෝරාගැනීමට අවශ්‍යද?",
+        "hasImages": true,
+        "imageCount": 10,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "10 pack එකක් ගන්නවා",
+        "botReply": "නියමයි! Rib Jacquard Shorts පැකේජය (10) තෝරාගැනීම ගැන ස්තුතියි. 😊\n\nදැන් ඔබට කැමති පාට අංක සහ අදාළ ප්‍රමාණයන් තෝරාගන්න පුළුවන්. ඔබ ලබාගන්නා මුළු ප්‍රමාණය 10 ක් විය යුතුයි.\n\nකරුණාකර තෝරාගත් පාට අංක සහ එක් එක් පාටින් අවශ්‍ය ගණන අපට එවන්න. ඒ වගේම ඔබේ නම, දුරකථන අංකය සහ ලිපිනය ලබා දෙන්න. 📦",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට 1 සිට 10 දක්වා සියලුම පාට වලින් 1 බැගින්",
+        "botReply": "හරිම වටිනවා! පාට 1 සිට 10 දක්වා සියලුම පාට වලින් 1 බැගින් ශෝර්ට් 10ක් වෙන් කරනවා. ✅\n\nඔබගේ ඇණවුම තහවුරු කිරීමට කරුණාකර පහත විස්තර අප වෙත එවන්න:\n\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 බෙදාහැරීමේ ලිපිනය:\n📍 නගරය:\n\nඉහත විස්තර එවීමෙන් පසු මම ඔබට ඇණවුමේ සාරාංශය එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Priyantha Dissanayake, 56 Beach Road, Hikkaduwa, 0770000019",
+        "botReply": "ඔබගේ ඇණවුම තහවුරු කිරීමට පෙර කරුණාකර මෙම සාරාංශය පරීක්ෂා කරන්න:\n\n📦 අයිතමය: Rib Jacquard Shorts (10 Pack)\n🎨 පාට: 1 සිට 10 දක්වා එක් අයිතමයක් බැගින් (සමස්තය 10)\n📏 ප්‍රමාණය: ෆ්‍රී සයිස් (ඉන 26-42)\n\n💰 උප එකතුව: රු. 5100\n🚚 බෙදාහැරීමේ ගාස්තුව: නොමිලේ (Free Delivery)\n💰 මුළු එකතුව: රු. 5100\n\n👤 නම: Priyantha Dissanayake\n📞 දුරකථන අංකය: 0770000019\n🏠 ලිපිනය: 56 Beach Road, Hikkaduwa\n\nමෙම විස්තර නිවැරදිද? කරුණාකර තහවුරු කරන්න. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "හරි confirm කරන්න",
+        "botReply": "ස්තූතියි! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී. 😊\n\nඔබගේ ඇණවුම දින 2-3ක් ඇතුළත ඔබ වෙත ලැබෙනු ඇත. අපගේ සේවාව පිළිබඳව ඔබ තැබූ විශ්වාසයට ස්තූතියි! 🌸",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  },
+  {
+    "scenario": {
+      "id": 10,
+      "name": "Customer 10 - SingleJersey Cotton 20 inch (10 Pack Package)",
+      "phone": "94770000020",
+      "productNumber": "2",
+      "productName": "SingleJersey Cotton උස අගල් 20",
+      "quantity": 10,
+      "isPackage": true,
+      "expectedSubtotal": 6200,
+      "expectedDelivery": 0,
+      "expectedTotal": 6200,
+      "colors": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+      "customerInfo": "Sandun Rajapaksha, 12 Park Avenue, Gampaha, 0770000020",
+      "customerName": "Sandun Rajapaksha",
+      "customerAddress": "12 Park Avenue, Gampaha",
+      "turns": [
+        {
+          "msg": "Hello",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "SingleJersey Cotton උස අගල් 20",
+          "expectImages": true,
+          "expectOrder": false
+        },
+        {
+          "msg": "10 pack එකක් ඕනේ",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "පාට අංක 1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "Sandun Rajapaksha, 12 Park Avenue, Gampaha, 0770000020",
+          "expectImages": false,
+          "expectOrder": false
+        },
+        {
+          "msg": "විස්තර නිවැරදියි, order එක දාන්න",
+          "expectImages": false,
+          "expectOrder": true
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hello",
+        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා. 🥰\n\nඅප සතුව පවතින කෙටි කලිසම් (Shorts) වර්ග කිහිපයක් තිබෙනවා. ඔබට අවශ්‍ය විශේෂිත වර්ගයක් හෝ මාදිලියක් තිබේද? එසේ නැතිනම් අපගේ එකතුව පෙන්වන්නද? 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "SingleJersey Cotton උස අගල් 20",
+        "botReply": "මෙම වර්ගයේ (Single Jersey Cotton - උස අඟල් 20) කෙටි කලිසම් ඉතාමත් සුවපහසුයි. මේවා පිරිමි සහ ගැහැණු දෙපිරිසටම ඇඳිය හැකියි. 🩳\n\nපැකේජ විස්තර:\n🔸 කලිසම් 4ක් - රු. 2650\n🔸 කලිසම් 10ක් - රු. 6200\n\nඔබට අවශ්‍ය කලිසම් ප්‍රමාණය සහ පැකේජය කුමක්ද? ඔබ කැමති නම් පාට සහ මෝස්තර තෝරාගන්න පුළුවන්. 🌸",
+        "hasImages": true,
+        "imageCount": 8,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "10 pack එකක් ඕනේ",
+        "botReply": "නියමයි! SingleJersey Cotton (උස අඟල් 20) කලිසම් 10ක පැකේජයක් තෝරා ගැනීම ගැන ස්තූතියි. 🔥\n\n🚚 මෙම පැකේජය සඳහා බෙදාහැරීම නොමිලේ (Free Delivery).\n\nදැන් කරුණාකර ඔබට අවශ්‍ය පාට අංක සහ එක් එක් පාටින් කීයක් බැගින් අවශ්‍යදැයි සඳහන් කරන්න. ඒ වගේම ඔබට ලැබෙන ඇණවුම තහවුරු කිරීමට ඔබේ පහත විස්තර ටික ලබා දෙන්න:\n\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 ලිපිනය:\n📍 නගරය:",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+        "botReply": "පැහැදිලිවම! ඔබ තෝරාගත් පාට අංක 1 සිට 10 දක්වා (එක් අංකයකින් එක බැගින්) අප සටහන් කරගත්තා. ✅\n\nඔබගේ ඇණවුම තහවුරු කිරීමට කරුණාකර පහත විස්තර ටික ලබා දෙන්න:\n\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 ලිපිනය:\n📍 නගරය:\n\nඉන්පසු මම ඔබගේ ඇණවුම් සාරාංශය ලබා දෙන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Sandun Rajapaksha, 12 Park Avenue, Gampaha, 0770000020",
+        "botReply": "ස්තූතියි සඳුන් මහතාණනි! ඔබගේ විස්තර ලැබුණා. ඔබගේ ඇණවුම් සාරාංශය පහත පරිදි වේ:\n\n📦 අයිතමය: SingleJersey Cotton Shorts (උස අඟල් 20)\n🔢 පැකේජය: 10 Pack\n🎨 පාට: අංක 1, 2, 3, 4, 5, 6, 7, 8, 9, 10\n💰 උප එකතුව: රු. 6200\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💵 මුළු මුදල: රු. 6200\n\n👤 නම: Sandun Rajapaksha\n📞 දුරකථන අංකය: 0770000020\n🏠 ලිපිනය: 12 Park Avenue, Gampaha\n\nමෙම විස්තර නිවැරදිද? කරුණාකර තහවුරු කරන්න. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "විස්තර නිවැරදියි, order එක දාන්න",
+        "botReply": "ඔබගේ ඇණවුම තහවුරු කිරීම ගැන ස්තූතියි! සඳුන් මහතාණනි, ඔබගේ ඇණවුම අප වෙත ලැබුණා. 🌸\n\nඅපගේ නිලධාරියෙකු ඉක්මනින්ම ඔබව සම්බන්ධ කරගෙන ඇණවුම තහවුරු කරනු ඇත. දින 2-3ක් ඇතුළත ඔබට භාණ්ඩය ලැබෙනු ඇත. අපව තෝරාගැනීම ගැන ස්තූතියි! 🥰",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": null,
+    "calcCorrect": false,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": null
+  }
+]
