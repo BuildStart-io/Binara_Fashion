@@ -1,0 +1,1200 @@
+[
+  {
+    "scenario": {
+      "id": 1,
+      "name": "Customer 1 - Waffle Knit Cotton Shorts (1 pc custom)",
+      "phone": "94711100001",
+      "productInquiry": "Waffle Knit Cotton Shorts",
+      "quantity": 1,
+      "expectedSubtotal": 700,
+      "expectedDelivery": 450,
+      "expectedTotal": 1150,
+      "colors": "2",
+      "customerName": "Kusal Mendis",
+      "customerAddress": "15 Galle Face Terrace, Colombo 03",
+      "turns": [
+        {
+          "msg": "Hi",
+          "expectImages": false
+        },
+        {
+          "msg": "Waffle Knit Cotton Shorts",
+          "expectImages": true
+        },
+        {
+          "msg": "මට 1ක් ගන්න පුළුවන්ද?",
+          "expectImages": false
+        },
+        {
+          "msg": "පාට අංක 2",
+          "expectImages": false
+        },
+        {
+          "msg": "Kusal Mendis, 15 Galle Face Terrace, Colombo 03, 0711100001",
+          "expectImages": false
+        },
+        {
+          "msg": "හරි confirm කරන්න",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hi",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා ! 🥰\n\nඔයාට කැමති කෙටි කලිසම් වර්ගය බලමුද? අප සතුව පහත අයිතම තිබේ:\n\n1. පොප්කොන් ශෝර්ට් උස අගල් 16\n2. SingleJersey Cotton උස අගල් 20\n3. පොප්කෝන් ශෝර්ට් උස අගල් 18\n4. Rib Jacquard Shorts\n5. Kyela Brand Single Jersey Cotton Shorts\n6. Waffle Knit Cotton Shorts\n7. Linen Blend Casual Shorts\n\nකරුණාකර අංකය හෝ නම සඳහන් කරන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Waffle Knit Cotton Shorts",
+        "botReply": "මෙම කලිසම් වර්ගය ඉතා උසස් තත්ත්වයේ වොෆල් නිට් (Waffle Knit) කපු රෙදිවලින් නිමවා ඇත. 😊\n\nපැකේජ මිල ගණන් පහත පරිදි වේ:\n🔹 4 පැක් = රු. 2800 (එකක් රු. 700 බැගින්)\n🔹 8 පැක් = රු. 5200 (එකක් රු. 650 බැගින්)\n\nඔබට අවශ්‍ය පැකේජය හෝ ප්‍රමාණය සඳහන් කරන්න. පසුව මම පාට සහ වෙනත් විස්තර ලබාගන්නම්.",
+        "hasImages": true,
+        "imageCount": 2,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "මට 1ක් ගන්න පුළුවන්ද?",
+        "botReply": "ඇත්ත වශයෙන්ම පුළුවන්! අපගේ Waffle Knit Cotton Shorts වල අගය අනුව එකක් රු. 700 බැගින් වේ.\n\nකලිසම් 5කට අඩු ඇණවුම් සඳහා බෙදාහැරීමේ ගාස්තුව රු. 450ක් අය කෙරේ. 📦\n\nඔබ කැමති පාට අංකය සහ ඉණ මිනුම (ඉඟිය: අපගේ කලිසම් 28-42 දක්වා ඕනෑම කෙනෙකුට ගැළපෙන ෆ්‍රී සයිස් වේ) සඳහන් කරන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 2",
+        "botReply": "හරි, ඔබ තෝරාගත් වර්ණය සටහන් කර ගත්තා. ✅\n\nදැන් ඔබේ ඇණවුම තහවුරු කර ගැනීම සඳහා කරුණාකර පහත විස්තර ලබා දෙන්න:\n\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 බෙදාහැරීමේ ලිපිනය:\n📍 නගරය:\n\nඔබේ විස්තර එව්ව ගමන්ම මම ඇණවුම් සාරාංශයක් එවන්නම්.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Kusal Mendis, 15 Galle Face Terrace, Colombo 03, 0711100001",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කර ගැනීම සඳහා සාරාංශය මෙන්න:\n\n📦 අයිතමය: Waffle Knit Cotton Shorts\n🎨 තෝරාගත් පාට: අංක 2\n📏 ප්‍රමාණය: ෆ්‍රී සයිස් (ඉණ 28-42)\n💰 උප එකතුව: රු. 700\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💳 මුළු මුදල: රු. 1150\n\n👤 නම: Kusal Mendis\n📞 දුරකථනය: 0711100001\n🏠 ලිපිනය: 15 Galle Face Terrace, Colombo 03\n\nමෙම විස්තර නිවැරදි දැයි කරුණාකර පරීක්ෂා කර තහවුරු කරන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "හරි confirm කරන්න",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කළා. බොහොම ස්තූතියි! 🙏\n\nඅපගේ ගෙවීම් කටයුතු සඳහා පහත බැංකු විස්තර භාවිතා කළ හැක:\n\n🏦 බැංකුව: [Bank Name]\n🔢 ගිණුම් අංකය: [Account Number]\n👤 ගිණුම් නාමය: [Account Name]\n\nගෙවීම සිදුකළ පසු එහි රිසිට්පතේ පින්තූරයක් අපට එවන්න. ඔබගේ ඇණවුම දින 2-3ක් ඇතුළත ඔබට ලැබෙනු ඇත.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": {
+      "id": "6cf4bb17-d86b-412c-9ab7-3e17b07fbc50",
+      "customer_name": "Kusal Mendis",
+      "customer_phone": "0711100001",
+      "total_amount": 1150,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "Waffle Knit Cotton Shorts",
+          "size": "Free Size (28-42)",
+          "price": 700,
+          "quantity": 1,
+          "variations": {
+            "Size": "Free Size (28-42)",
+            "Color": "2"
+          },
+          "product_type": "physical",
+          "selected_colors": "2"
+        }
+      ],
+      "special_instructions": "Colours: 2 | Size: Free Size (28-42)"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  },
+  {
+    "scenario": {
+      "id": 2,
+      "name": "Customer 2 - Linen Blend Casual Shorts (2 pcs custom)",
+      "phone": "94711100002",
+      "productInquiry": "Linen Blend Casual Shorts",
+      "quantity": 2,
+      "expectedSubtotal": 1800,
+      "expectedDelivery": 450,
+      "expectedTotal": 2250,
+      "colors": "1, 2",
+      "customerName": "Dinuka Sanjeewa",
+      "customerAddress": "88 Peradeniya Road, Kandy",
+      "turns": [
+        {
+          "msg": "Hello",
+          "expectImages": false
+        },
+        {
+          "msg": "Linen Blend Casual Shorts",
+          "expectImages": true
+        },
+        {
+          "msg": "මට කලිසම් 2ක් ඕනේ, ගාණ කීයද?",
+          "expectImages": false
+        },
+        {
+          "msg": "පාට අංක 1 සහ 2",
+          "expectImages": false
+        },
+        {
+          "msg": "Dinuka Sanjeewa, 88 Peradeniya Road, Kandy, 0711100002",
+          "expectImages": false
+        },
+        {
+          "msg": "විස්තර නිවැරදියි confirm කරන්න",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hello",
+        "botReply": "Hello! Welcome to Binara Fashion. How can I help you today? 😊\n\nWe have a variety of high-quality shorts available. Would you like to see our collection or are you looking for something specific?",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Linen Blend Casual Shorts",
+        "botReply": "Great choice! Our Linen Blend Casual Shorts are made from premium breathable material. \n\nHere are the details:\n🔹 3 Pack: LKR 2700 (LKR 900/item)\n🔹 6 Pack: LKR 5100 (LKR 850/item)\n🚚 Free delivery for all packages!\n\nWould you like to place an order? Please let me know the quantity and your preferred size.",
+        "hasImages": true,
+        "imageCount": 2,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "මට කලිසම් 2ක් ඕනේ, ගාණ කීයද?",
+        "botReply": "පොප්කෝන් ශෝර්ට් 2කක් සඳහා මිල ගණනය කරමු:\n\n🔹 එක කලිසමක මිල රු. 900 බැගින් (රු. 2700 / 3)\n🔹 කලිසම් 2කේ මුළු වටිනාකම රු. 1800\n🔹 බෙදාහැරීමේ ගාස්තුව රු. 450 (කලිසම් 5ට අඩු නිසා)\n💰 මුළු එකතුව: රු. 2250\n\nඔබට මෙය තහවුරු කළ හැකිද? ඔබේ ලිපිනය සහ දුරකථන අංකය එවන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 1 සහ 2",
+        "botReply": "හරි, අංක 1 සහ 2 පාටින් කලිසම් දෙකක් ලබා ගැනීමට මම සටහන් කරගත්තා. \n\nඇණවුම සම්පූර්ණ කිරීමට කරුණාකර පහත විස්තර එවන්න:\n\n✅ ඔබේ නම\n✅ බෙදාහැරීමේ ලිපිනය\n✅ නගරය\n✅ දුරකථන අංකය\n\nමේ විස්තර ලැබුණු පසු මම ඔබට ඇණවුම් සාරාංශයක් එවන්නම්.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Dinuka Sanjeewa, 88 Peradeniya Road, Kandy, 0711100002",
+        "botReply": "ස්තූතියි දිනුක, ඔබේ විස්තර ලැබුණා. ඇණවුමේ සාරාංශය මෙන්න:\n\n📦 භාණ්ඩය: Linen Blend Casual Shorts\n🔢 ප්‍රමාණය: 02\n🎨 වර්ණ: අංක 01 සහ 02\n💰 උප එකතුව: රු. 1800\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💳 මුළු එකතුව: රු. 2250\n\n👤 නම: Dinuka Sanjeewa\n📞 දුරකථන අංකය: 0711100002\n🏠 ලිපිනය: 88 Peradeniya Road, Kandy\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "විස්තර නිවැරදියි confirm කරන්න",
+        "botReply": "ස්තූතියි දිනුක! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කර ඇත. අපගේ කණ්ඩායම ඔබව සම්බන්ධ කරගෙන ඇණවුම භාරදීම සිදුකරනු ඇත. \n\nඔබගේ විශ්වාසයට ස්තූතියි! 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": {
+      "id": "97613465-bdfa-486f-9b20-c6de2aa777ea",
+      "customer_name": "Dinuka Sanjeewa",
+      "customer_phone": "0711100002",
+      "total_amount": 2250,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "Linen Blend Casual Shorts",
+          "size": "Free Size",
+          "price": 1800,
+          "quantity": 2,
+          "variations": {
+            "Size": "Free Size",
+            "Color": "1, 2"
+          },
+          "product_type": "physical",
+          "selected_colors": "1, 2"
+        }
+      ],
+      "special_instructions": "Colours: 1, 2 | Size: Free Size"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  },
+  {
+    "scenario": {
+      "id": 3,
+      "name": "Customer 3 - Linen Blend Casual Shorts (3-Pack Package)",
+      "phone": "94711100003",
+      "productInquiry": "Linen Blend Casual Shorts",
+      "quantity": 3,
+      "expectedSubtotal": 2700,
+      "expectedDelivery": 0,
+      "expectedTotal": 2700,
+      "colors": "1, 2, 3",
+      "customerName": "Nadeesha Perera",
+      "customerAddress": "42 Sea Street, Negombo",
+      "turns": [
+        {
+          "msg": "විස්තර එවන්න",
+          "expectImages": false
+        },
+        {
+          "msg": "Linen Blend Casual Shorts",
+          "expectImages": true
+        },
+        {
+          "msg": "3 Pack එකක් ගන්නවා",
+          "expectImages": false
+        },
+        {
+          "msg": "පාට 1, 2, 3",
+          "expectImages": false
+        },
+        {
+          "msg": "Nadeesha Perera, 42 Sea Street, Negombo, 0711100003",
+          "expectImages": false
+        },
+        {
+          "msg": "හරි ඇණවුම දාන්න",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "විස්තර එවන්න",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා! 🥰\n\nඅප සතුව පවතින කෙටි කලිසම් වර්ග කිහිපයක් පහත දැක්වේ:\n\n1. පොප්කොන් ශෝර්ට් (උස අඟල් 16)\n2. SingleJersey Cotton (උස අඟල් 20)\n3. පොප්කෝන් ශෝර්ට් (උස අඟල් 18)\n4. Rib Jacquard Shorts\n5. Kyela Brand Single Jersey Cotton Shorts\n6. Waffle Knit Cotton Shorts\n7. Linen Blend Casual Shorts\n\nඔයාට වැඩිදුර තොරතුරු දැනගන්න අවශ්‍ය කලිසම් වර්ගයේ අංකය හෝ නම කියන්නකෝ. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Linen Blend Casual Shorts",
+        "botReply": "Linen Blend Casual Shorts ඉතා උසස් තත්ත්වයේ සහ හුස්ම ගත හැකි ලිනන් රෙදිවලින් නිමවා ඇත. 🌿\n\nමිල ගණන්:\n🔹 පැකේජය (කලිසම් 3ක්) - රු. 2700\n🔹 පැකේජය (කලිසම් 6ක්) - රු. 5100\n\nඔබට මෙය ඇණවුම් කිරීමට අවශ්‍යද? එසේ නම්, අවශ්‍ය පැකේජය සහ ඔබට ගැළපෙන ප්‍රමාණය (ඉණ මිනුම) පවසන්න. 😊",
+        "hasImages": true,
+        "imageCount": 2,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "3 Pack එකක් ගන්නවා",
+        "botReply": "පහසුවෙන් ඇණවුම ලබාගැනීමට පහත විස්තර ටික ලබා දෙන්න:\n\n🔹 ඔබට අවශ්‍ය පාට අංක හෝ වර්ණ තෝරාගන්න\n🔹 ඔබේ ඉණ මිනුම (Size)\n🔹 ඔබේ නම\n🔹 දුරකථන අංකය\n🔹 බෙදාහැරීමේ ලිපිනය සහ නගරය\n\nමේවා එව්වොත් මම ඔයාගේ ඇණවුම සකස් කරන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට 1, 2, 3",
+        "botReply": "හරි, ඒ පාට අංක තුන ඇණවුමට ඇතුළත් කළා. 📝\n\nදැන් ඇණවුම තහවුරු කරන්න පහත විස්තර ටිකත් එවන්නකෝ:\n\n🔹 ඔබේ ඉණ මිනුම (Size - අඟල් 28 සිට 42 දක්වා)\n🔹 ඔබේ නම\n🔹 දුරකථන අංකය\n🔹 බෙදාහැරීමේ ලිපිනය සහ නගරය\n\nමේවා ලැබුණ පසු මම ඇණවුම් සාරාංශය එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Nadeesha Perera, 42 Sea Street, Negombo, 0711100003",
+        "botReply": "ස්තූතියි නදීශා, ඔබේ විස්තර සියල්ල ලැබුණා. ඉණ මිනුම (Size) ගැනත් සඳහන් කරන්න පුළුවන්ද? 😊\n\nඇණවුම් සාරාංශය:\n\n📦 භාණ්ඩය: Linen Blend Casual Shorts (3 Pack)\n🎨 පාට: 1, 2, 3\n📏 ඉණ මිනුම: (තහවුරු කරන්න)\n💰 උප එකතුව: රු. 2700\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💰 මුළු එකතුව: රු. 2700\n\nමෙම තොරතුරු නිවැරදිද? තහවුරු කළ පසු අපි ඇණවුම භාරගන්නෙමු. 💳",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "හරි ඇණවුම දාන්න",
+        "botReply": "ස්තූතියි නදීශා! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කළා. 📦✨\n\nඔබේ ඇණවුම ඉදිරි දින 2-3 ඇතුළත ඔබේ ලිපිනයට ලැබෙනු ඇත. ඇණවුම සම්බන්ධව වැඩිදුර විස්තර සඳහා අපගේ කාර්ය මණ්ඩලය ඔබට කතා කරනු ඇත. \n\nBinara Fashion තෝරා ගැනීම ගැන ස්තූතියි! 🥰",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": {
+      "id": "081795ab-76da-4a9f-b9d8-e337dac419ab",
+      "customer_name": "Nadeesha Perera",
+      "customer_phone": "0711100003",
+      "total_amount": 2700,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "Linen Blend Casual Shorts",
+          "size": "Not specified",
+          "price": 2700,
+          "quantity": 3,
+          "variations": {
+            "Size": "Not specified",
+            "Color": "1, 2, 3"
+          },
+          "product_type": "physical",
+          "selected_colors": "1, 2, 3"
+        }
+      ],
+      "special_instructions": "Colours: 1, 2, 3 | Size: Not specified"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  },
+  {
+    "scenario": {
+      "id": 4,
+      "name": "Customer 4 - Waffle Knit Cotton Shorts (4-Pack Package)",
+      "phone": "94711100004",
+      "productInquiry": "Waffle Knit Cotton Shorts",
+      "quantity": 4,
+      "expectedSubtotal": 2800,
+      "expectedDelivery": 0,
+      "expectedTotal": 2800,
+      "colors": "1, 2, 3, 4",
+      "customerName": "Sajith Premadasa",
+      "customerAddress": "102 Beach Road, Matara",
+      "turns": [
+        {
+          "msg": "Hi",
+          "expectImages": false
+        },
+        {
+          "msg": "Waffle Knit Cotton Shorts",
+          "expectImages": true
+        },
+        {
+          "msg": "4 Pack එකක් දාන්න",
+          "expectImages": false
+        },
+        {
+          "msg": "පාට අංක 1, 2, 3, 4",
+          "expectImages": false
+        },
+        {
+          "msg": "Sajith Premadasa, 102 Beach Road, Matara, 0711100004",
+          "expectImages": false
+        },
+        {
+          "msg": "ඔව් විස්තර හරි",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hi",
+        "botReply": "Hello! Welcome to Binara Fashion. 😊\n\nWe have a variety of comfortable short collections available. Please let me know if you are looking for something specific, or would you like to see our available options? 🛍️",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Waffle Knit Cotton Shorts",
+        "botReply": "Great choice! Our Premium Waffle Knit Cotton Shorts are very comfortable. 🩳\n\nHere are the package details:\n🔹 4 Pack: LKR 2800 (LKR 700 per item)\n🔹 8 Pack: LKR 5200 (LKR 650 per item)\n\nDelivery is 100% FREE for these packages! 🚚 \n\nWould you like to place an order? Please let me know your preferred package and quantity. 😊",
+        "hasImages": true,
+        "imageCount": 2,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "4 Pack එකක් දාන්න",
+        "botReply": "එලකිරි! 4 Pack එකක් සඳහා ඔබගේ ඇණවුම මම සටහන් කරගන්නම්. 😊\n\nවැඩකටයුතු ඉදිරියට කරගෙන යාමට කරුණාකර පහත විස්තර ලබා දෙන්න:\n🔹 ඔබ කැමති පාට අංක (ඡායාරූපයේ ඇති පරිදි)\n🔹 ඔබේ ඉණ මිනුම (ඉන 28 සිට 44 දක්වා)\n🔹 ඔබේ සම්පූර්ණ නම\n🔹 ලිපිනය සහ නගරය\n🔹 දුරකථන අංකය",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 1, 2, 3, 4",
+        "botReply": "ස්තුතියි! ඔබ තෝරාගත් පාට අංක 1, 2, 3, 4 මම සටහන් කරගත්තා. \n\nඇණවුම සම්පූර්ණ කිරීමට කරුණාකර පහත විස්තර ටිකත් එවන්න:\n🔹 ඔබේ ඉණ මිනුම (ඉන 28 සිට 44 දක්වා)\n🔹 ඔබේ සම්පූර්ණ නම\n🔹 බෙදාහැරීමේ ලිපිනය සහ නගරය\n🔹 දුරකථන අංකය",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Sajith Premadasa, 102 Beach Road, Matara, 0711100004",
+        "botReply": "ස්තුතියි! ඔබගේ ඇණවුම තහවුරු කිරීමට පහත තොරතුරු පරීක්ෂා කරන්න:\n\n📦 අයිතමය: Waffle Knit Cotton Shorts (4 Pack)\n🎨 තෝරාගත් පාට: 1, 2, 3, 4\n📏 ඉණ මිනුම: සකස් කර ගන්නා ලදී (Free Size)\n💰 එකතුව: LKR 2800\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💳 මුළු ගෙවීම: LKR 2800\n\n👤 නම: Sajith Premadasa\n📞 දුරකථන අංකය: 0711100004\n🏠 ලිපිනය: 102 Beach Road, Matara\n\nමෙම විස්තර නිවැරදිද? කරුණාකර තහවුරු කරන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "ඔව් විස්තර හරි",
+        "botReply": "ඔබගේ ඇණවුම තහවුරු කළා. බොහොම ස්තුතියි! 🥰\n\nඔබගේ ඇණවුම ඉක්මනින්ම ඔබ වෙත එවීමට කටයුතු කරන්නම්. දින 2-3ක් ඇතුළත ඔබට භාණ්ඩය ලැබෙනු ඇත. 🚚",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": {
+      "id": "a4478751-c52c-4b05-9d93-0748c631e9cb",
+      "customer_name": "Sajith Premadasa",
+      "customer_phone": "0711100004",
+      "total_amount": 2800,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "Waffle Knit Cotton Shorts",
+          "size": "Free Size (28-42)",
+          "price": 2800,
+          "quantity": 4,
+          "variations": {
+            "Size": "Free Size (28-42)",
+            "Color": "1, 2, 3, 4"
+          },
+          "product_type": "physical",
+          "selected_colors": "1, 2, 3, 4"
+        }
+      ],
+      "special_instructions": "Colours: 1, 2, 3, 4 | Size: Free Size (28-42)"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  },
+  {
+    "scenario": {
+      "id": 5,
+      "name": "Customer 5 - Popcorn 18 inch (5 pcs custom / 5 colors chosen)",
+      "phone": "94711100005",
+      "productInquiry": "popcorn 18",
+      "quantity": 5,
+      "expectedSubtotal": 3250,
+      "expectedDelivery": 0,
+      "expectedTotal": 3250,
+      "colors": "1, 2, 3, 3, 4",
+      "customerName": "Malith Jayawardena",
+      "customerAddress": "67 Circular Road, Kurunegala",
+      "turns": [
+        {
+          "msg": "popcorn 18",
+          "expectImages": true
+        },
+        {
+          "msg": "1 2 3 3 4",
+          "expectImages": false
+        },
+        {
+          "msg": "ඔව් කලිසම් 5ම ගන්නවා",
+          "expectImages": false
+        },
+        {
+          "msg": "Malith Jayawardena, 67 Circular Road, Kurunegala, 0711100005",
+          "expectImages": false
+        },
+        {
+          "msg": "විස්තර නිවැරදියි, confirm කරන්න",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "popcorn 18",
+        "botReply": "ඔබ තෝරාගත් පොප්කෝන් ශෝර්ට් (උස අඟල් 18) පිළිබඳ විස්තර මෙන්න:\n\n🔹 මිල: ශෝර්ට් 04ම රු. 2600 යි\n🔹 ඉණ: 26 සිට 40 දක්වා (Free Size)\n🔹 උස: අඟල් 18\n🔹 බෙදාහැරීම: නොමිලේ (Free Delivery) 🚚\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ කැමති පාට අංක සඳහන් කරන්න. පින්තූර පහත දැක්වේ.",
+        "hasImages": true,
+        "imageCount": 9,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "1 2 3 3 4",
+        "botReply": "ඔබ තෝරාගත් පාට අංක 1, 2, 3 (දෙකක්) සහ 4, වශයෙන් ශෝර්ට් 4 ක් තහවුරු කරගත්තා. \n\nඇණවුම සම්පූර්ණ කිරීමට කරුණාකර පහත විස්තර එවන්න:\n\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 බෙදාහැරීමේ ලිපිනය:\n📍 නගරය:",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "ඔව් කලිසම් 5ම ගන්නවා",
+        "botReply": "පොප්කෝන් ශෝර්ට් (අඟල් 18) කලිසම් 5ක් ගැනීමට තීරණය කිරීම ගැන ස්තූතියි! \n\nඒ සඳහා මුළු මුදල තීරණය කිරීමට, ඔබ කලින් තෝරාගත් පාට අංක 1, 2, 3 (දෙකක්), 4 ට අමතරව තවත් එක් පාට අංකයක් ද සඳහන් කරන්න.\n\nඇණවුම සම්පූර්ණ කිරීමට පහත විස්තර එවන්න:\n\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 බෙදාහැරීමේ ලිපිනය:\n📍 නගරය:",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "Malith Jayawardena, 67 Circular Road, Kurunegala, 0711100005",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කිරීමට පෙර කරුණාකර මෙම සාරාංශය පරීක්ෂා කරන්න:\n\n📦 අයිතමය: පොප්කෝන් ශෝර්ට් (අඟල් 18)\n🔢 ප්‍රමාණය: 5 (පැකේජය)\n🎨 තෝරාගත් පාට: 1, 2, 3 (දෙකක්), 4 සහ තවත් එකක් (කරුණාකර අවසන් පාට අංකය සඳහන් කරන්න)\n💰 උප එකතුව: රු. 3250 (එක් අයිතමයක මිල රු. 650 බැගින්)\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💰 මුළු මුදල: රු. 3250\n💳 ගෙවීම් ක්‍රමය: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD)\n\n👤 නම: Malith Jayawardena\n📞 දුරකථන අංකය: 0711100005\n🏠 ලිපිනය: 67 Circular Road, Kurunegala\n\nමෙම විස්තර නිවැරදිද? කරුණාකර තහවුරු කරන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "විස්තර නිවැරදියි, confirm කරන්න",
+        "botReply": "ඔබේ ඇණවුම සාර්ථකව තහවුරු කළා! ස්තූතියි. 🌸 \n\nඔබේ ඇණවුම ඉදිරි දින 2-3 ඇතුළත ඔබේ ලිපිනයට ලැබෙනු ඇත. භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීමට (Cash on Delivery) හැකියි.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 1,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 5,
+    "dbOrder": {
+      "id": "c2d760b8-0541-4fb6-8215-358106ca71f1",
+      "customer_name": "Malith Jayawardena",
+      "customer_phone": "0711100005",
+      "total_amount": 3250,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "පොප්කෝන් ශෝර්ට් උස අගල් 18",
+          "size": "Free Size",
+          "price": 3250,
+          "quantity": 5,
+          "variations": {
+            "Size": "Free Size",
+            "Color": "1, 2, 3, 3, 4"
+          },
+          "product_type": "physical",
+          "selected_colors": "1, 2, 3, 3, 4"
+        }
+      ],
+      "special_instructions": "Colours: 1, 2, 3, 3, 4 | Size: Free Size"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  },
+  {
+    "scenario": {
+      "id": 6,
+      "name": "Customer 6 - Linen Blend Casual Shorts (6-Pack Package)",
+      "phone": "94711100006",
+      "productInquiry": "Linen Blend Casual Shorts",
+      "quantity": 6,
+      "expectedSubtotal": 5100,
+      "expectedDelivery": 0,
+      "expectedTotal": 5100,
+      "colors": "1, 2, 3, 4, 5, 6",
+      "customerName": "Charith Asalanka",
+      "customerAddress": "19 Nuwara Eliya Road, Gampola",
+      "turns": [
+        {
+          "msg": "Hi",
+          "expectImages": false
+        },
+        {
+          "msg": "Linen Blend Casual Shorts",
+          "expectImages": true
+        },
+        {
+          "msg": "6 Pack එක ගන්න කැමතියි",
+          "expectImages": false
+        },
+        {
+          "msg": "පාට 1 සිට 6 දක්වා",
+          "expectImages": false
+        },
+        {
+          "msg": "Charith Asalanka, 19 Nuwara Eliya Road, Gampola, 0711100006",
+          "expectImages": false
+        },
+        {
+          "msg": "හරි confirm කරන්න",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hi",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා ! 🥰\n\nඔයාට කැමති කෙටි කලිසම් වර්ගය බලමුද? අපේ නිෂ්පාදන ලැයිස්තුව පහතින් දැක්වේ:\n\n🔹 පොප්කොන් ශෝර්ට් උස අගල් 16\n🔹 SingleJersey Cotton උස අගල් 20\n🔹 පොප්කෝන් ශෝර්ට් උස අගල් 18\n🔹 Rib Jacquard Shorts\n🔹 Kyela Brand Single Jersey Cotton Shorts\n🔹 Waffle Knit Cotton Shorts\n🔹 Linen Blend Casual Shorts\n\nඔයාට කැමති වර්ගයක් තෝරගන්න, මම වැඩි විස්තර එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Linen Blend Casual Shorts",
+        "botReply": "මෙන්න Linen Blend Casual Shorts ගැන විස්තර:\n\n🩳 Linen Blend Casual Shorts 🩳\nPremium breathable linen material.\n\n💰 මිල ගණන්:\n🔹 3 Pack: LKR 2700\n🔹 6 Pack: LKR 5100\n\n🚚 පැකේජ් සඳහා බෙදාහැරීම නොමිලේ (Free Delivery).\n\nඔයාට ඕන පැකේජය සහ ප්‍රමාණය සඳහන් කරන්න. මම වැඩිදුර තොරතුරු එවන්නම්. 😊",
+        "hasImages": true,
+        "imageCount": 2,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "6 Pack එක ගන්න කැමතියි",
+        "botReply": "නියමයි! Linen Blend Casual Shorts පැකේජය 6ක් තෝරා ගැනීම ගැන ස්තූතියි. ✅\n\nදැන් අපිට අවශ්‍යයි:\n📏 ඔයාගේ ඉණ මිනුම (Size)\n🎨 ඔයා කැමති පාට අංක (ඡායාරූපවල ඇති)\n\nමේ විස්තර ටික එවන්න, මම ඇණවුම සඳහා ඉතිරි විස්තර ටික අරගන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට 1 සිට 6 දක්වා",
+        "botReply": "ඉතා හොඳයි! 6 Pack සඳහා පාට 1 සිට 6 දක්වා තෝරාගත්තා. ✅\n\nදැන් අපිට අවශ්‍යයි:\n📏 ඔබේ ඉණ මිනුම (Size)\n👤 ඔබේ සම්පූර්ණ නම\n🏠 ඔබේ ලිපිනය සහ නගරය\n📞 ඔබේ දුරකථන අංකය\n\nමෙම විස්තර එවන්න, මම ඇණවුම් සාරාංශය එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Charith Asalanka, 19 Nuwara Eliya Road, Gampola, 0711100006",
+        "botReply": "ස්තූතියි චරිත්. ඔබේ ඉණ මිනුම (Size) සඳහන් කිරීමට අමතක වී ඇත. කරුණාකර එය සඳහන් කරන්න.\n\nඇණවුම් සාරාංශය:\n\n📦 භාණ්ඩය: Linen Blend Casual Shorts (6 Pack)\n🎨 තෝරාගත් පාට: 1, 2, 3, 4, 5, 6\n📏 ප්‍රමාණය: (ඉණ මිනුම ලැබුණු පසු ඇතුළත් කරමි)\n💰 උප එකතුව: LKR 5100\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💰 මුළු එකතුව: LKR 5100\n💳 ගෙවීම් ක්‍රමය: Cash on Delivery\n👤 නම: Charith Asalanka\n📞 දුරකථන: 0711100006\n🏠 ලිපිනය: 19 Nuwara Eliya Road, Gampola\n\nසියල්ල නිවැරදිද? තහවුරු කරන්න. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "හරි confirm කරන්න",
+        "botReply": "ඔබේ ඇණවුම සාර්ථකව තහවුරු කළා. ස්තූතියි! 🙏\n\nඅපගේ සේවකයෙකු ඉක්මනින්ම ඔබව අමතා ඇණවුම තහවුරු කරනු ඇත. භාණ්ඩ ලැබුණු පසු ඔබට මුදල් ගෙවිය හැක. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": {
+      "id": "0bd4e605-45ff-4512-8e6d-e52feec78294",
+      "customer_name": "Charith Asalanka",
+      "customer_phone": "0711100006",
+      "total_amount": 5100,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "Linen Blend Casual Shorts",
+          "size": "Not specified",
+          "price": 5100,
+          "quantity": 6,
+          "variations": {
+            "Size": "Not specified",
+            "Color": "1, 2, 3, 4, 5, 6"
+          },
+          "product_type": "physical",
+          "selected_colors": "1, 2, 3, 4, 5, 6"
+        }
+      ],
+      "special_instructions": "Colours: 1, 2, 3, 4, 5, 6 | Size: Not specified"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  },
+  {
+    "scenario": {
+      "id": 7,
+      "name": "Customer 7 - Kyela Single Jersey (6 pcs custom qty)",
+      "phone": "94711100007",
+      "productInquiry": "Kyela Brand Single Jersey Cotton Shorts",
+      "quantity": 6,
+      "expectedSubtotal": 3000,
+      "expectedDelivery": 0,
+      "expectedTotal": 3000,
+      "colors": "1, 2, 3, 4, 5, 6",
+      "customerName": "Harshani Silva",
+      "customerAddress": "54 Hospital Junction, Badulla",
+      "turns": [
+        {
+          "msg": "Hello",
+          "expectImages": false
+        },
+        {
+          "msg": "Kyela Brand Single Jersey Cotton Shorts",
+          "expectImages": true
+        },
+        {
+          "msg": "මට කලිසම් 6ක් ගන්න ඕනෙ",
+          "expectImages": false
+        },
+        {
+          "msg": "පාට අංක 1, 2, 3, 4, 5, 6",
+          "expectImages": false
+        },
+        {
+          "msg": "Harshani Silva, 54 Hospital Junction, Badulla, 0711100007",
+          "expectImages": false
+        },
+        {
+          "msg": "ඔව් විස්තර හරි order එක දාන්න",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hello",
+        "botReply": "ආයුබෝවන්! බිනර ෆැෂන් (Binara Fashion) වෙත ඔබව සාදරයෙන් පිළිගන්නවා. 🥰\n\nඅපගේ කෙටි කලිසම් වර්ග කිහිපයක් තිබෙනවා. ඔබට අවශ්‍ය විශේෂිත වර්ගයක් තිබේද? නැත්නම් පවතින සියලුම වර්ගවල ලැයිස්තුව එවන්නද? 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Kyela Brand Single Jersey Cotton Shorts",
+        "botReply": "මෙන්න Kyela Brand Single Jersey Cotton Shorts පිළිබඳ විස්තර:\n\n🔹 මිල: \n📦 ශෝර්ට් 05ක්: රු. 2500\n📦 ශෝර්ට් 10ක්: රු. 4500\n\n🔹 විශේෂාංග:\n✅ උස අඟල් 16\n✅ ඉණ අඟල් 26 සිට 42 දක්වා (Free Size)\n✅ සින්ගල් ජේසි කොට්න් මැටීරියල්\n✅ Unisex (ගැහැනු පිරිමි දෙපාර්ශවයටම සුදුසුයි)\n🚚 බෙදාහැරීම නොමිලේ! (මෙම ඔෆර් එක දින 07කට පමණි)\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ කැමති වර්ණ අංක සඳහන් කරන්න. 😊",
+        "hasImages": true,
+        "imageCount": 12,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "මට කලිසම් 6ක් ගන්න ඕනෙ",
+        "botReply": "නිශ්චිතවම, කලිසම් 6ක් ලබාගැනීමට හැකියි. \n\nKyela Brand Single Jersey Cotton Shorts සඳහා මිල ගණනය කිරීම:\n\n🔹 ඒකක මිල: රු. 500 (රු. 2500 / 5)\n🔹 මුළු මුදල (කලිසම් 6ක්): රු. 3000\n🚚 බෙදාහැරීම: නොමිලේ (අයිතම 5ට වැඩි බැවින්)\n\nදැන් කැමති වර්ණ අංක (ඡායාරූපවල ඇති පරිදි) සහ ඔබට අවශ්‍ය ප්‍රමාණය/මිනුම් පවසන්න.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 1, 2, 3, 4, 5, 6",
+        "botReply": "නියමයි! වර්ණ අංක 1, 2, 3, 4, 5 සහ 6 තෝරාගත්තා. 🎨\n\nදැන් ඔබේ විස්තර ලබා දෙන්න:\n👤 නම:\n🏠 සම්පූර්ණ ලිපිනය:\n📍 නගරය:\n📱 දුරකථන අංකය:\n\nමේ තොරතුරු ලැබුණු පසු මම ඇණවුම් සාරාංශය ඔබ වෙත එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Harshani Silva, 54 Hospital Junction, Badulla, 0711100007",
+        "botReply": "ස්තූතියි හර්ෂණී, ඔබගේ ඇණවුම තහවුරු කිරීමට පෙර සාරාංශය පරීක්ෂා කරන්න:\n\n📦 අයිතමය: Kyela Brand Single Jersey Cotton Shorts\n🔢 ප්‍රමාණය: 06\n🎨 වර්ණ: 01, 02, 03, 04, 05, 06\n💰 උප එකතුව: රු. 3000\n🚚 බෙදාහැරීම: නොමිලේ\n💳 මුළු මුදල: රු. 3000\n\n👤 නම: Harshani Silva\n📱 දුරකථන අංකය: 0711100007\n🏠 ලිපිනය: 54 Hospital Junction, Badulla\n\nසියලු විස්තර නිවැරදිද? තහවුරු කරන්නේ නම් කරුණාකර 'ඔව්' ලෙස පවසන්න. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "ඔව් විස්තර හරි order එක දාන්න",
+        "botReply": "ඔබගේ ඇණවුම සාර්ථකව තහවුරු වුණා. ස්තූතියි! 🌸\n\nඅපගේ නිලධාරියෙකු ඔබව සම්බන්ධ කරගෙන වැඩිදුර තොරතුරු තහවුරු කරනු ඇත.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": {
+      "id": "87a87adf-45f1-40f7-8953-2d02159528d7",
+      "customer_name": "Harshani Silva",
+      "customer_phone": "0711100007",
+      "total_amount": 3000,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "Kyela Brand Single Jersey Cotton Shorts",
+          "size": "Free Size",
+          "price": 3000,
+          "quantity": 6,
+          "variations": {
+            "Size": "Free Size",
+            "Color": "01, 02, 03, 04, 05, 06"
+          },
+          "product_type": "physical",
+          "selected_colors": "01, 02, 03, 04, 05, 06"
+        }
+      ],
+      "special_instructions": "Colours: 01, 02, 03, 04, 05, 06 | Size: Free Size"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  },
+  {
+    "scenario": {
+      "id": 8,
+      "name": "Customer 8 - Waffle Knit Cotton Shorts (8-Pack Package)",
+      "phone": "94711100008",
+      "productInquiry": "Waffle Knit Cotton Shorts",
+      "quantity": 8,
+      "expectedSubtotal": 5200,
+      "expectedDelivery": 0,
+      "expectedTotal": 5200,
+      "colors": "1, 2, 3, 4, 5, 6, 7, 8",
+      "customerName": "Pathum Nissanka",
+      "customerAddress": "73 Main Street, Ratnapura",
+      "turns": [
+        {
+          "msg": "විස්තර එවන්න",
+          "expectImages": false
+        },
+        {
+          "msg": "Waffle Knit Cotton Shorts",
+          "expectImages": true
+        },
+        {
+          "msg": "8 Pack එකක් එවන්න",
+          "expectImages": false
+        },
+        {
+          "msg": "පාට 1, 2, 3, 4, 5, 6, 7, 8",
+          "expectImages": false
+        },
+        {
+          "msg": "Pathum Nissanka, 73 Main Street, Ratnapura, 0711100008",
+          "expectImages": false
+        },
+        {
+          "msg": "හරි confirm කරන්න",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "විස්තර එවන්න",
+        "botReply": "අපේ ළඟ කෙටි කලිසම් වර්ග කිහිපයක් තිබෙනවා. ඔයාට පහත වර්ගවලින් කැමති එකක් තෝරාගන්න පුළුවන්:\n\n🔹 පොප්කොන් ශෝර්ට් (උස අඟල් 16) - ශෝර්ට් 5ක් රු. 2600 / 10ක් රු. 4600\n🔹 පොප්කෝන් ශෝර්ට් (උස අඟල් 18) - ශෝර්ට් 4ක් රු. 2600\n🔹 SingleJersey Cotton (උස අඟල් 20) - ශෝර්ට් 4ක් රු. 2650 / 10ක් රු. 6200\n🔹 Rib Jacquard Shorts (උස අඟල් 16) - ශෝර්ට් 5ක් රු. 2700 / 10ක් රු. 5100\n🔹 Kyela Brand Single Jersey Cotton - ශෝර්ට් 5ක් රු. 2500 / 10ක් රු. 4500\n🔹 Waffle Knit Cotton Shorts - ශෝර්ට් 4ක් රු. 2800 / 8ක් රු. 5200\n🔹 Linen Blend Casual Shorts - ශෝර්ට් 3ක් රු. 2700 / 6ක් රු. 5100\n\nඔයාට බලන්න ඕන විශේෂිත කලිසම් වර්ගයක් තියෙනවා නම් කියන්න, මම ඒකේ වැඩි විස්තර සහ පින්තූර එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Waffle Knit Cotton Shorts",
+        "botReply": "🩳 Waffle Knit Cotton Shorts 🩳\n\n✅ ඉතා උසස් තත්ත්වයේ Waffle Knit කොට්න් රෙදිවලින් නිමවා ඇත.\n✅ ඉන ප්‍රමාණය: 28 සිට 42 දක්වා (Free Size)\n✅ පැකේජ මිල ගණන්:\n🔹 4 Pack: රු. 2800 (එකක් රු. 700)\n🔹 8 Pack: රු. 5200 (එකක් රු. 650)\n\n🚚 බෙදාහැරීම සම්පූර්ණයෙන්ම නොමිලේ!\n\nඔබට අවශ්‍ය පැකේජය සහ කැමති වර්ණ තෝරාගන්න. මම පින්තූර ටිකක් එවන්නද? 😊",
+        "hasImages": true,
+        "imageCount": 2,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "8 Pack එකක් එවන්න",
+        "botReply": "සුපිරි! 8 Pack එක තෝරාගැනීම ගැන ස්තූතියි. 📦\n\nදැන් කැමති වර්ණ තෝරාගන්න අපේ පින්තූරවල ඇති අංක 8ක් සඳහන් කරන්න. 🎨\n\nඊළඟට ඔයාගේ විස්තර ටික එවන්න:\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 ලිපිනය:\n📍 නගරය:",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට 1, 2, 3, 4, 5, 6, 7, 8",
+        "botReply": "ස්තූතියි! ඔයා තෝරාගත් වර්ණ අංක (1, 2, 3, 4, 5, 6, 7, 8) සටහන් කරගත්තා. ✅\n\nදැන් ඔයාගේ පහත විස්තර ටික එවන්න:\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 සම්පූර්ණ ලිපිනය:\n📍 නගරය:\n\nඒවා ලැබුණු පසු මම ඔයාට ඇණවුමේ සම්පූර්ණ සාරාංශය එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Pathum Nissanka, 73 Main Street, Ratnapura, 0711100008",
+        "botReply": "ස්තූතියි පතුම්, ඔයාගේ විස්තර ලැබුණා. 🌸\n\nඔන්න ඔයාගේ ඇණවුමේ සාරාංශය:\n\n📦 භාණ්ඩය: Waffle Knit Cotton Shorts (8 Pack)\n🎨 වර්ණ: 1, 2, 3, 4, 5, 6, 7, 8\n💰 උප එකතුව: රු. 5200\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💰 මුළු එකතුව: රු. 5200\n\n👤 නම: Pathum Nissanka\n📞 දුරකථන අංකය: 0711100008\n🏠 ලිපිනය: 73 Main Street, Ratnapura\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න, මම ඇණවුම සකස් කරන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "හරි confirm කරන්න",
+        "botReply": "ස්තූතියි පතුම්! ඔයාගේ ඇණවුම සාර්ථකව තහවුරු වුණා. ✅\n\nඅපේ සේවාව තෝරාගැනීම ගැන ස්තූතියි! දින 2-3ක් ඇතුළත භාණ්ඩය ඔයාගේ ලිපිනයට ලැබෙනු ඇත. 🚚🌸",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": {
+      "id": "57ee3385-d217-47cc-b805-83920adbc85a",
+      "customer_name": "Pathum Nissanka",
+      "customer_phone": "0711100008",
+      "total_amount": 5200,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "Waffle Knit Cotton Shorts",
+          "size": "Free Size",
+          "price": 5200,
+          "quantity": 8,
+          "variations": {
+            "Size": "Free Size",
+            "Color": "1, 2, 3, 4, 5, 6, 7, 8"
+          },
+          "product_type": "physical",
+          "selected_colors": "1, 2, 3, 4, 5, 6, 7, 8"
+        }
+      ],
+      "special_instructions": "Colours: 1, 2, 3, 4, 5, 6, 7, 8 | Size: Free Size"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  },
+  {
+    "scenario": {
+      "id": 9,
+      "name": "Customer 9 - SingleJersey Cotton 20 inch (2 pcs custom)",
+      "phone": "94711100009",
+      "productInquiry": "SingleJersey Cotton උස අගල් 20",
+      "quantity": 2,
+      "expectedSubtotal": 1325,
+      "expectedDelivery": 450,
+      "expectedTotal": 1775,
+      "colors": "1, 3",
+      "customerName": "Ishara Madushani",
+      "customerAddress": "28 Temple Road, Kalutara",
+      "turns": [
+        {
+          "msg": "Hi",
+          "expectImages": false
+        },
+        {
+          "msg": "SingleJersey Cotton උස අගල් 20",
+          "expectImages": true
+        },
+        {
+          "msg": "කලිසම් 2ක් ගන්න පුළුවන්ද?",
+          "expectImages": false
+        },
+        {
+          "msg": "පාට 1 සහ 3",
+          "expectImages": false
+        },
+        {
+          "msg": "Ishara Madushani, 28 Temple Road, Kalutara, 0711100009",
+          "expectImages": false
+        },
+        {
+          "msg": "හරි ඇණවුම දාන්න",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hi",
+        "botReply": "Welcome to Binara Fashion! 🥰\n\nHow can I help you today? We have a variety of comfortable short collections available. 🩳",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "SingleJersey Cotton උස අගල් 20",
+        "botReply": "එම ශෝර්ට් වර්ගය ඉතා ජනප්‍රියයි. මෙන්න එහි විස්තර:\n\n🩳 Unisex Single Jersey Cotton Shorts\n🔥 උස අඟල් 20 | ඉණ 26 - 42 දක්වා\n✅ මිල: පැකේජය අනුව වෙනස් වේ\n🚚 දිවයින පුරා නොමිලේ බෙදාහැරීම\n\nඔබට අවශ්‍ය පැකේජ ප්‍රමාණය සහ පාට තෝරාගැනීමට අවශ්‍යද?",
+        "hasImages": true,
+        "imageCount": 8,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "කලිසම් 2ක් ගන්න පුළුවන්ද?",
+        "botReply": "ඔව්, අනිවාර්යයෙන්ම පුළුවන්! \n\nSingleJersey Cotton ශෝර්ට්ස් වල පැකේජ මිල අනුව ගණනය කිරීමේදී, එක් කලිසමක මිල රු. 662.50ක් (2650/4) බැගින්, කලිසම් 2කට රු. 1325ක් අය වේ. \n\nකලිසම් 5කට අඩු නිසා බෙදාහැරීමේ ගාස්තුව රු. 450ක් එකතු වේ. \n\nමුළු එකතුව: රු. 1775යි.\n\nඔබට අවශ්‍ය පාට අංක සහ ඉණ ප්‍රමාණය පවසන්න, මම ඔබේ ඇණවුම සටහන් කරගන්නම්.",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට 1 සහ 3",
+        "botReply": "හරි, පාට 1 සහ 3 තෝරාගත්තා. \n\nඔබේ ඇණවුම සඳහා වැඩිදුර විස්තර ලබා දෙන්න:\n\n🔹 නම\n🔹 දුරකථන අංකය\n🔹 බෙදාහැරීමේ ලිපිනය\n🔹 නගරය\n\nමේ විස්තර එවන්න, මම ඇණවුම් සාරාංශය එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Ishara Madushani, 28 Temple Road, Kalutara, 0711100009",
+        "botReply": "ස්තූතියි ඉශාරා මහත්මිය, ඔබේ ඇණවුමේ සාරාංශය මෙන්න:\n\n📦 අයිතමය: SingleJersey Cotton Shorts (උස අඟල් 20)\n🔢 ප්‍රමාණය: 02\n🎨 තෝරාගත් පාට: 01, 03\n💰 උප එකතුව: රු. 1325\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💳 මුළු එකතුව: රු. 1775\n\n👤 නම: Ishara Madushani\n📞 දුරකථන: 0711100009\n📍 ලිපිනය: 28 Temple Road, Kalutara\n\nමෙම විස්තර නිවැරදිද? තහවුරු කළ පසු අපගේ කාර්යමණ්ඩලය ඔබව සම්බන්ධ කර ගනු ඇත. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "හරි ඇණවුම දාන්න",
+        "botReply": "ස්තූතියි ඉශාරා මහත්මිය! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කළා. අපගේ කාර්යමණ්ඩලය ඉක්මනින්ම ඔබව සම්බන්ධ කර ගනු ඇත. \n\nBinara Fashion සමඟ එක්වීම ගැන ස්තූතියි! 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": {
+      "id": "e427fe8d-6a6a-41ef-b23b-4636c854f9e5",
+      "customer_name": "Ishara Madushani",
+      "customer_phone": "0711100009",
+      "total_amount": 1775,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "SingleJersey Cotton උස අගල් 20",
+          "size": "Free Size (26-42)",
+          "price": 1325,
+          "quantity": 2,
+          "variations": {
+            "Size": "Free Size (26-42)",
+            "Color": "01, 03"
+          },
+          "product_type": "physical",
+          "selected_colors": "01, 03"
+        }
+      ],
+      "special_instructions": "Colours: 01, 03 | Size: Free Size (26-42)"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  },
+  {
+    "scenario": {
+      "id": 10,
+      "name": "Customer 10 - Rib Jacquard Shorts (10-Pack Package)",
+      "phone": "94711100010",
+      "productInquiry": "Rib Jacquard Shorts",
+      "quantity": 10,
+      "expectedSubtotal": 5100,
+      "expectedDelivery": 0,
+      "expectedTotal": 5100,
+      "colors": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+      "customerName": "Ramesh Mendis",
+      "customerAddress": "91 Station Road, Gampaha",
+      "turns": [
+        {
+          "msg": "Hello",
+          "expectImages": false
+        },
+        {
+          "msg": "Rib Jacquard Shorts",
+          "expectImages": true
+        },
+        {
+          "msg": "10 pack එකක් ඕනේ",
+          "expectImages": false
+        },
+        {
+          "msg": "පාට අංක 1 සිට 10 දක්වා",
+          "expectImages": false
+        },
+        {
+          "msg": "Ramesh Mendis, 91 Station Road, Gampaha, 0711100010",
+          "expectImages": false
+        },
+        {
+          "msg": "විස්තර නිවැරදියි confirm කරන්න",
+          "expectImages": false
+        }
+      ]
+    },
+    "turnResults": [
+      {
+        "turnNum": 1,
+        "userMsg": "Hello",
+        "botReply": "ආයුබෝවන්! බිනර ෆැෂන් (Binara Fashion) වෙත ඔබව සාදරයෙන් පිළිගනිමු. 😊\n\nඅප සතුව පවතින කෙටි කලිසම් (Shorts) වර්ග කිහිපයක් පහත දැක්වේ. ඔබට අවශ්‍ය වර්ගය තෝරාගන්න:\n\n1. පොප්කොන් ශෝර්ට් (උස අඟල් 16)\n2. SingleJersey Cotton ශෝර්ට් (උස අඟල් 20)\n3. පොප්කෝන් ශෝර්ට් (උස අඟල් 18)\n4. Rib Jacquard Shorts (උස අඟල් 16)\n5. Kyela Brand Single Jersey Cotton Shorts (උස අඟල් 16)\n6. Waffle Knit Cotton Shorts\n7. Linen Blend Casual Shorts\n\nඔබට වැඩි විස්තර දැනගැනීමට අවශ්‍ය අංකය පවසන්න. 📦",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 2,
+        "userMsg": "Rib Jacquard Shorts",
+        "botReply": "Rib Jacquard Shorts ඉතාමත් ජනප්‍රිය තේරීමක්! ✌️ \n\nමෙම කලිසම් ගැහැනු පිරිමි දෙපාර්ශවයටම ඇඳිය හැකි අතර රිබ් ජැකුවර්ඩ් (Rib Jacquard) මැටීරියල් එකෙන් නිමවා ඇත. \n\nමිල ගණන්:\n🔹 05ක් = රු. 2700\n🔹 10ක් = රු. 5100\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ වර්ණ තෝරාගන්න. ඔබ මිලදී ගැනීමට කැමති පැකේජය කුමක්ද?",
+        "hasImages": true,
+        "imageCount": 10,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 3,
+        "userMsg": "10 pack එකක් ඕනේ",
+        "botReply": "නියමයි! Rib Jacquard Shorts පැකේජ 10ක් සඳහා ඇණවුම සටහන් කරගන්නම්. 📦\n\nකරුණාකර පහත විස්තර ලබා දෙන්න:\n🔹 ඔබේ නම:\n🔹 දුරකථන අංකය:\n🔹 ලිපිනය සහ නගරය:\n🔹 ඔබට අවශ්‍ය වර්ණ අංක (පින්තූරවල ඇති පරිදි):\n\nමෙම පැකේජය සඳහා බෙදාහැරීමේ ගාස්තුව නොමිලේ (Free Delivery). 🚚",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 4,
+        "userMsg": "පාට අංක 1 සිට 10 දක්වා",
+        "botReply": "ස්තූතියි! Rib Jacquard Shorts 10ක් සඳහා පාට අංක 1 සිට 10 දක්වා සටහන් කරගත්තා. 🎨\n\nදැන් ඇණවුම තහවුරු කිරීමට ඔබේ පහත විස්තර ලබා දෙන්න:\n\n🔹 නම:\n🔹 දුරකථන අංකය:\n🔹 බෙදාහැරීමේ ලිපිනය:\n🔹 නගරය:\n\nවිස්තර ලැබුණු පසු මම ඇණවුම් සාරාංශයක් එවන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 5,
+        "userMsg": "Ramesh Mendis, 91 Station Road, Gampaha, 0711100010",
+        "botReply": "ස්තූතියි රමේෂ් මහත්මයා, ඔබගේ විස්තර ලැබුණා. ඇණවුම් සාරාංශය පහත පරිදි වේ:\n\n📦 අයිතමය: Rib Jacquard Shorts (10 පැකේජය)\n🎨 වර්ණ: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10\n💰 උප එකතුව: රු. 5100\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💵 මුළු මුදල: රු. 5100\n👤 නම: රමේෂ් මෙන්ඩිස්\n📞 දුරකථන අංකය: 0711100010\n🏠 ලිපිනය: 91 ස්ටේෂන් පාර, ගම්පහ\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න, එවිට මම ඇණවුම අනුමත කරන්නම්. 😊",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": false
+      },
+      {
+        "turnNum": 6,
+        "userMsg": "විස්තර නිවැරදියි confirm කරන්න",
+        "botReply": "ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී! ස්තූතියි. 📦✨\n\nඅපගේ නිලධාරියෙකු ඉදිරියේදී ඔබව අමතා ඇණවුම තහවුරු කරනු ඇත. භාණ්ඩ ලැබීමෙන් පසු ගෙවීම සිදු කළ හැක (Cash on Delivery). 🚚",
+        "hasImages": false,
+        "imageCount": 0,
+        "orderCreated": true
+      }
+    ],
+    "photosSentTurn": 2,
+    "imageSpamTurns": [],
+    "prematureOrderTurn": -1,
+    "orderCreatedTurn": 6,
+    "dbOrder": {
+      "id": "c888a60d-8ac1-43c9-bd53-2390f5ab2edf",
+      "customer_name": "Ramesh Mendis",
+      "customer_phone": "0711100010",
+      "total_amount": 5100,
+      "status": "pending",
+      "order_items": [
+        {
+          "name": "Rib Jacquard Shorts",
+          "size": "Free Size",
+          "price": 5100,
+          "quantity": 10,
+          "variations": {
+            "Size": "Free Size",
+            "Color": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10"
+          },
+          "product_type": "physical",
+          "selected_colors": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10"
+        }
+      ],
+      "special_instructions": "Colours: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 | Size: Free Size"
+    },
+    "calcCorrect": true,
+    "pacingCorrect": true,
+    "imageCorrect": true,
+    "coloursRecorded": true
+  }
+]
