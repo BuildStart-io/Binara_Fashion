@@ -43,7 +43,7 @@
       {
         "turnNum": 1,
         "userMsg": "Hi",
-        "botReply": "Hello! Welcome to Binara Fashion. How can I help you today? 😊\n\nWe have a variety of shorts available:\n\n1. Popcorn Shorts (16 inch)\n2. Single Jersey Cotton Shorts (20 inch)\n3. Popcorn Shorts (18 inch)\n4. Rib Jacquard Shorts\n5. Kyela Brand Cotton Shorts\n6. Waffle Knit Cotton Shorts\n7. Linen Blend Casual Shorts\n8. Cargo Fleece Casual Shorts\n9. Denim Stretch Comfort Shorts\n\nLet me know if you are interested in any of these! 🌸",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා ! 🥰\nඔයාට කැමති කෙටි කලිසම් වර්ගය බලමුද? අපේ ළඟ විවිධ වර්ගයේ කෙටි කලිසම් තියෙනවා. ඔබට බලන්න ඕන වර්ගය කියන්න, මම ඒවගේ විස්තර සහ පින්තූර එවන්නම්. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -51,7 +51,7 @@
       {
         "turnNum": 2,
         "userMsg": "Cargo Fleece Casual Shorts",
-        "botReply": "Great choice! The Cargo Fleece Casual Shorts are a premium item. 🩳\n\n📦 Package options:\n🔹 2 Pack: LKR 2400 (1200 per item)\n🔹 4 Pack: LKR 4400 (1100 per item)\n\n🌿 Features:\n✅ Premium heavy fleece material\n✅ Side cargo pockets\n✅ Free size (Waist 28-42)\n\nHow many items or which package would you like to order? And let me know if you'd like to see the available colors! 🎨",
+        "botReply": "ඔබ තෝරාගත් Cargo Fleece Casual Shorts පිළිබඳ විස්තර මෙන්න:\n\nමෙම කලිසම් උසස් තත්ත්වයේ මෘදු ෆ්ලීස් (fleece) රෙදිවලින් නිමවා ඇත. එහි දෙපස කාගෝ සාක්කු සහිතව ඉතා මනා නිමාවකින් යුක්තයි.\n\nඉන ප්‍රමාණය: 28 සිට 42 දක්වා (Free Size)\nමිල: පැකේජ අනුව තීරණය වේ (2ක් = 2400 LKR / 4ක් = 4400 LKR)\n\nඔබට මෙය ඇණවුම් කිරීමට අවශ්‍යද? එසේ නම් ඔබට අවශ්‍ය ප්‍රමාණය සහ පාට අංක පවසන්න.",
         "hasImages": true,
         "imageCount": 1,
         "orderCreated": false
@@ -59,7 +59,7 @@
       {
         "turnNum": 3,
         "userMsg": "මට 1ක් ගන්න පුළුවන්ද?",
-        "botReply": "ඔව්, ඔබට අවශ්‍ය ඕනෑම ප්‍රමාණයක් ඇණවුම් කළ හැකියි. \n\nCargo Fleece Casual Shorts එකක මිල රු. 1200ක් වෙනවා (පැකේජ් මිල අනුව ගණනය කළේ). \n\nඔබට කැමති පාට අංක සහ අවශ්‍ය ප්‍රමාණය (එකක් නම් අදාළ පාට අංකය) පවසන්න. ඊට පස්සේ අපි බෙදාහැරීමේ විස්තර වෙත යමු. 😊",
+        "botReply": "ඔව්, ඔබට අවශ්‍ය ප්‍රමාණය ලබාගත හැකියි. Cargo Fleece Casual Shorts එකක් සඳහා මිල රු. 1200ක් වෙනවා. \n\nඔබ ශෝර්ට් 5කට අඩුවෙන් ලබාගන්නා නිසා බෙදාහැරීමේ ගාස්තුව රු. 450ක් එකතු වන බව කරුණාවෙන් සලකන්න. ඔබට මෙය ඇණවුම් කිරීමට අවශ්‍ය නම්, කරුණාකර ඔබ කැමති පාට සහ ඔබේ විස්තර (නම, ලිපිනය, දුරකථන අංකය) එවන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -67,7 +67,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට අංක 1",
-        "botReply": "හරි, ඔබ තෝරාගත්තා:\n\n📦 අයිතම: 1 Cargo Fleece Casual Short\n🎨 පාට: අංක 1\n💰 උප එකතුව: රු. 1200\n\nඔබ කලිසම් 5කට අඩු ප්‍රමාණයක් ඇණවුම් කරන නිසා, බෙදාහැරීමේ ගාස්තුව රු. 450ක් එකතු වෙනවා.\n\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💵 මුළු මුදල: රු. 1650\n\nඔබේ නම, දුරකථන අංකය සහ බෙදාහැරීමේ ලිපිනය එවන්න. අපි ඇණවුම තහවුරු කරමු. 😊",
+        "botReply": "හරි, Cargo Fleece Casual Shorts එකක් (පාට අංක 1) සඳහා ඔබේ ඇණවුම මම සටහන් කරගන්නම්.\n\nඇණවුම තහවුරු කිරීමට ඔබේ සම්පූර්ණ නම, ලිපිනය සහ දුරකථන අංකය ලබා දෙන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -75,7 +75,7 @@
       {
         "turnNum": 5,
         "userMsg": "Chaminda Vaas, 14 Galle Face Court, Colombo 03, 0766600001",
-        "botReply": "ස්තූතියි චමින්ද මහත්මයා, ඔබගේ ඇණවුම් විස්තර සාරාංශය මෙන්න:\n\n📦 භාණ්ඩය: Cargo Fleece Casual Short (1ක්)\n🎨 පාට: අංක 1\n👤 නම: Chaminda Vaas\n📞 දුරකථන: 0766600001\n🏠 ලිපිනය: 14 Galle Face Court, Colombo 03\n\n💰 උප එකතුව: රු. 1200\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💵 මුළු මුදල: රු. 1650\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න, එවිට අපට ඇණවුම සකස් කළ හැක. 😊",
+        "botReply": "ඔබේ ඇණවුමේ විස්තර පහත දැක්වේ. කරුණාකර මේවා නිවැරදි දැයි පරීක්ෂා කර තහවුරු කරන්න.\n\n📦 භාණ්ඩ: Cargo Fleece Casual Shorts\n🔢 ප්‍රමාණය: 1\n🎨 පාට: අංක 1\n📏 Size: Free Size (ඉන 28-42)\n\n💰 Subtotal: රු. 1200\n🚚 Delivery ගාස්තුව: රු. 450\n💰 මුළු එකතුව: රු. 1650\n\n💳 Payment Method: Cash on Delivery (COD)\n👤 නම: Chaminda Vaas\n📍 ලිපිනය: 14 Galle Face Court, Colombo 03\n📞 දුරකථන අංකය: 0766600001\n\nසියලු විස්තර නිවැරදි නම් 'Ok' හෝ 'Confirm' ලෙස පවසන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -83,7 +83,7 @@
       {
         "turnNum": 6,
         "userMsg": "හරි confirm කරන්න",
-        "botReply": "ස්තූතියි! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී. 🎊\n\nඔබගේ භාණ්ඩය දින 2-3ක් ඇතුළත ඔබ වෙත ලැබෙනු ඇත. අපගේ සේවාව භාවිතා කිරීම ගැන ස්තූතියි! 😊",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කළා. අපගේ ඇණවුම් අංශයෙන් ඉක්මනින්ම ඔබව සම්බන්ධ කර ගනු ඇත. අපව තෝරා ගැනීම ගැන ස්තූතියි! 🥰",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -94,7 +94,7 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "625c7f93-ab90-429f-9fc5-e970bb0fce13",
+      "id": "fff1649b-2336-4fd1-a3dc-bc697e3df363",
       "customer_name": "Chaminda Vaas",
       "customer_phone": "0766600001",
       "total_amount": 1650,
@@ -164,7 +164,7 @@
       {
         "turnNum": 1,
         "userMsg": "Hello",
-        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා. 😊\n\nඔබට අවශ්‍ය කලිසම් වර්ගය තෝරා ගැනීමට පහත ලැයිස්තුව බලන්න:\n\n1. පොප්කොන් ශෝර්ට් උස අගල් 16\n2. SingleJersey Cotton උස අගල් 20\n3. පොප්කෝන් ශෝර්ට් උස අගල් 18\n4. Rib Jacquard Shorts\n5. Kyela Brand Single Jersey Cotton Shorts\n6. Waffle Knit Cotton Shorts\n7. Linen Blend Casual Shorts\n8. Cargo Fleece Casual Shorts\n9. Denim Stretch Comfort Shorts\n\nඔබට අවශ්‍ය අංකය හෝ නම සඳහන් කරන්න.",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා ! 🥰\n\nඅපගේ කෙටි කලිසම් වර්ග කිහිපයක් තිබෙනවා. ඔබට අවශ්‍ය විශේෂිත වර්ගයක් ගැන විමසන්නට හෝ පින්තූර බලන්නට අවශ්‍යද? 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -172,7 +172,7 @@
       {
         "turnNum": 2,
         "userMsg": "Cargo Fleece Casual Shorts",
-        "botReply": "Cargo Fleece Casual Shorts ඉතා අගනා තේරීමක්! 🩳✨\n\nමෙම කලිසම් උසස් තත්වයේ ෆ්ලීස් රෙදිවලින් නිමවා ඇත. ඉන 28 සිට 42 දක්වා ඕනෑම කෙනෙකුට ඇඳිය හැකි (Free Size) පහසු කලිසම් වර්ගයකි.\n\nපැකේජ මිල ගණන්:\n📦 පැකේජ 2ක් - රු. 2400\n📦 පැකේජ 4ක් - රු. 4400\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ පාට තෝරා ගන්න, මම ඔබේ ඇණවුම සකස් කරන්නම්. 😊",
+        "botReply": "ප්‍රිමියම් වර්ගයේ Cargo Fleece Casual Shorts පිළිබඳ තොරතුරු පහත දැක්වේ.\n\nමෙම කලිසම් උසස් තත්ත්වයේ මෘදු ෆ්ලීස් මැටීරියල් එකකින් සමන්විතයි. ඉණ ප්‍රමාණය 28 සිට 42 දක්වා ඕනෑම කෙනෙකුට ගැළපෙනවා (Free Size). \n\nඔබට මෙය ඇණවුම් කිරීමට අවශ්‍යද? එසේ නම්, අවශ්‍ය ප්‍රමාණය සහ වර්ණ තෝරාගැනීම සඳහා මම පින්තූර එවන්නද?",
         "hasImages": true,
         "imageCount": 1,
         "orderCreated": false
@@ -180,7 +180,7 @@
       {
         "turnNum": 3,
         "userMsg": "2 Pack එකක් ගන්නවා",
-        "botReply": "ගොඩක් හොඳයි! Cargo Fleece Casual Shorts පැකේජ් 2ක් තෝරා ගැනීම ගැන ස්තූතියි. 🩳✨\n\nඇණවුම තහවුරු කිරීමට පහත විස්තර ලබා දෙන්න:\n\n🔹 ඔබේ නම:\n🔹 දුරකථන අංකය:\n🔹 බෙදාහැරීමේ ලිපිනය:\n🔹 නගරය:\n🔹 කැමති වර්ණ අංක (පින්තූරවල ඇති):\n\nදැනට ඔබ ඇණවුම් කර ඇත්තේ කලිසම් 2ක් බැවින්, බෙදාහැරීමේ ගාස්තුව රු. 450ක් එකතු වන බව කරුණාවෙන් සලකන්න. 😊",
+        "botReply": "හරි, ඔබ Cargo Fleece Casual Shorts පැකේජ 2ක් තෝරාගෙන තිබෙනවා. එහි මිල රු. 2400කි. \n\nමෙම පැකේජය සඳහා බෙදාහැරීම නොමිලේ (Free Delivery) 🚚.\n\nඔබ කැමති වර්ණ තෝරා ගැනීමට කරුණාකර අපගේ පින්තූරවල ඇති අංක වලින් තෝරාගන්න. ඉන්පසු ඔබේ නම, ලිපිනය සහ දුරකථන අංකය එවන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -188,7 +188,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට 1 සහ 2",
-        "botReply": "පැහැදිලියි! ඔබ තෝරාගත් වර්ණ අංක 1 සහ 2 මම සටහන් කරගත්තා. 🎨✅\n\nඇණවුම සම්පූර්ණ කිරීමට පහත විස්තර ටිකත් එවන්න:\n\n🔹 ඔබේ නම:\n🔹 දුරකථන අංකය:\n🔹 බෙදාහැරීමේ ලිපිනය:\n🔹 නගරය:\n\nමෙම විස්තර ලැබුණු පසු මම ඔබේ ඇණවුම් සාරාංශය එවන්නම්. 😊",
+        "botReply": "හරි, Cargo Fleece Casual Shorts පාට අංක 1 සහ 2 තෝරාගෙන තිබෙනවා.\n\nදැන් කරුණාකර ඔබගේ නම, ලිපිනය සහ දුරකථන අංකය ලබා දෙන්න. එවිට මම සම්පූර්ණ ඇණවුම් සාරාංශය ඔබට එවන්නම්. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -196,7 +196,7 @@
       {
         "turnNum": 5,
         "userMsg": "Nilakshi Silva, 55 Station Road, Nugegoda, 0766600002",
-        "botReply": "ඔබේ ඇණවුම තහවුරු කිරීමට සාරාංශය මෙන්න:\n\n📦 අයිතමය: Cargo Fleece Casual Shorts (2 Pack)\n🎨 වර්ණ: 1 සහ 2\n👤 නම: Nilakshi Silva\n📞 දුරකථන අංකය: 0766600002\n🏠 ලිපිනය: 55 Station Road, Nugegoda\n💰 උප එකතුව: රු. 2400\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💵 මුළු මුදල: රු. 2850\n💳 ගෙවීමේ ක්‍රමය: Cash on Delivery\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්නේ නම් කරුණාකර ඔව් (Yes) ලෙස පවසන්න. 😊",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කිරීම සඳහා විස්තර මෙන්න:\n\n📦 භාණ්ඩ: Cargo Fleece Casual Shorts\n🔢 ප්‍රමාණය: 2\n📏 Size: Free Size (ඉණ 28 - 42)\n🎨 පාට: 1 සහ 2\n💰 Subtotal: රු. 2400\n🚚 Delivery ගාස්තුව: නොමිලේ (Free Delivery)\n💵 මුළු එකතුව: රු. 2400\n💳 Payment Method: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD)\n\n📍 ලිපිනය: Nilakshi Silva, 55 Station Road, Nugegoda\n📞 දුරකථන අංකය: 0766600002\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්නේ නම් කරුණාකර \"ඔව්\" ලෙස පිළිතුරු දෙන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -204,7 +204,7 @@
       {
         "turnNum": 6,
         "userMsg": "විස්තර නිවැරදියි confirm කරන්න",
-        "botReply": "ස්තූතියි! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී. 😊\n\nඔබගේ Cargo Fleece Casual Shorts කලිසම් යුගලය ඉදිරි දින 2-3 ඇතුළත ඔබ වෙත ලැබෙනු ඇත. අපව තෝරා ගැනීම ගැන ස්තූතියි! 🚚✨",
+        "botReply": "ඔබේ ඇණවුම සාර්ථකව තහවුරු වුණා. ඉතා ඉක්මනින් අපගේ නියෝජිතයෙක් ඔබව සම්බන්ධ කරගනු ඇත. ඇණවුම දින 2-3ක් ඇතුළත ඔබට ලැබෙනු ඇත. අපව තෝරා ගැනීම ගැන ස්තූතියි! 🥰",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -215,10 +215,10 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "a47c7ac0-201c-42dc-831a-9dfa71634377",
+      "id": "d3ee125a-6734-4eb1-b513-e21bc284c6c4",
       "customer_name": "Nilakshi Silva",
       "customer_phone": "0766600002",
-      "total_amount": 2850,
+      "total_amount": 2400,
       "status": "pending",
       "order_items": [
         {
@@ -236,7 +236,7 @@
       ],
       "special_instructions": "Colours: 1, 2 | Size: Free Size"
     },
-    "calcCorrect": false,
+    "calcCorrect": true,
     "pacingCorrect": true,
     "imageCorrect": true,
     "coloursRecorded": true
@@ -285,7 +285,7 @@
       {
         "turnNum": 1,
         "userMsg": "විස්තර එවන්න",
-        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා. 😊\n\nඅප සතුව පවතින උසස් තත්ත්වයේ කෙටි කලිසම් වර්ග කිහිපයක් පහත දැක්වේ:\n\n1️⃣ පොප්කොන් ශෝර්ට් (උස අඟල් 16) - රු. 2600 (පැකේජය)\n2️⃣ SingleJersey Cotton ශෝර්ට් (උස අඟල් 20) - රු. 2650 (පැකේජය)\n3️⃣ පොප්කෝන් ශෝර්ට් (උස අඟල් 18) - රු. 2600 (පැකේජය)\n4️⃣ Rib Jacquard ශෝර්ට් (උස අඟල් 16) - රු. 2700 (පැකේජය)\n5️⃣ Kyela Brand Single Jersey Cotton ශෝර්ට් - රු. 2500 (පැකේජය)\n6️⃣ Waffle Knit Cotton ශෝර්ට් - රු. 2800 (පැකේජය)\n7️⃣ Linen Blend Casual ශෝර්ට් - රු. 2700 (පැකේජය)\n8️⃣ Cargo Fleece Casual ශෝර්ට් - රු. 2400 (පැකේජය)\n9️⃣ Denim Stretch Comfort ශෝර්ට් - රු. 3000 (පැකේජය)\n\nඔබට වැඩිදුර තොරතුරු හෝ පින්තූර අවශ්‍ය විශේෂිත කලිසම් වර්ගයක් තිබේද? අංකය හෝ නම සඳහන් කරන්න.",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා! අප සතුව පවතින උසස් තත්ත්වයේ කෙටි කලිසම් (Shorts) වර්ග කිහිපයක් පහත දැක්වේ:\n\n1. පොප්කොන් ශෝර්ට් (උස අඟල් 16 / 18)\n2. SingleJersey Cotton ශෝර්ට් (උස අඟල් 20)\n3. Rib Jacquard ශෝර්ට් (උස අඟල් 16)\n4. Kyela Brand Single Jersey Cotton ශෝර්ට් (උස අඟල් 16)\n5. Waffle Knit Cotton ශෝර්ට්\n6. Linen Blend Casual ශෝර්ට්\n7. Cargo Fleece Casual ශෝර්ට්\n8. Denim Stretch Comfort ශෝර්ට්\n\nඔබට අවශ්‍ය විශේෂිත කලිසම් වර්ගය හෝ වැඩි විස්තර දැනගැනීමට කැමති අයිතමය සඳහන් කරන්න. මම ඒ පිළිබඳ වැඩි විස්තර සහ පින්තූර එවන්නම්.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -293,7 +293,7 @@
       {
         "turnNum": 2,
         "userMsg": "Denim Stretch Comfort Shorts",
-        "botReply": "Denim Stretch Comfort Shorts 🩳\n\nමෙම කලිසම් සුවපහසු මෘදු ස්ට්‍රෙච් ඩෙනිම් රෙදිවලින් නිමවා ඇත. \n\n✅ ඉණ: 28 සිට 40 දක්වා (Free Size)\n✅ පැකේජ මිල: \n🔹 පැකේජ 3ක් - රු. 3000\n🔹 පැකේජ 6ක් - රු. 5400\n\n📦 ඕනෑම පැකේජයක් සඳහා ඩිලිවරි නොමිලේ! 🚚\n\nඔබට අවශ්‍ය පැකේජය සහ කලිසම් ගණන පවසන්න, අපි ඇණවුම භාරගන්නම්. 😊",
+        "botReply": "Denim Stretch Comfort Shorts පිළිබඳ විස්තර පහත දැක්වේ:\n\nමෙම කලිසම් මෘදු සහ ඇඳීමට ඉතා සුවපහසු (Stretch) ඩෙනිම් වර්ගයකින් නිමවා ඇත. ඉණ ප්‍රමාණය අඟල් 28 සිට 40 දක්වා ඕනෑම කෙනෙකුට ගැළපෙන පරිදි (Free Size) සකසා ඇත.\n\nමිල ගණන්:\n- කලිසම් 3ක්: රු. 3000 (එකක් රු. 1000 බැගින්)\n- කලිසම් 6ක්: රු. 5400 (එකක් රු. 900 බැගින්)\n\nමෙම ඇණවුම් සඳහා බෙදාහැරීමේ ගාස්තු නොමිලේ වේ. ඔබ මෙය මිලදී ගැනීමට කැමතිද? එසේ නම් ඔබට අවශ්‍ය ප්‍රමාණය පවසන්න.",
         "hasImages": true,
         "imageCount": 1,
         "orderCreated": false
@@ -301,7 +301,7 @@
       {
         "turnNum": 3,
         "userMsg": "මට කලිසම් 2ක් ඕනේ, ගාණ කීයද?",
-        "botReply": "ඔබට අවශ්‍ය Denim Stretch Comfort Shorts කලිසම් 2ක් සඳහා මිල ගණන් පහත දැක්වේ:\n\n📦 කලිසම් 2කේ මිල: රු. 2000 (එකක මිල රු. 1000 බැගින්)\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💰 මුළු එකතුව: රු. 2450\n\nඔබේ ඇණවුම තහවුරු කිරීමට කැමති නම්, ඔබේ නම, ලිපිනය සහ දුරකථන අංකය එවන්න. 😊",
+        "botReply": "ඔබ Denim Stretch Comfort Shorts කලිසම් 2ක් ඇණවුම් කිරීමට බලාපොරොත්තු වන නිසා, එකක මිල රු. 1000 බැගින් මුළු මුදල රු. 2000ක් වේ.\n\nඅපගේ ප්‍රතිපත්තිය අනුව, කලිසම් 5කට අඩු ඇණවුම් සඳහා රු. 450ක බෙදාහැරීමේ ගාස්තුවක් අය කෙරේ. ඒ අනුව මුළු එකතුව රු. 2450ක් වේ.\n\nඔබ කැමති නම්, ඇණවුම තහවුරු කිරීමට ඔබේ නම, ලිපිනය සහ දුරකථන අංකය ලබා දෙන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -309,7 +309,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට 1 සහ 2",
-        "botReply": "එල, ඔබ තෝරාගත් Denim Stretch Comfort Shorts කලිසම් 2 සඳහා තහවුරු කිරීම සූදානම් කරමු. 😊\n\nකරුණාකර ඔබේ පහත විස්තර එවන්න:\n\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 සම්පූර්ණ බෙදාහැරීමේ ලිපිනය:\n🏙️ නගරය:\n\nමෙම විස්තර ලැබුණු පසු මම ඔබේ ඇණවුම් සාරාංශය එවන්නම්. 📦✨",
+        "botReply": "නියමයි! Denim Stretch Comfort Shorts පාට අංක 1 සහ 2 තෝරාගත්තා. \n\nඇණවුම සම්පූර්ණ කිරීමට කරුණාකර පහත විස්තර ලබා දෙන්න:\n1. ඔබේ නම:\n2. බෙදාහැරීමේ ලිපිනය:\n3. දුරකථන අංකය:\n\nමේවා එවූ පසු මම ඇණවුම් සාරාංශයක් එවන්නම්.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -317,7 +317,7 @@
       {
         "turnNum": 5,
         "userMsg": "Lasith Malinga, 99 Beach Road, Rathgama, 0766600003",
-        "botReply": "ස්තූතියි Lasith Malinga මහතාණනි, ඔබගේ ඇණවුම් සාරාංශය පහත දැක්වේ:\n\n📦 ඇණවුම: Denim Stretch Comfort Shorts (කලිසම් 2)\n🎨 තෝරාගත් පාට: 1 සහ 2\n👤 නම: Lasith Malinga\n📞 දුරකථන අංකය: 0766600003\n🏠 ලිපිනය: 99 Beach Road, Rathgama\n\n💰 උප එකතුව: රු. 2000\n🚚 බෙදාහැරීමේ ගාස්තුව: රු. 450\n💳 මුළු එකතුව: රු. 2450\n💳 ගෙවීම් ක්‍රමය: Cash on Delivery\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න, එවිට අපේ කණ්ඩායම ඇණවුම අනුමත කරනු ඇත. ✅",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කිරීමට පෙර කරුණාකර මෙම විස්තර පරීක්ෂා කරන්න:\n\n📦 භාණ්ඩ: Denim Stretch Comfort Shorts\n🔢 ප්‍රමාණය: 02\n🎨 පාට: 01, 02\n📏 Size: Free Size (ඉණ 28-40)\n\n💰 එකතුව:\n🔹 කලිසම් මිල: රු. 2000\n🔹 Delivery ගාස්තුව: රු. 450\n💵 මුළු එකතුව: රු. 2450\n\n🚚 Delivery: 99 Beach Road, Rathgama\n👤 නම: Lasith Malinga\n📞 දුරකථන අංකය: 0766600003\n💳 Payment Method: Cash on Delivery (COD)\n\nසියලු විස්තර නිවැරදිද? නිවැරදි නම් කරුණාකර \"ඔව්\" ලෙස තහවුරු කරන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -325,7 +325,7 @@
       {
         "turnNum": 6,
         "userMsg": "හරි ඇණවුම දාන්න",
-        "botReply": "ස්තූතියි Lasith Malinga! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී. අපගේ කණ්ඩායම විසින් දින 2-3ක් ඇතුළත ඔබේ ඇණවුම ඔබ වෙත එවනු ඇත. 📦🚚\n\nතවත් උදව්වක් අවශ්‍ය නම් අපේ නිල කාර්ය මණ්ඩල අංකය 0761122620 ඔස්සේ සම්බන්ධ වන්න. නැවතත් පැමිණීමට ආරාධනා! 😊✨",
+        "botReply": "ඔබගේ ඇණවුම තහවුරු කිරීම ගැන ස්තූතියි! අපි ඔබගේ ඇණවුම ලැබුණු බව තහවුරු කරන අතර, එය දින 2-3ක් ඇතුළත ඔබේ ලිපිනයට ලැබෙනු ඇත.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -336,7 +336,7 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "a4775ffe-38ca-4969-9455-56eba4923cc2",
+      "id": "dcebb4ab-b74c-48c4-8b9e-965ae8dfad6e",
       "customer_name": "Lasith Malinga",
       "customer_phone": "0766600003",
       "total_amount": 2450,
@@ -406,7 +406,7 @@
       {
         "turnNum": 1,
         "userMsg": "Hi",
-        "botReply": "Welcome to Binara Fashion! 🥰\n\nHow can I help you today? Would you like to see our available shorts collection? 😊",
+        "botReply": "බිනර ෆැෂන් වෙත ඔබව සාදරයෙන් පිළිගන්නවා! 🥰\nඔයාට අවශ්‍ය කෙටි කලිසම් වර්ගය මොකක්ද? නැත්නම් අපේ කලිසම් වර්ග බලන්න කැමතිද? 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -414,7 +414,7 @@
       {
         "turnNum": 2,
         "userMsg": "Denim Stretch Comfort Shorts",
-        "botReply": "These are our Denim Stretch Comfort Shorts! 👖\n\n✨ Features:\n✅ Soft stretch denim wash\n✅ Free Size (Waist 28-40)\n✅ Price:\n🔹 3 Pack: LKR 3000\n🔹 6 Pack: LKR 5400\n\n📦 Delivery is Free for these packages! 🚚\n\nWould you like to order a package? Please let me know your preferred quantity. 😊",
+        "botReply": "Denim Stretch Comfort Shorts ඉතාමත් ජනප්‍රිය සහ පහසු රෙදි වර්ගයකින් නිමවා ඇති කලිසම් වර්ගයක්.\n\nමෙම කලිසම් සඳහා දැනට අප සතුව ඇති පැකේජ විස්තර:\n- කලිසම් 3ක්: රු. 3000\n- කලිසම් 6ක්: රු. 5400\n\nමෙම කලිසම් සඳහා ඩිලිවරි ගාස්තු අය කරන්නේ නැහැ. ඔයාට අවශ්‍ය පැකේජය සහ ප්‍රමාණය කියන්න, මම විස්තර ලබා දෙන්නම්.",
         "hasImages": true,
         "imageCount": 1,
         "orderCreated": false
@@ -422,7 +422,7 @@
       {
         "turnNum": 3,
         "userMsg": "3 Pack එකක් දාන්න",
-        "botReply": "නියමයි! Denim Stretch Comfort Shorts පැකේජයක් තෝරාගැනීම ගැන ස්තූතියි. 😊\n\nඔබේ ඇණවුම සඳහා කරුණාකර පහත විස්තර ලබා දෙන්න:\n\n🔹 නම:\n🔹 දුරකථන අංකය:\n🔹 බෙදාහැරීමේ ලිපිනය:\n🔹 නගරය:\n\nඉන්පසු අපි ඇණවුම තහවුරු කරමු. 🚚",
+        "botReply": "හරි, Denim Stretch Comfort Shorts 3ක පැකේජයක් ඇණවුම් කිරීමට තීරණය කිරීම ගැන ස්තූතියි! 😊\n\nදැන් මට පහත විස්තර ටික ලබා දෙන්න:\n1. ඔයාට අවශ්‍ය පාට අංක (පින්තූරවල ඇති පරිදි).\n2. ඔයාගේ නම.\n3. භාණ්ඩ ලැබිය යුතු ලිපිනය.\n4. දුරකථන අංකය.\n\nපින්තූරවල ඇති පාට අංක තෝරාගෙන මට එවන්න, මම ඇණවුම සකස් කරන්නම්.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -430,7 +430,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට 1, 2, 3",
-        "botReply": "පැහැදිලිවම! Denim Stretch Comfort Shorts පැකේජයට අදාළව ඔබ කැමති පාට අංක 1, 2 සහ 3 ලෙස සටහන් කරගත්තා. 🎨\n\nදැන් ඔබේ ඇණවුම අවසන් කිරීමට කරුණාකර පහත විස්තර ලබා දෙන්න:\n\n🔹 නම:\n🔹 දුරකථන අංකය:\n🔹 බෙදාහැරීමේ ලිපිනය:\n🔹 නගරය:\n\nමෙම විස්තර ලැබුණු පසු මම ඔබට ඇණවුම් සාරාංශය එවන්නම්. 😊",
+        "botReply": "නියමයි! ඔයා තෝරාගත් පාට අංක 1, 2 සහ 3 සටහන් කරගත්තා.\n\nදැන් ඇණවුම සම්පූර්ණ කිරීමට කරුණාකර ඔයාගේ පහත විස්තර ලබා දෙන්න:\n📍 සම්පූර්ණ ලිපිනය:\n👤 නම:\n📞 දුරකථන අංකය:\n\nමෙම විස්තර ලැබුණු පසු මම ඇණවුම් සාරාංශය එවන්නම්.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -438,7 +438,7 @@
       {
         "turnNum": 5,
         "userMsg": "Dilshan Madushanka, 12 Tangalle Road, Hambantota, 0766600004",
-        "botReply": "ඔබේ ඇණවුම් විස්තර සියල්ල ලැබුණා. ස්තූතියි! 😊\n\n📦 ඇණවුම් සාරාංශය:\n\n🔹 නිෂ්පාදනය: Denim Stretch Comfort Shorts\n🔹 ප්‍රමාණය: 3 Pack\n🔹 තෝරාගත් වර්ණ: 1, 2, 3\n🔹 නම: Dilshan Madushanka\n🔹 දුරකථන අංකය: 0766600004\n🔹 ලිපිනය: 12 Tangalle Road, Hambantota\n\n💰 උප එකතුව: LKR 3000\n🚚 බෙදාහැරීමේ ගාස්තුව: නොමිලේ (Free Delivery)\n💰 මුළු එකතුව: LKR 3000\n💳 ගෙවීම් ක්‍රමය: Cash on Delivery\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න, එවිට මම ඇණවුම ලියාපදිංචි කරන්නම්. ✅",
+        "botReply": "ඔබ ලබා දුන් විස්තර අනුව ඔබේ ඇණවුම් සාරාංශය මෙන්න:\n\n📦 භාණ්ඩ: Denim Stretch Comfort Shorts (3 Pack)\n📏 Size: Free Size\n🎨 පාට: 1, 2, 3\n💰 Subtotal: රු. 3000\n🚚 Delivery ගාස්තුව: නොමිලේ\n💸 මුළු එකතුව: රු. 3000\n💳 Payment Method: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD)\n\n👤 නම: Dilshan Madushanka\n📍 ලිපිනය: 12 Tangalle Road, Hambantota\n📞 දුරකථන අංකය: 0766600004\n\nසියලු විස්තර නිවැරදිද? කරුණාකර තහවුරු කරන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -446,7 +446,7 @@
       {
         "turnNum": 6,
         "userMsg": "ඔව් විස්තර හරි",
-        "botReply": "ස්තූතියි! ඔබේ ඇණවුම සාර්ථකව තහවුරු කළා. අපගේ නිෂ්පාදනය තෝරා ගැනීම ගැන ඔබට බොහොම ස්තූතියි. 😊\n\nඔබේ ඇණවුම දින 2-3ක් ඇතුළත ඔබේ ලිපිනයට ලැබෙනු ඇත. 🚚",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කිරීම ගැන ස්තූතියි! ඔබගේ ඇණවුම අප විසින් භාරගනු ලැබුවා. දින 2-3ක් ඇතුළත ඔබට භාණ්ඩ ලැබෙනු ඇත. 🥰",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -457,7 +457,7 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "f80721a3-78de-48d1-a0e6-d66eda768049",
+      "id": "42e6afc4-b93a-4c6b-b95d-fb5900478bd2",
       "customer_name": "Dilshan Madushanka",
       "customer_phone": "0766600004",
       "total_amount": 3000,
@@ -527,7 +527,7 @@
       {
         "turnNum": 1,
         "userMsg": "Hi",
-        "botReply": "Hello! Welcome to Binara Fashion. How can I help you today? 😊\n\nWe have a range of comfortable and stylish shorts available. Please let me know if you are looking for anything specific or if you'd like to see our catalog! 👕🩳",
+        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා. අපගේ කෙටි කලිසම් වර්ග කිහිපයක් තිබෙනවා. ඔබට අවශ්‍ය ඕනෑම ප්‍රමාණයකින් ඇණවුම් ලබාගත හැකියි. ඔබට බලන්න ඕන වර්ගය කුමක්ද? 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -535,7 +535,7 @@
       {
         "turnNum": 2,
         "userMsg": "Denim Stretch Comfort Shorts",
-        "botReply": "Great choice! Our Denim Stretch Comfort Shorts are soft, durable, and offer a perfect fit. 👖✨\n\nHere are the package details:\n🔹 3 Pack: LKR 3000\n🔹 6 Pack: LKR 5400\n\nDelivery is FREE for these! 🚚\n\nWould you like to place an order? Please let me know your preferred package and size/quantity. 😊",
+        "botReply": "Denim Stretch Comfort Shorts ඉතා ඉහළ තත්ත්වයෙන් යුත් ඇඳුමකි. මේවා ඉන 28 සිට 40 දක්වා ඕනෑම කෙනෙකුට ඇඳිය හැකි අතර ඉතා මෘදු ස්වභාවයකින් යුක්තයි.\n\nපැකේජ විස්තර:\n- කලිසම් 3ක් = රු. 3000\n- කලිසම් 6ක් = රු. 5400\n\nඔබට කීයක් අවශ්‍යද? ඒ වගේම කැමති ප්‍රමාණය සහ පාට අංක තිබේ නම් සඳහන් කරන්න.",
         "hasImages": true,
         "imageCount": 1,
         "orderCreated": false
@@ -543,7 +543,7 @@
       {
         "turnNum": 3,
         "userMsg": "කලිසම් 5ක් ගන්න පුළුවන්ද?",
-        "botReply": "ඔව්, අනිවාර්යයෙන්ම පුළුවන්! 😊\n\nDenim Stretch Comfort Shorts 5ක් සඳහා මිල ගණනය කරන්නේ මෙහෙමයි:\n🔹 එකක මිල: LKR 1000 (3 පැකේජ් මිල අනුව)\n🔹 මුළු මුදල: LKR 5000\n\nමේ ඇණවුම සඳහා බෙදාහැරීම නොමිලේ (Free Delivery) 🚚✅\n\nඔබේ ඇණවුම තහවුරු කිරීමට කැමති පාට අංක සහ ඔබේ විස්තර (නම, ලිපිනය, දුරකථන අංකය) එවන්න. 🌸",
+        "botReply": "ඔව්, අනිවාර්යයෙන්ම පුළුවන්! ඔබට කැමති ඕනෑම ගණනක් ඇණවුම් කරන්න පුළුවන්.\n\nDenim Stretch Comfort Shorts 5ක් සඳහා මිල රු. 5000ක් වෙනවා (රු. 1000 බැගින්). මෙම ඇණවුම සඳහා බෙදාහැරීමේ ගාස්තුව රු. 0ක් (නොමිලේ) ලෙස ලැබෙනවා.\n\nඔබට අවශ්‍ය පාට අංක සහ ඉන ප්‍රමාණය සඳහන් කරන්න, මම ඇණවුම සකස් කර එවන්නම්. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -551,7 +551,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට 1, 2, 3, 4, 5",
-        "botReply": "නියමයි! Denin Stretch Comfort Shorts 5ක් සඳහා ඔබේ ඇණවුම ලැබුණා. 👖✨\n\nදැන් ඇණවුම තහවුරු කිරීමට ඔබේ පහත විස්තර ටික එවන්න:\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 බෙදාහැරීමේ ලිපිනය:\n🏙️ නගරය:\n\nමේ විස්තර එව්වට පස්සේ මම ඔයාට ඇණවුමේ සම්පූර්ණ සාරාංශය එවන්නම්. 😊",
+        "botReply": "ගොඩක් ස්තූතියි! ඇණවුම සඳහා අවශ්‍ය විස්තර ටික මට එවන්න පුළුවන්ද?\n\nඔබේ නම:\nලිපිනය:\nදුරකථන අංකය:\n\nමේ විස්තර ලැබුණු පසු මම සම්පූර්ණ ඇණවුම් සාරාංශය එවන්නම්. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -559,7 +559,7 @@
       {
         "turnNum": 5,
         "userMsg": "Chamari Athapaththu, 77 Temple Road, Kurunegala, 0766600005",
-        "botReply": "ඔබේ ඇණවුමේ විස්තර මෙන්න, කරුණාකර පරීක්ෂා කරන්න:\n\n📦 අයිතමය: Denim Stretch Comfort Shorts\n🔢 ප්‍රමාණය: 5\n🎨 තෝරාගත් පාට: 1, 2, 3, 4, 5\n📏 ප්‍රමාණය: Free Size\n\n💰 එකතුව: LKR 5000\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💵 මුළු මුදල: LKR 5000\n💳 ගෙවීම් ක්‍රමය: Cash on Delivery\n\n👤 නම: Chamari Athapaththu\n📞 දුරකථන අංකය: 0766600005\n🏠 ලිපිනය: 77 Temple Road, Kurunegala\n\nමෙම විස්තර නිවැරදිද? තහවුරු කරන්න, එවිට අපේ පද්ධතියේ ඇණවුම සුරැකෙනු ඇත. 😊",
+        "botReply": "Chamari මහත්මියනි, ඔබගේ ඇණවුම් සාරාංශය පහත දැක්වේ. කරුණාකර මෙය පරීක්ෂා කර නිවැරදි දැයි තහවුරු කරන්න.\n\n📦 භාණ්ඩ: Denim Stretch Comfort Shorts\n🔢 ප්‍රමාණය: 5\n🎨 පාට: 1, 2, 3, 4, 5\n📏 Size: Free Size (28 - 40)\n💰 Subtotal: රු. 5000\n🚚 Delivery ගාස්තුව: නොමිලේ\n📍 මුළු එකතුව: රු. 5000\n\n💳 Payment Method: Cash on Delivery (භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම)\n👤 නම: Chamari Athapaththu\n📍 ලිපිනය: 77 Temple Road, Kurunegala\n📞 දුරකථන අංකය: 0766600005\n\nමෙම විස්තර නිවැරදිද? නිවැරදි නම් කරුණාකර තහවුරු කරන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -567,7 +567,7 @@
       {
         "turnNum": 6,
         "userMsg": "හරි confirm කරන්න",
-        "botReply": "ස්තූතියි! ඔබගේ ඇණවුම සාර්ථකව තහවුරු විය. ✅\n\nඔබගේ ඇණවුම දින 2-3ක් ඇතුළත ඔබ වෙත ලැබෙනු ඇත. 🚚 අපගේ සේවාව තෝරා ගැනීම ගැන ස්තූතියි! 🌸",
+        "botReply": "ඔබගේ ඇණවුම තහවුරු කළා. ඔබගේ ඇණවුම දින 2-3ක් ඇතුළත ඔබගේ ලිපිනයට ලැබෙනු ඇත. අපව තෝරාගැනීම ගැන ඔබට බොහෝම ස්තූතියි! 🥰",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -578,7 +578,7 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "79498d00-b927-4b85-8f48-76761d84a2bc",
+      "id": "deb80e72-7aa1-4c44-b148-63e6c7a31de8",
       "customer_name": "Chamari Athapaththu",
       "customer_phone": "0766600005",
       "total_amount": 5000,
@@ -648,7 +648,7 @@
       {
         "turnNum": 1,
         "userMsg": "Hello",
-        "botReply": "Welcome to Binara Fashion! 🥰\n\nWe have a variety of comfortable short collections available. Would you like to see our products or are you looking for something specific? 😊",
+        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා. අපගේ ඇඳුම් එකතුවෙන් ඔබට අවශ්‍ය ඕනෑම කෙටි කලිසම් වර්ගයක් ගැන විස්තර දැනගන්න හෝ ඇණවුම් කරන්න අපට කියන්න. ඔබට සහය වීමට මම සූදානම්! 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -656,7 +656,7 @@
       {
         "turnNum": 2,
         "userMsg": "පොප්කොන් ශෝර්ට් උස අගල් 16",
-        "botReply": "පොප්කොන් ශෝර්ට් උස අගල් 16 කලිසම් සඳහා ඔබ කැමැත්ත දැක්වීම ගැන ස්තුතියි! ❤️🔥\n\nමේවායේ විස්තර පහත පරිදි වේ:\n🔹 ඉණ ප්‍රමාණය: 28 සිට 44 දක්වා (Free Size)\n🔹 උස: අගල් 16\n🔹 පැකේජ් මිල: \n   📦 ශෝර්ට් 05 = LKR 2600\n   📦 ශෝර්ට් 10 = LKR 4600\n🚚 බෙදාහැරීම නොමිලේ (Free Delivery)\n\nඔබට අවශ්‍ය කලිසම් ගණන සහ කැමති පාට අංක පවසන්න. මම ඇණවුම සඳහා උදව් කරන්නම්. 😊",
+        "botReply": "පොප්කොන් ශෝර්ට් (උස අඟල් 16) ඉතා ජනප්‍රියයි. මේවා රු. 2600 කට ශෝර්ට් 5ක පැකේජයක් ලෙස හෝ රු. 4600 කට ශෝර්ට් 10ක පැකේජයක් ලෙස ලබාගත හැකියි. ඔබට කැමති ඕනෑම ප්‍රමාණයක් මිලදී ගත හැකි අතර, 5ක් හෝ වැඩි නම් බෙදාහැරීම නොමිලේ.\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ කැමති පාට මොනවාද?",
         "hasImages": true,
         "imageCount": 12,
         "orderCreated": false
@@ -664,7 +664,7 @@
       {
         "turnNum": 3,
         "userMsg": "5 Pack එකක් ඕනේ",
-        "botReply": "නියමයි! පොප්කොන් ශෝර්ට් 5ක පැකේජයක් ඇණවුම් කිරීමට තීරණය කිරීම ගැන ස්තුතියි. 📦✨\n\nමෙම ඇණවුම සඳහා බෙදාහැරීමේ ගාස්තුව නොමිලේ (Free Delivery) වේ. ✅\n\nදැන් කරුණාකර පහත විස්තර එවන්න:\n🔹 ඔබ තෝරා ගන්නා පාට අංක (කැමති පාට 5ක් තෝරාගත හැක)\n🔹 ඔබේ නම\n🔹 දුරකථන අංකය\n🔹 බෙදාහැරීමේ ලිපිනය\n🔹 නගරය\n\nමෙම විස්තර ලැබුණු පසු මම ඔබේ ඇණවුම් සාරාංශය එවන්නම්. 😊",
+        "botReply": "හොඳයි, පොප්කොන් ශෝර්ට් (අඟල් 16) පැකේජයක් (5 Pack) තෝරාගැනීම ගැන ස්තූතියි. එහි මිල රු. 2600 කි. මෙම ඇණවුම සඳහා බෙදාහැරීම නොමිලේ (Free Delivery) ලබා දෙනු ලැබේ.\n\nඔබ කැමති පාට අංක සහ ඔබේ විස්තර පහත පරිදි ලබා දෙන්න:\n1. නම:\n2. බෙදාහැරීමේ ලිපිනය:\n3. දුරකථන අංකය:\n4. කැමති පාට අංක:\n5. ඉන ප්‍රමාණය (හෝ ෆ්‍රී සයිස්):\n\nවිස්තර එවූ පසු මම ඔබට සම්පූර්ණ ඇණවුම් සාරාංශය එවන්නම්.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -672,7 +672,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට 1, 2, 3, 4, 5",
-        "botReply": "පැහැදිලියි! පාට අංක 1, 2, 3, 4 සහ 5 තෝරාගත්තා. 🎨✨\n\nදැන් මට ඔබේ පහත විස්තර ලබා දෙන්න:\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 බෙදාහැරීමේ ලිපිනය:\n🏙️ නගරය:\n\nමෙම විස්තර ලැබුණු පසු මම ඔබේ ඇණවුම් සාරාංශය තහවුරු කිරීමට එවන්නම්. 😊",
+        "botReply": "හොඳයි, ඔබට ස්තුතියි. දැන් ඔබේ ඇණවුම තහවුරු කර ගැනීමට කරුණාකර පහත විස්තර ලබා දෙන්න:\n\n1. නම:\n2. බෙදාහැරීමේ ලිපිනය:\n3. දුරකථන අංකය:\n\nඔබ ඉන ප්‍රමාණය සඳහන් කර නැති නිසා, මේවා ඉන 28 සිට 44 දක්වා ෆ්‍රී සයිස් (Free Size) ලෙස සලකනවා. ඉහත විස්තර ලබා දුන් පසු මම ඔබට ඇණවුම් සාරාංශය එවන්නම්.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -680,7 +680,7 @@
       {
         "turnNum": 5,
         "userMsg": "Rangana Herath, 33 Kandy Road, Kegalle, 0766600006",
-        "botReply": "ඔබේ ඇණවුම් සාරාංශය පහත දැක්වේ:\n\n📦 අයිතමය: පොප්කොන් ශෝර්ට් උස අගල් 16 (05 Pack)\n🎨 තෝරාගත් පාට: 1, 2, 3, 4, 5\n💰 අයිතම මිල: LKR 2600\n🚚 බෙදාහැරීම: නොමිලේ (Free Delivery)\n💰 එකතුව: LKR 2600\n💳 ගෙවීමේ ක්‍රමය: Cash on Delivery\n\n👤 නම: Rangana Herath\n📞 දුරකථන අංකය: 0766600006\n🏠 ලිපිනය: 33 Kandy Road, Kegalle\n\nමෙම තොරතුරු නිවැරදිද? කරුණාකර පරීක්ෂා කර තහවුරු කරන්න. 😊",
+        "botReply": "ඔබගේ ඇණවුම තහවුරු කිරීමට පෙර කරුණාකර මෙම සාරාංශය පරීක්ෂා කර බලන්න:\n\n📦 භාණ්ඩ: පොප්කොන් ශෝර්ට් උස අගල් 16 (5 Pack)\n💰 එකතුව: රු. 2600\n🚚 Delivery: නොමිලේ\n📍 ලිපිනය: Rangana Herath, 33 Kandy Road, Kegalle\n📞 දුරකථන අංකය: 0766600006\n🎨 පාට: 1, 2, 3, 4, 5\n📏 Size: Free Size\n💳 Payment Method: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD)\n\nසියලුම විස්තර නිවැරදිද? නිවැරදි නම් කරුණාකර \"ඔව්\" ලෙස තහවුරු කරන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -688,7 +688,7 @@
       {
         "turnNum": 6,
         "userMsg": "විස්තර නිවැරදියි confirm කරන්න",
-        "botReply": "ස්තුතියි! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී. අපගේ කණ්ඩායම ඉක්මනින්ම ඔබ හා සම්බන්ධ වනු ඇත. 📦✅\n\nඔබගේ ඇණවුම සඳහා ස්තුතියි! 🌸",
+        "botReply": "ඔබගේ ඇණවුම තහවුරු කිරීම ගැන බොහොම ස්තූතියි! ඔබගේ ඇණවුම අප විසින් සටහන් කර ගත්තෙමු. අපගේ කාර්ය මණ්ඩලය ඉක්මනින්ම ඔබව සම්බන්ධ කරගනු ඇත. 🌸",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -699,7 +699,7 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "45760be7-5ed6-43b7-bd9c-29af29db3ed7",
+      "id": "65921378-88d5-41ee-87d8-2dc60a3007ba",
       "customer_name": "Rangana Herath",
       "customer_phone": "0766600006",
       "total_amount": 2600,
@@ -769,7 +769,7 @@
       {
         "turnNum": 1,
         "userMsg": "විස්තර එවන්න",
-        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා! 🥰\n\nඅප සතු කෙටි කලිසම් වර්ග කිහිපයක් පහත දැක්වේ. ඔබට අවශ්‍ය වර්ගය තෝරාගෙන පවසන්න:\n\n1. පොප්කොන් ශෝර්ට් (උස අඟල් 16)\n2. SingleJersey Cotton ශෝර්ට් (උස අඟල් 20)\n3. පොප්කෝන් ශෝර්ට් (උස අඟල් 18)\n4. Rib Jacquard Shorts\n5. Kyela Brand Single Jersey Cotton Shorts\n6. Waffle Knit Cotton Shorts\n7. Linen Blend Casual Shorts\n8. Cargo Fleece Casual Shorts\n9. Denim Stretch Comfort Shorts\n\nඔබට වැඩි විස්තර අවශ්‍ය වන්නේ කුමන වර්ගය ගැනද? 😊",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා! අප සතුව පවතින උසස් තත්ත්වයේ කෙටි කලිසම් වර්ග කිහිපයක් පහත දැක්වේ. ඔබට අවශ්‍ය වර්ගය තෝරාගෙන ඒ පිළිබඳ වැඩි විස්තර ලබාගත හැක.\n\n1. පොප්කොන් ශෝර්ට් (උස අඟල් 16/18)\n2. SingleJersey Cotton ශෝර්ට් (උස අඟල් 20)\n3. Rib Jacquard ශෝර්ට් (උස අඟල් 16)\n4. Kyela Brand Single Jersey Cotton ශෝර්ට්\n5. Waffle Knit Cotton ශෝර්ට්\n6. Linen Blend Casual ශෝර්ට්\n7. Cargo Fleece Casual ශෝර්ට්\n8. Denim Stretch Comfort ශෝර්ට්\n\nඔබට කැමති වර්ගයේ පින්තූර හෝ විස්තර අවශ්‍ය නම් කරුණාකර පවසන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -777,7 +777,7 @@
       {
         "turnNum": 2,
         "userMsg": "Cargo Fleece Casual Shorts",
-        "botReply": "Cargo Fleece Casual Shorts ඉතා උසස් තත්ත්වයේ ඇඳුමකි. මෙන්න ඒ පිළිබඳ විස්තර:\n\n🩳 Cargo Fleece Casual Shorts\n🔥 මිල: පැකේජ අනුව වෙනස් වේ\n📦 පැකේජ:\n🔹 2 Pack: LKR 2400\n🔹 4 Pack: LKR 4400\n🌿 ඉණ: 28 සිට 42 දක්වා (Free Size)\n🚚 බෙදාහැරීම: භාණ්ඩ 2ක් හෝ වැඩි නම් නොමිලේ\n\nඔබට අවශ්‍ය පැකේජය කුමක්ද? සහ කැමති පාට මොනවාදැයි පවසන්න. 😊",
+        "botReply": "මේවා ඉතා උසස් මට්ටමේ Cargo Fleece Casual Shorts වේ. \n\nප්‍රධාන විස්තර:\n- ද්‍රව්‍ය: Premium heavy fleece material (පැති සාක්කු සහිතයි).\n- ඉණ ප්‍රමාණය: 28 සිට 42 දක්වා (Free Size).\n- පැකේජ්: 2ක් රු. 2400 (එකක් රු. 1200) සහ 4ක් රු. 4400.\n- ඩිලිවරි: මෙම අයිතම සඳහා ඩිලිවරි ගාස්තු අය නොකෙරේ.\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ පාට තෝරා ගැනීමට පින්තූර අවශ්‍යද?",
         "hasImages": true,
         "imageCount": 1,
         "orderCreated": false
@@ -785,7 +785,7 @@
       {
         "turnNum": 3,
         "userMsg": "4 Pack එකක් දාන්න",
-        "botReply": "නියමයි! Cargo Fleece Casual Shorts පැකේජයක් (4 Pack) තෝරා ගැනීම ගැන ස්තූතියි. 🔥\n\nඇණවුම තහවුරු කිරීමට කරුණාකර පහත විස්තර ලබා දෙන්න:\n\n✅ ඔබේ නම:\n✅ දුරකථන අංකය:\n✅ බෙදාහැරීමේ ලිපිනය:\n✅ නගරය:\n✅ කැමති පාට අංක (පින්තූරයේ ඇති පරිදි):\n\nමෙම පැකේජය සඳහා බෙදාහැරීම සම්පූර්ණයෙන්ම නොමිලේ (Free Delivery)! 🚚✨",
+        "botReply": "ඇණවුම තහවුරු කර ගැනීමට කරුණාකර පහත තොරතුරු ලබා දෙන්න:\n\n1. ඔබට අවශ්‍ය පාට (පින්තූරයේ ඇති අංක අනුව)\n2. ඔබගේ නම\n3. ලිපිනය\n4. දුරකථන අංකය\n\nමේවා එවු පසු මම ඔබට සම්පූර්ණ ඇණවුම් සාරාංශය එවන්නම්. 📦",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -793,7 +793,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට 1, 2, 3, 4",
-        "botReply": "ස්තූතියි! Cargo Fleece Casual Shorts (4 Pack) සඳහා ඔබේ පාට තේරීම (1, 2, 3, 4) සටහන් කරගත්තා. 🎨\n\nඇණවුම සම්පූර්ණ කිරීමට කරුණාකර ඔබගේ පහත විස්තර ලබා දෙන්න:\n\n✅ නම:\n✅ දුරකථන අංකය:\n✅ සම්පූර්ණ ලිපිනය:\n✅ නගරය:\n\nමේවා එවූ පසු මම ඔබට ඇණවුම් සාරාංශයක් එවන්නම්. 😊",
+        "botReply": "තෝරාගත් පාට සඳහා ස්තූතියි. දැන් ඇණවුම සම්පූර්ණ කිරීමට පහත තොරතුරු ටික එවන්න:\n\nනම:\nලිපිනය:\nදුරකථන අංකය:\n\nමෙම තොරතුරු ලැබුණු පසු මම ඔබට ඇණවුම් සාරාංශය එවන්නම්. 🚚",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -801,7 +801,7 @@
       {
         "turnNum": 5,
         "userMsg": "Marvan Atapattu, 88 Flower Road, Colombo 07, 0766600007",
-        "botReply": "ඔබගේ ඇණවුම් සාරාංශය පහත දැක්වේ:\n\n📦 අයිතමය: Cargo Fleece Casual Shorts (4 Pack)\n🎨 තෝරාගත් පාට: 1, 2, 3, 4\n👤 නම: Marvan Atapattu\n📞 දුරකථන අංකය: 0766600007\n🏠 ලිපිනය: 88 Flower Road, Colombo 07\n💰 උප එකතුව: LKR 4400\n🚚 බෙදාහැරීමේ ගාස්තු: නොමිලේ (Free Delivery)\n💵 මුළු එකතුව: LKR 4400\n💳 ගෙවීමේ ක්‍රමය: Cash on Delivery\n\nමෙම විස්තර නිවැරදි දැයි පරීක්ෂා කර තහවුරු කරන්න. කිසියම් වෙනසක් අවශ්‍ය නම් පවසන්න. 😊",
+        "botReply": "ඔබේ ඇණවුම් සාරාංශය පහත පරිදි වේ:\n\n📦 භාණ්ඩ: Cargo Fleece Casual Shorts (4 Pack)\n🔢 ප්‍රමාණය: 4\n📏 Size: Free Size (ඉන 28 - 42)\n🎨 පාට: 1, 2, 3, 4\n💰 Subtotal: රු. 4400\n🚚 Delivery: නොමිලේ (Free Delivery)\n💰 මුළු එකතුව: රු. 4400\n💳 Payment Method: Cash on Delivery (භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම)\n\n📍 නම: Marvan Atapattu\n📍 ලිපිනය: 88 Flower Road, Colombo 07\n📞 දුරකථන අංකය: 0766600007\n\nමෙම විස්තර නිවැරදිද? කරුණාකර පරීක්ෂා කර තහවුරු කරන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -809,7 +809,7 @@
       {
         "turnNum": 6,
         "userMsg": "හරි ඇණවුම දාන්න",
-        "botReply": "ස්තූතියි! ඔබේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී. 🎊\n\nඔබගේ Cargo Fleece Casual Shorts කට්ටලය දින 2-3ක් ඇතුළත ඔබ වෙත ලැබෙනු ඇත. අපගේ සේවාව පිළිබඳව ඔබ තැබූ විශ්වාසයට ස්තූතියි! 🙏✨",
+        "botReply": "ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී! ඇණවුම දින 2-3ක් ඇතුළත ඔබේ ලිපිනයට ලැබෙනු ඇත. අපව තෝරා ගැනීම ගැන ස්තූතියි! 🥰",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -820,7 +820,7 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "806a1f4d-a3eb-4629-8e9e-91c7fa6befef",
+      "id": "f5bbaf0b-287b-4742-9f0e-8ef0951d239c",
       "customer_name": "Marvan Atapattu",
       "customer_phone": "0766600007",
       "total_amount": 4400,
@@ -890,7 +890,7 @@
       {
         "turnNum": 1,
         "userMsg": "Hi",
-        "botReply": "Hello! Welcome to Binara Fashion! 🥰\n\nWe have a variety of comfortable and stylish shorts available. Please let me know if you are looking for anything specific, or I can share our collection with you! 😊",
+        "botReply": "Binara Fashion වෙත ඔබව සාදරයෙන් පිලිගන්නවා ! 🥰\n\nඅපගේ කෙටි කලිසම් වර්ග කිහිපයක් තිබෙනවා. ඔබට අවශ්‍ය ඕනෑම ප්‍රමාණයක් මිලදී ගත හැකියි. ඔබට බලන්න අවශ්‍ය කලිසම් වර්ගය හෝ පැකේජය ගැන විස්තර කියන්නද? 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -898,7 +898,7 @@
       {
         "turnNum": 2,
         "userMsg": "Linen Blend Casual Shorts",
-        "botReply": "Great choice! The Linen Blend Casual Shorts are premium, breathable, and perfect for casual wear. 🌿\n\n📦 Package Options:\n🔹 3 Pack: LKR 2700\n🔹 6 Pack: LKR 5100\n\nFree Size: Fits waist 28 to 42.\n\nWould you like to place an order? Please let me know the quantity or package you prefer! 😊",
+        "botReply": "එම Linen Blend Casual Shorts ඉතාමත් උසස් තත්වයේ රෙදි වලින් නිමවා ඇත. මේවායේ ඉණ ප්‍රමාණය 28 සිට 42 දක්වා ඕනෑම කෙනෙකුට ගැළපෙනවා (Free Size).\n\nමිල ගණන් පහත පරිදි වේ:\n- පැකේජ් 3ක්: රු. 2700\n- පැකේජ් 6ක්: රු. 5100\n\nඔබට කීයක් අවශ්‍යද? ඒ වගේම ඔබට අවශ්‍ය වර්ණ තෝරා ගැනීමට මම පින්තූර එවන්නද?",
         "hasImages": true,
         "imageCount": 2,
         "orderCreated": false
@@ -906,7 +906,7 @@
       {
         "turnNum": 3,
         "userMsg": "කලිසම් 4ක් ගන්න පුළුවන්ද?",
-        "botReply": "ඔව්, අනිවාර්යයෙන්ම පුළුවන්! 😊\n\nඔබ අයිතම 4ක් තෝරාගෙන ඇති බැවින්, මෙම කලිසම් සඳහා වන විශේෂ දීමනාව අනුව ඔබට බෙදාහැරීමේ ගාස්තුව නොමිලේ (Free Delivery) ලැබෙනවා. 🚚💨\n\nමෙම කලිසම් සඳහා ඉණ මිනුම 28 සිට 42 දක්වා ඕනෑම කෙනෙකුට ගැළපෙනවා (Free Size).\n\nදැන් අපට පහත විස්තර ලබා දෙන්න:\n1. ඔබ කැමති වර්ණ අංක (පින්තූරවල ඇති අංක අනුව)\n2. ඔබගේ නම\n3. දුරකථන අංකය\n4. බෙදාහැරීමේ ලිපිනය සහ නගරය\n\nමේවා එව්වොත් මම ඉක්මනින් ඔයාගේ ඇණවුම් සාරාංශය එවන්නම්!",
+        "botReply": "ඔව්, ඔබට කලිසම් 4ක් ගන්න පුළුවන්. \n\nඅපගේ Linen Blend Casual Shorts පැකේජ් මිල අනුව කලිසම් 3කට රු. 2700ක් අය කෙරේ. ඒ අනුව ඔබ ඉල්ලා ඇති 4 වැනි කලිසම සඳහා අමතර ගාස්තුව (එක කලිසමක් රු. 900 බැගින්) සමඟ සම්පූර්ණ මුදල රු. 3600ක් වේ.\n\nඅයිතම 3කට වඩා වැඩි නිසා ඔබට බෙදාහැරීම නොමිලේ (Free Delivery) ලැබෙනවා. ඔබට අවශ්‍ය පාට 4 තෝරා ගැනීමට පින්තූර ටික එවන්නද?",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -914,7 +914,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට 1, 2, 3, 4",
-        "botReply": "ස්තූතියි! ඔබ තෝරාගත් වර්ණ අංක 1, 2, 3 සහ 4 මම සටහන් කරගත්තා. 🎨\n\nදැන් ඇණවුම තහවුරු කිරීමට කරුණාකර ඔබගේ පහත විස්තර ලබා දෙන්න:\n\n👤 නම:\n📞 දුරකථන අංකය:\n🏠 සම්පූර්ණ බෙදාහැරීමේ ලිපිනය:\n📍 නගරය:\n\nමෙම විස්තර එවූ පසු මම ඔබට ඇණවුම් සාරාංශයක් එවන්නම්. 😊",
+        "botReply": "එල, ඔබ Linen Blend Casual Shorts පාට අංක 1, 2, 3 සහ 4 තෝරාගෙන තිබෙනවා.\n\nදැන් ඇණවුම තහවුරු කර ගැනීම සඳහා කරුණාකර ඔබේ පහත විස්තර ලබා දෙන්න:\n1. ඔබේ නම:\n2. බෙදාහැරීමේ ලිපිනය:\n3. නගරය:\n4. දුරකථන අංකය:\n\nමෙම විස්තර ලැබුණු පසු මම අවසාන ඇණවුම් සාරාංශය ඔබට එවන්නම්. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -922,7 +922,7 @@
       {
         "turnNum": 5,
         "userMsg": "Oshada Fernando, 22 Park Road, Panadura, 0766600008",
-        "botReply": "මෙන්න ඔබේ ඇණවුම් සාරාංශය:\n\n📦 භාණ්ඩය: Linen Blend Casual Shorts (4 ක්)\n🎨 වර්ණ: 1, 2, 3, 4\n📏 ප්‍රමාණය: Free Size (ඉණ 28-42)\n\n💰 උප එකතුව: LKR 3600\n🚚 බෙදාහැරීමේ ගාස්තුව: නොමිලේ (Free Delivery)\n💰 මුළු එකතුව: LKR 3600\n\n👤 නම: Oshada Fernando\n📞 දුරකථන අංකය: 0766600008\n🏠 ලිපිනය: 22 Park Road, Panadura\n💳 ගෙවීමේ ක්‍රමය: Cash on Delivery\n\nමෙම විස්තර නිවැරදි දැයි පරීක්ෂා කර තහවුරු කරන්න. කිසියම් වෙනසක් කිරීමට අවශ්‍ය නම් පවසන්න. 😊",
+        "botReply": "ඔබේ ඇණවුම සඳහා ස්තූතියි! මෙය ඔබගේ ඇණවුම් සාරාංශයයි:\n\n📦 භාණ්ඩ: Linen Blend Casual Shorts\n🔢 ප්‍රමාණය: 4\n🎨 පාට: 1, 2, 3, 4\n📏 Size: Free Size (ඉණ 28-42)\n\n💰 උප එකතුව: රු. 3600\n🚚 Delivery ගාස්තුව: රු. 0 (නොමිලේ)\n💰 මුළු එකතුව: රු. 3600\n\n💳 Payment Method: Cash on Delivery (භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම)\n👤 නම: Oshada Fernando\n📍 ලිපිනය: 22 Park Road, Panadura\n📞 දුරකථන අංකය: 0766600008\n\nසියලු විස්තර නිවැරදිදැයි කරුණාකර පරීක්ෂා කර තහවුරු කරන්න. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -930,7 +930,7 @@
       {
         "turnNum": 6,
         "userMsg": "හරි confirm කරන්න",
-        "botReply": "ස්තූතියි! ඔබේ ඇණවුම සාර්ථකව තහවුරු වුණා. 🙏\n\nඔබගේ ඇණවුම දින 2-3ක් ඇතුළත ඔබට ලැබෙනු ඇත. අපගේ සේවාව තෝරාගැනීම ගැන ස්තූතියි! 🥰",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කිරීම ගැන ස්තූතියි! ඉතා ඉක්මනින් ඔබේ භාණ්ඩ නිවසටම ලැබෙනු ඇත.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -941,7 +941,7 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "051e3024-8cc2-45f5-bde7-329de4282bce",
+      "id": "d7130a4d-7210-43aa-8f31-b6d0acf9d0a0",
       "customer_name": "Oshada Fernando",
       "customer_phone": "0766600008",
       "total_amount": 3600,
@@ -1011,7 +1011,7 @@
       {
         "turnNum": 1,
         "userMsg": "Hello",
-        "botReply": "Hello! Welcome to Binara Fashion. How can I help you today? 😊\n\nFeel free to ask about our available clothing items or check our catalog! 👗🩳",
+        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා. 🥰 \n\nඔබට අවශ්‍ය කෙටි කලිසම් වර්ගය හෝ අපගේ එකතුවේ ඇති භාණ්ඩ ගැන ඕනෑම විස්තරයක් අපගෙන් විමසන්න. ඔබට උදව් කිරීමට අපි සූදානම්! 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -1019,7 +1019,7 @@
       {
         "turnNum": 2,
         "userMsg": "Waffle Knit Cotton Shorts",
-        "botReply": "Great choice! Our Premium Waffle Knit Cotton Shorts are very comfortable. 🩳\n\nThey are available in these packs:\n🔹 4 Pack: LKR 2800 (LKR 700 per item)\n🔹 8 Pack: LKR 5200 (LKR 650 per item)\n\n✅ Delivery is FREE for these packages! 🚚\n\nWould you like to place an order? Please let me know your preferred pack size and quantity.",
+        "botReply": "අපගේ Premium Waffle Knit Cotton Shorts ඉතා උසස් තත්ත්වයේ මෘදු කොට්න් රෙදිවලින් නිමවා ඇත. මේවා ඉණ 28 සිට 42 දක්වා Free Size එකක් ලෙස අදින්න පුළුවන්.\n\nමෙහි මිල ගණන් පහත පරිදි වේ:\n- 4 Pack: රු. 2800 (එකක් රු. 700 බැගින්)\n- 8 Pack: රු. 5200 (එකක් රු. 650 බැගින්)\n\nඔබට අවශ්‍ය ප්‍රමාණය සහ පැකේජය පවසන්න, මම වැඩිදුර විස්තර ලබා දෙන්නම්.",
         "hasImages": true,
         "imageCount": 2,
         "orderCreated": false
@@ -1027,7 +1027,7 @@
       {
         "turnNum": 3,
         "userMsg": "මට කලිසම් 3ක් ඕනේ, ගාණ කීයද?",
-        "botReply": "අපේ Waffle Knit Cotton Shorts පැකේජ් මිල අනුව 1කක මිල රු. 700ක් වෙනවා. ඒ අනුව කලිසම් 3ක මිල රු. 2100ක් වෙනවා. 💰\n\nමෙම ඇණවුම අයිතම 5ට අඩු නිසා රු. 450ක ඩිලිවරි ගාස්තුවක් එකතු වෙනවා. ඒ අනුව මුළු මුදල රු. 2550ක් වේ. ✅\n\nඔබ කැමති පාට අංක තෝරාගන්න පුළුවන්. 🎨 ඇණවුම තහවුරු කිරීමට කැමතිද?",
+        "botReply": "ඔබ Waffle Knit Cotton Shorts 3ක් ඇණවුම් කරන්නේ නම්, එහි මිල රුපියල් 2100ක් වේ (එකක් රු. 700 බැගින්). \n\nකලිසම් 5කට අඩු ඇණවුමක් වන බැවින්, බෙදාහැරීමේ ගාස්තුව ලෙස රු. 450ක් එකතු වේ. මුළු මුදල රු. 2550කි.\n\nඔබට මෙය තහවුරු කිරීමට අවශ්‍ය නම්, කරුණාකර ඔබ කැමති පාට අංක සහ ඔබේ විස්තර ලබා දෙන්න. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -1035,7 +1035,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට 1, 2, 3",
-        "botReply": "නියමයි! ඔබ කැමති පාට අංක 1, 2 සහ 3 ලෙස සටහන් කර ගත්තා. 🎨\n\nඇණවුම තහවුරු කර ගැනීමට කරුණාකර පහත විස්තර ලබා දෙන්න:\n👤 ඔබගේ නම\n📞 දුරකථන අංකය\n🏠 බෙදාහැරීමේ ලිපිනය\n🏙️ නගරය\n\nමෙම විස්තර ලැබුණු පසු මම ඇණවුම් සාරාංශයක් ඔබ වෙත එවන්නම්. 😊",
+        "botReply": "හරි, ඔබ තෝරාගත් පාට අංක 1, 2 සහ 3 සටහන් කරගත්තා. \n\nඇණවුම තහවුරු කිරීමට ඔබේ පහත විස්තර ලබා දෙන්න:\n1. නම:\n2. ලිපිනය:\n3. දුරකථන අංකය:\n\nමේවා එව්වම මම ඔබට ඇණවුමේ සම්පූර්ණ සාරාංශයක් එවන්නම්. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -1043,7 +1043,7 @@
       {
         "turnNum": 5,
         "userMsg": "Ramesh Mendis, 15 Main Street, Ambalangoda, 0766600009",
-        "botReply": "ස්තූතියි රමේෂ්! ඔබගේ ඇණවුම් විස්තර මෙන්න:\n\n📦 අයිතමය: Waffle Knit Cotton Shorts (x3)\n🎨 තෝරාගත් පාට: 1, 2, 3\n💰 උප එකතුව: රු. 2100\n🚚 බෙදාහැරීමේ ගාස්තු: රු. 450\n💳 මුළු මුදල: රු. 2550\n📦 ගෙවීමේ ක්‍රමය: Cash on Delivery\n\n👤 නම: Ramesh Mendis\n📞 දුරකථන: 0766600009\n🏠 ලිපිනය: 15 Main Street, Ambalangoda\n\nමෙම විස්තර නිවැරදිද? කරුණාකර පරීක්ෂා කර තහවුරු කරන්න. 😊",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කිරීමට පෙර කරුණාකර මෙම සාරාංශය පරීක්ෂා කරන්න:\n\n📦 භාණ්ඩ: Waffle Knit Cotton Shorts\n✅ ප්‍රමාණය: 3\n✅ Size: Free Size (ඉණ 28 - 42)\n🎨 පාට: 1, 2, 3\n💰 Subtotal: රු. 2100\n🚚 Delivery ගාස්තුව: රු. 450\n💰 මුළු එකතුව: රු. 2550\n\n💳 Payment Method: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD)\n\n📍 නම: Ramesh Mendis\n📍 ලිපිනය: 15 Main Street, Ambalangoda\n📞 දුරකථන අංකය: 0766600009\n\nසියලු විස්තර නිවැරදිද? කරුණාකර තහවුරු කරන්න.",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -1051,7 +1051,7 @@
       {
         "turnNum": 6,
         "userMsg": "විස්තර නිවැරදියි confirm කරන්න",
-        "botReply": "ස්තූතියි රමේෂ්! ඔබගේ ඇණවුම සාර්ථකව තහවුරු කරන ලදී. අපගේ බෙදාහැරීමේ කණ්ඩායම දින 2-3ක් ඇතුලත ඔබගේ ඇණවුම නිවසටම එවනු ඇත. 🚚✨",
+        "botReply": "ඔබගේ ඇණවුම අප වෙත සාර්ථකව ලැබුණා. ඔබගේ ඇණවුම තහවුරු කළා. ඇණවුම භාරදීම සඳහා දින 2-3ක් ගතවනු ඇත. ස්තූතියි! 🥰",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -1062,7 +1062,7 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "0fdf6f7f-d913-4bda-9d21-7c39eb5a74fd",
+      "id": "aab98b19-18c7-4f53-ac94-c320563e6b37",
       "customer_name": "Ramesh Mendis",
       "customer_phone": "0766600009",
       "total_amount": 2550,
@@ -1132,7 +1132,7 @@
       {
         "turnNum": 1,
         "userMsg": "විස්තර එවන්න",
-        "botReply": "අපේ ළඟ තියෙන ජනප්‍රිය කෙටි කලිසම් වර්ග කිහිපයක් පහත දැක්වෙනවා. ඔබට අවශ්‍ය වර්ගයේ නම හෝ අංකය පවසන්න, මම වැඩිදුර විස්තර සහ පින්තූර එවන්නම්. 😊\n\n1. පොප්කොන් ශෝර්ට් උස අගල් 16 (පැකේජ: 5ක් 2600/=, 10ක් 4600/=)\n2. SingleJersey Cotton උස අගල් 20 (පැකේජ: 4ක් 2650/=, 10ක් 6200/=)\n3. පොප්කෝන් ශෝර්ට් උස අගල් 18 (පැකේජ: 4ක් 2600/=)\n4. Rib Jacquard Shorts (පැකේජ: 5ක් 2700/=, 10ක් 5100/=)\n5. Kyela Brand Single Jersey Cotton Shorts (පැකේජ: 5ක් 2500/=, 10ක් 4500/=)\n6. Waffle Knit Cotton Shorts (පැකේජ: 4ක් 2800/=, 8ක් 5200/=)\n7. Linen Blend Casual Shorts (පැකේජ: 3ක් 2700/=, 6ක් 5100/=)\n8. Cargo Fleece Casual Shorts (පැකේජ: 2ක් 2400/=, 4ක් 4400/=)\n9. Denim Stretch Comfort Shorts (පැකේජ: 3ක් 3000/=, 6ක් 5400/=)",
+        "botReply": "ආයුබෝවන්! Binara Fashion වෙත ඔබව සාදරයෙන් පිළිගන්නවා. 🥰\n\nඅප සතුව පවතින උසස් තත්ත්වයේ කෙටි කලිසම් (Shorts) වර්ග කිහිපයක් පහතින් දැක්වේ:\n\n1. පොප්කොන් ශෝර්ට් (අඟල් 16 / 18)\n2. SingleJersey Cotton ශෝර්ට් (අඟල් 20)\n3. Rib Jacquard ශෝර්ට් (අඟල් 16)\n4. Kyela Brand Single Jersey Cotton ශෝර්ට්\n5. Waffle Knit Cotton ශෝර්ට්\n6. Linen Blend Casual ශෝර්ට්\n7. Cargo Fleece Casual ශෝර්ට්\n8. Denim Stretch Comfort ශෝර්ට්\n\nඔබට වැඩිදුර විස්තර හෝ පින්තූර බැලීමට අවශ්‍ය විශේෂිත වර්ගයක් තිබේද? නැතහොත් සියලුම වර්ගවල පින්තූර එවන්නද? 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -1140,7 +1140,7 @@
       {
         "turnNum": 2,
         "userMsg": "Denim Stretch Comfort Shorts",
-        "botReply": "මෙම Denim Stretch Comfort Shorts ඉතා මෘදු සහ ඇඳීමට පහසු සිනිඳු ඩෙනිම් රෙදිවලින් නිමවා ඇත. 😊\n\n🔹 ඉණ: 28 සිට 40 දක්වා (Free Size)\n🔹 මිල ගණන්:\n📦 පැකේජ 3ක්: 3000/=\n📦 පැකේජ 6ක්: 5400/=\n🚚 මෙම ඇණවුම සඳහා බෙදාහැරීම නොමිලේ!\n\nඔබට අවශ්‍ය පැකේජය සහ කැමති පාට අංක පවසන්න, ඇණවුම තහවුරු කරමු. 🌸",
+        "botReply": "Denim Stretch Comfort Shorts ඉතා මෘදු සහ ඇඳීමට පහසු අගනා කලිසම් වර්ගයකි. 👖\n\nමේවා ඉණ අඟල් 28 සිට 40 දක්වා ඕනෑම කෙනෙකුට ගැළපෙන ෆ්‍රී සයිස් එකකි. මෙහි මිල ගණන්:\n🌸 පැකේජය (කලිසම් 3) = රු. 3000\n🌸 පැකේජය (කලිසම් 6) = රු. 5400\n\nමෙම ඇණවුම සඳහා බෙදාහැරීමේ ගාස්තු අය නොකෙරේ. ඔබට මෙය ඇණවුම් කිරීමට අවශ්‍යද? එසේ නම් කැමති පාට සහ අවශ්‍ය ප්‍රමාණය පවසන්න. 😊",
         "hasImages": true,
         "imageCount": 1,
         "orderCreated": false
@@ -1148,7 +1148,7 @@
       {
         "turnNum": 3,
         "userMsg": "6 Pack එකක් ගන්න කැමතියි",
-        "botReply": "නියමයි! Denim Stretch Comfort Shorts පැකේජ 6ක් සඳහා ඇණවුම සටහන් කරගන්නම්. 😊\n\nදැන් ඔබේ කැමති පාට අංක ටික එවන්න. (පාට 6ක් තෝරාගත හැක)\n\nඊට අමතරව, ඔබේ නම, දුරකථන අංකය සහ ලිපිනය එවන්න. මම සම්පූර්ණ ඇණවුමේ සාරාංශයක් එවන්නම්. 🌸",
+        "botReply": "ඉතා හොඳයි! ඔබ තෝරාගත් Denim Stretch Comfort Shorts 6ක ඇණවුම තහවුරු කරගැනීම සඳහා පහත විස්තර ලබා දෙන්න:\n\n1. ඔබට අවශ්‍ය පාට අංක (පින්තූරයේ ඇති පරිදි):\n2. ඔබේ නම:\n3. බෙදාහැරීමේ ලිපිනය:\n4. දුරකථන අංකය:\n\nපැකේජය රු. 5400ක් වන අතර ඩිලිවරි නොමිලේ. විස්තර එවූ පසු මම ඇණවුම් සාරාංශයක් එවන්නම්. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -1156,7 +1156,7 @@
       {
         "turnNum": 4,
         "userMsg": "පාට 1 සිට 6 දක්වා",
-        "botReply": "හරිම හොඳයි! Denim Stretch Comfort Shorts පැකේජ 6ක් සඳහා ඇණවුම සටහන් කරගත්තා. 😊\n\nදැන් ඇණවුම තහවුරු කිරීමට ඔබේ නම, දුරකථන අංකය සහ ලිපිනය එවන්න. 🚚🌸",
+        "botReply": "නියමයි, ඔබ Denim Stretch Comfort Shorts පාට 1 සිට 6 දක්වා ඇණවුම් කිරීමට තෝරාගැනීම ගැන ස්තූතියි.\n\nදැන් ඔබේ ඇණවුම සම්පූර්ණ කිරීමට කරුණාකර පහත විස්තර ලබා දෙන්න:\n\n1. ඔබේ නම:\n2. බෙදාහැරීමේ ලිපිනය:\n3. දුරකථන අංකය:\n\nමෙම විස්තර ලැබුණු පසු මම ඇණවුම් සාරාංශය ඔබ වෙත එවන්නම්. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -1164,7 +1164,7 @@
       {
         "turnNum": 5,
         "userMsg": "Shashikala Siriwardene, 40 Matara Road, Galle, 0766600010",
-        "botReply": "ඔබගේ ඇණවුම තහවුරු කිරීමට පෙර කරුණාකර මෙම සාරාංශය පරීක්ෂා කරන්න:\n\n📦 අයිතමය: Denim Stretch Comfort Shorts (පැකේජ 6ක්)\n🎨 තෝරාගත් පාට: 1, 2, 3, 4, 5, 6\n💰 උප එකතුව: 5400/=\n🚚 බෙදාහැරීමේ ගාස්තුව: නොමිලේ\n💰 මුළු එකතුව: 5400/=\n💳 ගෙවීම් ක්‍රමය: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (Cash on Delivery)\n\n👤 නම: Shashikala Siriwardene\n📞 දුරකථන අංකය: 0766600010\n🏠 ලිපිනය: 40 Matara Road, Galle\n\nසියලු විස්තර නිවැරදි දැයි තහවුරු කරන්න. කිසියම් වෙනසක් අවශ්‍ය නම් පවසන්න. 😊",
+        "botReply": "ඔබේ ඇණවුම තහවුරු කිරීම සඳහා විස්තර වලට ස්තූතියි. ඔබගේ ඇණවුම් සාරාංශය පහත දැක්වේ:\n\n📦 භාණ්ඩ: Denim Stretch Comfort Shorts (6 Pack)\n💰 ප්‍රමාණය: 6\n📏 Size: Free Size (ඉණ 28 - 40)\n🎨 පාට: 1, 2, 3, 4, 5, 6\n💵 Subtotal: LKR 5400\n🚚 Delivery ගාස්තුව: LKR 0 (නොමිලේ)\n💰 මුළු එකතුව: LKR 5400\n💳 Payment Method: භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීම (COD)\n\n📍 ලිපිනය: Shashikala Siriwardene, 40 Matara Road, Galle\n📞 දුරකථන අංකය: 0766600010\n\nමෙම විස්තර නිවැරදිද? සියල්ල නිවැරදි නම් 'හරි' ලෙස පණිවිඩයක් එවන්න. 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": false
@@ -1172,7 +1172,7 @@
       {
         "turnNum": 6,
         "userMsg": "හරි ඇණවුම දාන්න",
-        "botReply": "ඔබගේ ඇණවුම සාර්ථකව තහවුරු කළා! ස්තූතියි! 😊\n\nදින 2-3ක් ඇතුළත ඔබගේ ඇණවුම ඔබ වෙත ලැබෙනු ඇත. භාණ්ඩ ලැබුණු පසු මුදල් ගෙවීමට (COD) හැකියාව ඇත. 🚚🌸",
+        "botReply": "ඔබේ ඇණවුම සාර්ථකව තහවුරු වුණා. ඉතා ඉක්මනින් අපගේ නියෝජිතයෙකු ඔබව සම්බන්ධ කරගෙන භාණ්ඩ ඔබ වෙත එවන දිනය දැනුම් දෙනු ඇත. අපව තෝරාගැනීම ගැන ස්තූතියි! 😊",
         "hasImages": false,
         "imageCount": 0,
         "orderCreated": true
@@ -1183,7 +1183,7 @@
     "prematureOrderTurn": -1,
     "orderCreatedTurn": 6,
     "dbOrder": {
-      "id": "ec98326e-30d4-4a96-8124-770b03b7a02f",
+      "id": "f15ebec4-2cb9-4694-a3cd-0eebf09c527a",
       "customer_name": "Shashikala Siriwardene",
       "customer_phone": "0766600010",
       "total_amount": 5400,
